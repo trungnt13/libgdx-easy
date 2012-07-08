@@ -1,0 +1,15 @@
+<PanelStyle
+	id = "5"
+	>
+	<Resource
+	name ="shit"
+	/>
+</PanelStyle>
+
+<ButtonStyle
+	id = "5"
+	>
+	<Resource
+	name = "shit"
+	/>
+</ButtonStyle>

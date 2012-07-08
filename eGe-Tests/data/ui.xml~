@@ -1,0 +1,140 @@
+<Skin>
+	<Atlas
+		id = "1"
+		file = "data/jump.txt"
+		path = "data/"
+	/>
+	<Atlas
+		id = "2"
+		file = "data/pack"
+		path = "data/"
+	/>
+	<Atlas
+		id = "3"
+		file = "data/mapAtlas.txt"
+		path = "data/"
+	/>
+	<BitmapFont
+		id = "1"
+		file = "data/arial-15.fnt"
+		texture = "data/arial-15.png"
+	/>
+	<CheckBoxStyle
+		id = "1"
+		x = "0.5f"
+		y = "0.5f"
+		layout_width = "0.1f"
+		layout_height = "0.1f"
+		text = "bull shit"
+		textColor = "0,1,0,1"
+		textDownColor = "0,0,1,1"
+		textAlign = "LEFT"
+		textSize = "30"
+		textFont = "1"
+		>
+		<Region
+			id = "2"
+			off = "badlogicsmall"
+			on = "badlogicslice"
+		/>
+	</CheckBoxStyle>
+	
+	<ButtonStyle
+		id = "1"
+		x = "0.3f"
+		y = "0.4f"
+		layout_width = "0.1f"
+		layout_height = "0.05f"
+		text = "shit"
+		textColor = "0,1,0,1"
+		textDownColor = "0,0,1,1"
+		textSize = "50"
+		textFont = "1"
+		toggle = "true"
+		>
+		<Region
+			id = "2"
+			down = "particle-star"
+			up = "badlogicslice"
+			/>
+	</ButtonStyle>
+	
+	<ProcessBarStyle
+		id = "2"
+		x = "100"
+		y = "100"
+		layout_width = "0.5f"
+		layout_height = "0.1f"
+		mode = "2"
+		time = "10"
+		>
+		<Region
+			id = "2"
+			background = "particle-star"
+		/>
+		<Animation
+			id = "1"
+			name = "ALIEN_JUMP_"
+			frameDuration = "0.03f"
+		/>
+	</ProcessBarStyle>
+	
+	<ImageStyle
+		id = "1"
+		x = "0"
+		y = "0"
+		layout_width = "0.5f"
+		layout_height = "0.5f"
+		flipX = "false"
+		flipY = "false"
+		>
+		<Region
+			id = "3"
+			texture = "map1"
+		/>
+	</ImageStyle>
+
+	<ImageStyle
+		id = "2"
+		x = "0.5f"
+		y = "0"
+		layout_width = "0.5f"
+		layout_height = "0.5f"
+		flipX = "false"
+		flipY = "false"
+		>
+		<Region
+			id = "3"
+			texture = "map2"
+		/>
+	</ImageStyle>
+	
+	<ImageStyle
+		id = "3"
+		x = "0.5f"
+		y = "0.5f"
+		layout_width = "0.5f"
+		layout_height = "0.5f"
+		flipX = "false"
+		flipY = "false"
+		>
+		<Region
+			id = "3"
+			texture = "map3"
+		/>
+	</ImageStyle>
+	
+	<SwipeStyle
+		id = "4"
+		x = "0.05f"
+		y = "0.2f"
+		layout_width = "0.9f"
+		layout_height = "0.5f"
+		childSize = "0.4f"
+		orientation = "horizontal"
+		padding = "0.05f"
+		friction = "0.98f"
+		velRatio = "0.3f"
+		panSensitive = "0.5f"
+		/>
+</Skin>

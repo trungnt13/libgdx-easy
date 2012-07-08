@@ -1,0 +1,79 @@
+tag
+{
+1 Layout
+2 PanelStyle
+3 ButtonStyle
+4 CheckBoxStyle
+5 ProcessBarStyle
+6 Resource
+7 Region
+8 Atlas
+9 Animation
+10 BitmapFont
+11 Skin
+12 ImageStyle
+13 SwipeStyle
+}
+
+element
+{
+1 id
+2 x
+3 y
+4 layout_width
+5 layout_height
+6 width
+7 height
+8 originX
+9 originY
+10 padding
+11 rotate
+12 align
+13 text
+14 textColor
+15 textSize
+16 textFont
+17 textAlign
+18 file
+19 path
+20 name
+21 type
+22 up
+23 down
+24 on
+25 off
+26 background
+27 shortbar
+28 longbar
+29 mouse
+30 disable
+31 texture
+32 flip
+33 atlasid
+34 enable
+35 focusable
+36 visible
+37 color
+38 textDownColor
+39 time
+40 frameDuration
+41 mode
+42 toggle
+43 flipX
+44 flipY
+45 orientation
+46 align
+47 friction
+48 velRatio
+49 childSize
+}
+
+////////////////////////////////////
++ id: the id of each style , you must guarantee that this number is
+unique for each type
++ x : x position , if( 0 <= x <= 1) its mean that the position x will be
+(x * screenWidth)
++ y: y position, same as x
++ width : if(0 <= layout_width <= 1) mean that the final width will be(
+layout_width * parentView.width)
++ acc: accelerometer (gia toc)

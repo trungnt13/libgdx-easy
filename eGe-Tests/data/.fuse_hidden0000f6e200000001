@@ -1,0 +1,59 @@
+<Skin>
+	<Atlas
+		id = "1"
+		file = "data/option/option.txt"
+		path = "data/option/"
+	/>
+	
+	<PanelStyle
+		id = "1"
+		x = "0.15f"
+		y = "0.2"
+		layout_width = "0.7f"
+		layout_height = "0.6f"
+		>
+		<Region
+			id = "1"
+			background = "BANG"
+		/>
+	</PanelStyle>
+	
+	<SliderStyle
+		id = "1"
+		x = "0.1f"
+		y = "0.1f"
+		layout_width = "0.8f"
+		layout_height = "0.2f"
+		min = "0"
+		max = "100"
+		step = "2"
+		value = "0"
+		>
+		<Region
+			id = "1"
+			background = "BACKGROUND_PROCESS"
+			longbar = "PROCESS"
+			knob = "KNOB"
+		/>
+	</SliderStyle>
+
+	<SliderStyle
+		id = "2"
+		x = "0.1f"
+		y = "0.5f"
+		layout_width = "0.8f"
+		layout_height = "0.2f"
+		min = "0"
+		max = "200"
+		step = "4"
+		value = "100"
+		>
+		<Region
+			id = "1"
+			background = "BACKGROUND_PROCESS"
+			longbar = "PROCESS"
+			knob = "KNOB"
+		/>
+	</SliderStyle>
+	
+</Skin>

@@ -1,0 +1,72 @@
+1.	ADDITION is faster than MULTIPLICATION is faster than DIVISION is faster than EXPONENT
+_ EXAMPLE:
+	int[] somethingToCalulate;
+	int constant;
+	for (int i = 0; i &lt; giantSize; i++) {
+		somethingToCalulate[i] = i * constant;
+	}
+_ FOR HIGH PERFORMANCE:
+	int[] somethingToCalulate;
+	int constant;
+	int accumulated = 0;
+	for (int i = 0; i &lt; giantSize; i++) {
+		somethingToCalulate[i] = accumulated;
+		accumulated += constant;
+	}
+2.	 CALCULATE ONCE, USE AS OFTEN AS YOU LIKE
+_ EXAMPLE:
+	int[] somethingToCalulate;
+	int[] somethingOtherToCalulate;
+	for (int i = 0; i &lt; giantSize; i++) {
+		somethingToCalulate[i] = i * (constant - i);
+		somethingOtherToCalulate = i * (constant - i) * otherConstant;
+	}
+_ FOR HIGH PERFORMANCE:
+	int[] somethingToCalulate;
+	int[] somethingOtherToCalulate;
+	for (int i = 0; i &lt; giantSize; i++) {
+		int temp = i * (constant - i);
+		somethingToCalulate[i] = temp;
+		somethingOtherToCalulate = temp * otherConstant;
+	}
+
+3.	 Save Casting:
+_EXAMPLE:
+
+	boolean equals (Object obj) {
+	if (obj instanceof Rectangle)
+		return (((Rectangle)obj).x == this.x && ((Rectangle)obj).y == this.y && ((Rectangle)obj).width == this.width && ((Rectangle)obj).height == this.height);
+	return false;
+	}
+
+_ HIGH PERFORMANCE:
+
+	boolean equals (Object obj) {
+	if (obj instanceof Rectangle) {
+		Rectangle rect = (Rectangle)obj;
+		return (rect.x == this.x && rect.y == this.y && rect.width == this.width && rect.height == this.height);
+	}
+	return false;
+	}
+
+4. 	If the cast is to an interface, it's probably twice slower than casting to a class. 
+_ EXAMPLE :
+
+	interface I {}
+	class Super {}
+	class Sub extends Super implements I {}
+	
+
+	Super su = new Sub();
+	I i = (I) su;
+_ HIGH PERFORMANCE :
+The further the separation between the interface and the subclass 
+(that is, the further back in the interface inheritance chain the cast interface is from the implemented interface), 
+the longer the cast takes to resolve.
+
+Also beware of unnecessary uses of instanceof. The following cast is resolved by the compiler and produces no runtime code to implement the unnecessary cast.
+Rectangle q = new Rectangle ();
+Rectangle p = (Rectangle) q;
+However,
+Rectangle p = new Rectangle ();
+boolean b = (p instanceof Rectangle);

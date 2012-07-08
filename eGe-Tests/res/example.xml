@@ -1,0 +1,118 @@
+<Skin>
+	
+	<Atlas
+		id = "1"
+		file = "data/jump.txt"
+		path = "data/"
+	/>
+	<Atlas
+		id = "2"
+		file = "data/pack"
+		path = "data/"
+	/>
+	<BitmapFont
+		id = "1"
+		file = "data/arial-15.fnt"
+		texture = "data/arial-15.png"
+	/>
+	<CheckBoxStyle
+		id = "1"
+		x = "0.5f"
+		y = "0.5f"
+		layout_width = "0.1f"
+		layout_height = "0.1f"
+		text = "bull"
+		textColor = "0,1,0,1"
+		textDownColor = "0,0,1,1"
+		textAlign = "RIGHT"
+		textSize = "0"
+		textFont = "1"
+		>
+		<Region
+			id = "2"
+			off = "badlogicsmall"
+			on = "badlogicsmall"
+		/>
+	</CheckBoxStyle>
+	
+	<ButtonStyle
+		id = "1"
+		x = "0.3f"
+		y = "0.4f"
+		layout_width = "0.1f"
+		layout_height = "0.05f"
+		text = "shit"
+		textColor = "0,1,0,1"
+		textDownColor = "0,0,1,1"
+		textSize = "50"
+		textFont = "1"
+		toggle = "true"
+		>
+		<Region
+			id = "2"
+			down = "particle-star"
+			up = "badlogicslice"
+			/>
+	</ButtonStyle>
+	
+	<ProcessBarStyle
+		id = "2"
+		x = "100"
+		y = "100"
+		layout_width = "0.5f"
+		layout_height = "0.1f"
+		mode = "2"
+		time = "10"
+		>
+		<Region
+			id = "2"
+			background = "particle-star"
+			// if you use this dont use animation
+			longbar = ""
+		/>
+		<Animation
+			id = "1"
+			name = "ALIEN_JUMP_"
+			frameDuration = "0.03f"
+		/>
+	</ProcessBarStyle>
+	
+	<SliderStyle
+		id = "1"
+		x = ""
+		y = ""
+		layout_width = ""
+		layout_height = ""
+		min = ""
+		max = ""
+		step = ""
+		>
+		<Region
+			id = "2"
+			background = ""
+			knob = ""
+			// if you use this dont use animation
+			longbar =""
+		/>
+		<Animation
+			id = "1"
+			name = "SHIT"
+			frameDuration = ""
+		/>
+	</SliderStyle>
+	
+	<PanelStyle
+		id = "6"
+		x = ""
+		y = ""
+		layout_width = ""
+		layout_height = ""
+		>
+		<Region
+			id = "1"
+			background = "image background"
+		/>
+	</PanelStyle>
+	
+	
+</Skin>	
