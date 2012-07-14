@@ -45,6 +45,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Boundable;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.SpriteBackend;
+import com.badlogic.gdx.utils.Updater;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 /** Holds the geometry, color, and texture information for drawing 2D sprites using {@link SpriteBatch}. A Sprite has a position
@@ -62,7 +63,7 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 	//	---------------------------------------------------------
 
 	final float[] vertices = new float[SPRITE_SIZE];
-	private final float[] edges = new float[8];
+	private final float[] rect = new float[4];
 	
 	private final Color color = new Color(1, 1, 1, 1);
 	private float x, y;
@@ -75,6 +76,12 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 	
 	//	---------------------------------------------------------
 
+	private Updater mUpdater = new Updater() {
+		@Override
+		public void update (SpriteBackend sprite, float delta) {
+		}
+	};
+	
 	/** Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and color set before it can be
 	 * drawn. */
 	public Sprite () {
@@ -433,25 +440,6 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 		return vertices;
 	}
 
-	public float[] getExtractBound(){
-		final float[] edges = this.edges;
-		final float[] vertices = this.vertices;
-		
-		edges[0] = vertices[X1];
-		edges[1] = vertices[Y1];
-		
-		edges[2] = vertices[X2];
-		edges[3] = vertices[Y2];
-		
-		edges[4] = vertices[X3];
-		edges[5] = vertices[Y3];
-		
-		edges[6] = vertices[X4];
-		edges[7] = vertices[Y4];
-		
-		return edges;
-	}
-	
 	public Circle getBoundingCircle(){
 		return null;
 	}
@@ -492,6 +480,39 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 		return bounds;
 	}
 	
+	@Override
+	public float[] getBoundingFloatRect () {
+		final float[] vertices = getVertices();
+
+		float minx = vertices[X1];
+		float miny = vertices[Y1];
+		float maxx = vertices[X1];
+		float maxy = vertices[Y1];
+
+		minx = minx > vertices[X2] ? vertices[X2] : minx;
+		minx = minx > vertices[X3] ? vertices[X3] : minx;
+		minx = minx > vertices[X4] ? vertices[X4] : minx;
+
+		maxx = maxx < vertices[X2] ? vertices[X2] : maxx;
+		maxx = maxx < vertices[X3] ? vertices[X3] : maxx;
+		maxx = maxx < vertices[X4] ? vertices[X4] : maxx;
+
+		miny = miny > vertices[Y2] ? vertices[Y2] : miny;
+		miny = miny > vertices[Y3] ? vertices[Y3] : miny;
+		miny = miny > vertices[Y4] ? vertices[Y4] : miny;
+
+		maxy = maxy < vertices[Y2] ? vertices[Y2] : maxy;
+		maxy = maxy < vertices[Y3] ? vertices[Y3] : maxy;
+		maxy = maxy < vertices[Y4] ? vertices[Y4] : maxy;
+
+		rect[0] = minx;
+		rect[1] = miny;
+		rect[2] = maxx - minx;
+		rect[3] = maxy - miny;
+
+		return rect;
+	}
+	
 	public void draw (SpriteBatch spriteBatch) {
 		spriteBatch.draw(texture, getVertices(), 0, SPRITE_SIZE);
 	}
@@ -506,6 +527,14 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 		setColor(color);
 	}
 
+	public void update(float delta){
+		mUpdater.update(this, delta);
+	}
+	
+	public void postUpdater(Updater updater){
+		this.mUpdater= updater;
+	}
+	
 	public float getX () {
 		return x;
 	}

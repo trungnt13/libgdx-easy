@@ -177,6 +177,18 @@ public class Array<T> implements Iterable<T> {
 		return -1;
 	}
 
+	public int lastIndexOf (T value, boolean identity) {
+	    T[] items = this.items;
+	    if (identity || value == null) {
+	      for (int i = size - 1; i >= 0; i--)
+	        if (items[i] == value) return i;
+	    } else {
+	      for (int i = size - 1; i >= 0; i--)
+	        if (value.equals(items[i])) return i;
+	    }
+	    return -1;
+	}
+	
 	public boolean removeValue (T value, boolean identity) {
 		T[] items = this.items;
 		if (identity || value == null) {
@@ -246,8 +258,7 @@ public class Array<T> implements Iterable<T> {
 		return items;
 	}
 
-	/** Creates a new backing array with the specified size containing . */
-	protected T[] resize (int newSize) {
+	/** Creates a new backing array with the specified size containing the current items. */	protected T[] resize (int newSize) {
 		T[] items = this.items;
 		T[] newItems = (T[])java.lang.reflect.Array.newInstance(items.getClass().getComponentType(), newSize);
 		System.arraycopy(items, 0, newItems, 0, Math.min(size, newItems.length));

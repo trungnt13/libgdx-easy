@@ -27,8 +27,9 @@ import com.badlogic.gdx.utils.Array;
 /** A button is a {@link Table} with a checked state and additional {@link ButtonStyle style} fields for pressed, unpressed, and
  * checked. Each time a button is clicked, the checked state is toggled. Being a table, a button can contain any other actors.
  * <p>
- * {@link ChangeEvent} is fired when the button is clicked.
- * <p>
+	{@link ChangeEvent} is fired when the button is clicked. Cancelling the event will restore the checked button state to what is
+ * was previously.
+ *  <p>
  * The preferred size of the button is determined by the background and the button contents.
  * @author Nathan Sweet */
 public class Button extends Table {
@@ -69,6 +70,7 @@ public class Button extends Table {
 	}
 
 	private void initialize () {
+		setTouchable(true);
 		addListener(clickListener = new ClickListener() {
 			public void clicked (ActorEvent event, float x, float y) {
 				boolean wasChecked = isChecked;

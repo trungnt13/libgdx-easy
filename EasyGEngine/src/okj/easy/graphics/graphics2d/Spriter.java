@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.SpriteBackend;
+import com.badlogic.gdx.utils.Updater;
 
 /**
  * SpriteCAA : <b>ASYNCHRONIZE COMPOSITE ANIMATE Sprite</b> 
@@ -33,7 +34,7 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	private float mOriginWidth;
 	private float mOriginHeight;
 	
-	
+	private final float[] rect = new float[4];
 	//	--------------------------------------------------
 	
 	private int idx = 0;
@@ -44,6 +45,13 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	private float y;
 	private float w;
 	private float h;
+
+	private Updater mUpdater = new Updater() {
+		@Override
+		public void update (SpriteBackend sprite, float delta) {
+		}
+	};
+	
 	
 	public Spriter(){
 		this(13);
@@ -696,8 +704,13 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 		final int[] runnable  = this.mRunnable;
 		for(int i = 0; i < runnbaleSize;i++)
 			((Animator)mSpriteList[runnable[i]]).update(delta);
+		mUpdater.update(this, delta);
 	}
 	
+	public void postUpdater(Updater updater){
+		this.mUpdater = updater;
+	}
+
 	/********************************************************
 	 * 
 	 ********************************************************/
@@ -728,10 +741,9 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	}
 	
 	@Override
-	public float[] getExtractBound () {
-		return null;
+	public float[] getBoundingFloatRect () {
+		return mOriginSprite.getBoundingFloatRect();
 	}
-
 	
 	@Override
 	public Circle getBoundingCircle () {

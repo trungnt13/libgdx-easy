@@ -38,9 +38,11 @@ public class Pools {
 
 	/** Frees an object from the {@link #get(Class) pool}. */
 	static public void free (Object object) {
-		if (object == null) return;
+		if (object == null) throw new IllegalArgumentException("object cannot be null.");
 		ReflectionPool pool = typePools.get(object.getClass());
-		if (pool != null) pool.free(object);
+		if (pool == null) 
+			throw new IllegalArgumentException("No objects have been obtained of type: " + object.getClass().getName());
+		pool.free(object);
 	}
 
 	private Pools () {

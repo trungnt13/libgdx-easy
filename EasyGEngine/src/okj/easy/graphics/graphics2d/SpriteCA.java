@@ -37,6 +37,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.SpriteBackend;
+import com.badlogic.gdx.utils.Updater;
 /**
  * SpriteCAS : <b>SYNCHRONIZE COMPOSITE ANIMATE Sprite</b>
  * @author Ngo Trong Trung
@@ -58,7 +59,7 @@ public class SpriteCA  implements SpriteBackend,Disposable,Animator{
 	private final ArrayList<TextureRegion[]> mRegions;
 	private final float[] mInfo;
 	private final float[] mVertices = new float[VERTICES];
-	private final float[] edges = new float[8];
+	private final float[] rect = new float[4];
 	
 	final int length;
 	private int size = 0;
@@ -96,6 +97,12 @@ public class SpriteCA  implements SpriteBackend,Disposable,Animator{
 	//	---------------------------------------------------
 	
 	private final Rectangle mBound = new Rectangle();
+
+	private Updater mUpdater = new Updater() {
+		@Override
+		public void update (SpriteBackend sprite, float delta) {
+		}
+	};
 	
 	public SpriteCA(){
 		this(13);
@@ -514,28 +521,41 @@ public class SpriteCA  implements SpriteBackend,Disposable,Animator{
 
 		return mBound;
 	}
-	
+
 	@Override
-	public float[] getExtractBound () {
-		final float[] edges = this.edges;
-		final float[] vertices = this.mVertices;
+	public float[] getBoundingFloatRect () {
+		final float[] vertices = SpriteCA.this.mVertices;
+
+		float minx = vertices[X1];
+		float miny = vertices[Y1];
+		float maxx = vertices[X1];
+		float maxy = vertices[Y1];
+
+		minx = minx > vertices[X2] ? vertices[X2] : minx;
+		minx = minx > vertices[X3] ? vertices[X3] : minx;
+		minx = minx > vertices[X4] ? vertices[X4] : minx;
+
+		maxx = maxx < vertices[X2] ? vertices[X2] : maxx;
+		maxx = maxx < vertices[X3] ? vertices[X3] : maxx;
+		maxx = maxx < vertices[X4] ? vertices[X4] : maxx;
+
+		miny = miny > vertices[Y2] ? vertices[Y2] : miny;
+		miny = miny > vertices[Y3] ? vertices[Y3] : miny;
+		miny = miny > vertices[Y4] ? vertices[Y4] : miny;
+
+		maxy = maxy < vertices[Y2] ? vertices[Y2] : maxy;
+		maxy = maxy < vertices[Y3] ? vertices[Y3] : maxy;
+		maxy = maxy < vertices[Y4] ? vertices[Y4] : maxy;
+
+		rect[0] = minx;
+		rect[1] = miny;
+		rect[2] = maxx-minx;
+		rect[3] = maxy-miny;
 		
-		edges[0] = vertices[X1];
-		edges[1] = vertices[Y1];
-		
-		edges[2] = vertices[X2];
-		edges[3] = vertices[Y2];
-		
-		edges[4] = vertices[X3];
-		edges[5] = vertices[Y3];
-		
-		edges[6] = vertices[X4];
-		edges[7] = vertices[Y4];
-		
-		return edges;
+		return rect;
 	}
 
-
+	
 	@Override
 	public float[] getVertices () {
 		return this.mVertices;
@@ -886,8 +906,13 @@ public class SpriteCA  implements SpriteBackend,Disposable,Animator{
 				 info[idx+FRAME_NUMBER] = (int) (info[idx+FRAME_NUMBER] % info[idx+FRAME_LENGTH]);
 			}
 		}
+		mUpdater.update(this, delta);
 	}
 	
+	public void postUpdater(Updater updater){
+		this.mUpdater = updater;
+	}
+
 	/**********************************************************
 	 * 
 	 **********************************************************/
@@ -917,5 +942,6 @@ public class SpriteCA  implements SpriteBackend,Disposable,Animator{
 		
 		setColor(1, 1, 1, 1);
 	}
+
 
 }

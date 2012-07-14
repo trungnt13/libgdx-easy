@@ -13,13 +13,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Screen{
 	public static final SpriteBatch batch = new SpriteBatch(); 
+	public static final SpriteCache cache = new SpriteCache();
+	
 	public static final Matrix4 projection = new Matrix4();
+	public static final Matrix4 transform = new Matrix4();
+
+	public static final Matrix4 zero = new Matrix4();
 	
 	public static final int RELEASE = 1;
 	public static final int HIDE = 2;

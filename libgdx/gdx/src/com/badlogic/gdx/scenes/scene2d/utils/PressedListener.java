@@ -36,7 +36,7 @@ public class PressedListener extends ActorListener {
 		return true;
 	}
 
-	/** Returns true if the specified position is over the specified actor or one of its decsendants. */
+	 /** Returns true if the specified position is over the specified actor or within the tap square. */
 	public boolean isOver (Actor actor, float x, float y) {
 		Actor hit = actor.hit(x, y);
 		if (hit == null || !hit.isDescendant(actor)) {

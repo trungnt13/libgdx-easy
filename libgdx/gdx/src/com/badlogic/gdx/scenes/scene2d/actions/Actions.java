@@ -384,6 +384,4 @@ public class Actions {
 		return action;
 	}
 
-	private Actions () {
-	}
 }

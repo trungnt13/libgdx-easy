@@ -119,10 +119,6 @@ public abstract class Widget extends Actor implements Layout {
 		validate();
 	}
 
-	public Actor hit (float x, float y) {
-		return x > 0 && x < getWidth() && y > 0 && y < getHeight() ? this : null;
-	}
-
 	public void layout () {
 	}
 }

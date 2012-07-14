@@ -18,7 +18,7 @@ public class FastGrid {
 	private final int mBoundWidth;
 	private final int mBoundHeight;
 	
-	private int mGridWith;
+	private int mGridWidth;
 	private int mGridHeight;
 	
 	public FastGrid (int boundWidth,int boundHeight){
@@ -26,37 +26,37 @@ public class FastGrid {
 		this.mBoundWidth = boundWidth;
 	}
 	
-	public FastGrid (int boundWidth,int boundHeight,int maxRow,int maxCol){
+	public FastGrid (int boundWidth,int boundHeight,int maxCol,int maxRow){
 		this.mBoundHeight = boundHeight;
 		this.mBoundWidth = boundWidth;
 		
-		this.mGridWith = boundWidth/maxCol;
+		this.mGridWidth = boundWidth/maxCol;
 		this.mGridHeight = boundHeight/maxRow;
 	}
 	
 	public void setMaxGrid(int maxCol,int maxRow){
-		this.mGridWith = mBoundWidth / maxCol;
+		this.mGridWidth = mBoundWidth / maxCol;
 		this.mGridHeight = mBoundHeight/maxRow;
 	}
 	
 	public Vector2 project(Vector2 result,float x,float y){
-		return result.set(x/mGridWith,y/mGridHeight);
+		return result.set(x/mGridWidth,y/mGridHeight);
 	}
 	
 	public int project(float x,float y){
-		return (((int)(x/mGridWith)<<16) | (int)y/mGridHeight);
+		return (((int)(x/mGridWidth)<<16) | (int)y/mGridHeight);
 	}
 	
 	public int project(int x,int y){
-		return (((x/mGridWith)<<16) | (y/mGridHeight));
+		return (((x/mGridWidth)<<16) | (y/mGridHeight));
 	}
 	
 	public Vector2 unproject(Vector2 result,int col,int row){
-		return result.set(mGridWith*col, mGridHeight*row);
+		return result.set(mGridWidth*col, mGridHeight*row);
 	}
 	
 	public Vector2 unproject(Vector2 result,int id){
-		return result.set(mGridWith*(id>>16), mGridHeight*(id&FIRST_16_ZERO_BIT));
+		return result.set(mGridWidth*(id>>16), mGridHeight*(id&FIRST_16_ZERO_BIT));
 	}
 	
 	public Vector2 toGridPos(Vector2 result,int id){

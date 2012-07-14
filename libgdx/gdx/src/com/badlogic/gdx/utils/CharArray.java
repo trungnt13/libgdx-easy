@@ -144,6 +144,13 @@ public class CharArray {
 		return -1;
 	}
 
+	public int lastIndexOf (char value) {
+	    char[] items = this.items;
+	    for (int i = size - 1; i >= 0; i--)
+	      if (items[i] == value) return i;
+	    return -1;
+	  }
+	
 	public boolean removeValue (char value) {
 		char[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {

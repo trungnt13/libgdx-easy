@@ -53,6 +53,18 @@ public class ButtonGroup {
 			add(buttons[i]);
 	}
 
+	public void remove (Button button) {
+		if (button == null) throw new IllegalArgumentException("button cannot be null.");
+		button.buttonGroup = null;
+		buttons.removeValue(button, true);
+	}
+	
+	public void remove (Button... buttons) {
+		if (buttons == null) throw new IllegalArgumentException("buttons cannot be null.");
+		for (int i = 0, n = buttons.length; i < n; i++)
+	    	remove(buttons[i]);
+	}
+	 	 
 	/** Sets the first {@link TextButton} with the specified text to checked. */
 	public void setChecked (String text) {
 		if (text == null) throw new IllegalArgumentException("text cannot be null.");

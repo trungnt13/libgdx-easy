@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /** A text label, with optional word wrapping.
  * <p>
@@ -44,7 +45,7 @@ public class Label extends Widget {
 	}
 
 	public Label (CharSequence text, Skin skin, String styleName) {
-		this(text, skin.get(LabelStyle.class));
+		this(text, skin.get(styleName, LabelStyle.class));
 	}
 
 	/** Creates a label, using a {@link LabelStyle} that has a BitmapFont with the specified name from the skin and the specified
@@ -196,6 +197,11 @@ public class Label extends Widget {
 	public void draw (SpriteBatch batch, float parentAlpha) {
 		layout();
 		validate();
+		if (style.background != null) {
+		   Color color = getColor();
+		   batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
+		   style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
+		}
 		cache.setPosition(getX(), getY());
 		cache.draw(batch, getColor().a * parentAlpha);
 	}
@@ -216,6 +222,9 @@ public class Label extends Widget {
 		/** Optional. */
 		public Color fontColor;
 
+		/** Optional. */
+		public Drawable background;
+		
 		public LabelStyle () {
 		}
 

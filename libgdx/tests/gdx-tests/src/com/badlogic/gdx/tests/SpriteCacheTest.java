@@ -19,6 +19,7 @@ package com.badlogic.gdx.tests;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -45,6 +46,10 @@ public class SpriteCacheTest extends GdxTest implements InputProcessor {
 	private float[] sprites;
 	private float[] sprites2;
 
+//	public static void main(String[] argv){
+//		new LwjglApplication(new SpriteCacheTest(), "", 800, 600, false);
+//	}
+	
 	@Override
 	public void render () {
 		if (renderMethod == 0) renderNormal();
@@ -73,8 +78,8 @@ public class SpriteCacheTest extends GdxTest implements InputProcessor {
 		end = (TimeUtils.nanoTime() - start) / 1000000000.0f;
 
 		if (TimeUtils.nanoTime() - startTime > 1000000000) {
-// Gdx.app.log( "SpriteBatch", "fps: " + frames + ", render calls: " + spriteBatch.renderCalls + ", " + begin + ", " + draw1 +
-// ", " + draw2 + ", " + drawText + ", " + end );
+ Gdx.app.log( "SpriteBatch", "fps: " + frames + ", render calls: " + 1 + ", " + begin + ", " + draw1 +
+ ", " + 1 + ", " + 1 + ", " + end );
 			frames = 0;
 			startTime = TimeUtils.nanoTime();
 		}
@@ -104,9 +109,10 @@ public class SpriteCacheTest extends GdxTest implements InputProcessor {
 		spriteCache.end();
 		end = (TimeUtils.nanoTime() - start) / 1000000000.0f;
 
+		
 		if (TimeUtils.nanoTime() - startTime > 1000000000) {
-// Gdx.app.log( "SpriteBatch", "fps: " + frames + ", render calls: " + spriteBatch.renderCalls + ", " + begin + ", " + draw1 +
-// ", " + draw2 + ", " + drawText + ", " + end );
+ Gdx.app.log( "SpriteBatch", "fps: " + frames + ", render calls: " + 1 + ", " + begin + ", " + draw1 +
+ ", " + draw2 + ", " + drawText + ", " + end );
 			frames = 0;
 			startTime = TimeUtils.nanoTime();
 		}

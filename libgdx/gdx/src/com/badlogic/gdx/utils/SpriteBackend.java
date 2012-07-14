@@ -34,6 +34,7 @@ public interface SpriteBackend extends Poolable,Boundable{
 	public void setColor(float r,float g,float b,float a);
 	
 	public void setColor(Color color);
+
 	//	---------------------------------------------------
 	
 	public float[] getVertices();
@@ -60,8 +61,11 @@ public interface SpriteBackend extends Poolable,Boundable{
 	
 	public float getScaleY();
 	
-	
 	//	---------------------------------------------------
+
+	public void postUpdater(Updater updater);
+	
+	public void update(float delta);
 	
 	public void draw(SpriteBatch batch);
 	

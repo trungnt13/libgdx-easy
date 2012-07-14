@@ -52,10 +52,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Boundable;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.SpriteBackend;
+import com.badlogic.gdx.utils.Updater;
 
 /** Holds the geometry, color, and texture information for drawing 2D sprites using {@link SpriteBatch}. A Sprite has a position
  * and a size given as width and height. The position is relative to the origin of the coordinate system specified via
@@ -66,7 +65,7 @@ import com.badlogic.gdx.utils.SpriteBackend;
  * @author mzechner
  * @author Nathan Sweet 
  * @author Ngo Trong Trung*/
-public class SpriteA  implements Poolable,Boundable,Animator,SpriteBackend{
+public class SpriteA  implements Animator,SpriteBackend{
 	TextureRegion[] keyFrames;
 
 	float mFrameDuration;
@@ -86,7 +85,7 @@ public class SpriteA  implements Poolable,Boundable,Animator,SpriteBackend{
 	//	---------------------------------------------------------
 
 	final float[] vertices = new float[SPRITE_SIZE];
-	private final float[] edges = new float[8];
+	final float[] rect = new float[4];
 	
 	private final Color color = new Color(1, 1, 1, 1);
 	private float x, y;
@@ -99,6 +98,12 @@ public class SpriteA  implements Poolable,Boundable,Animator,SpriteBackend{
 	
 	//	---------------------------------------------------------
 
+	private Updater mUpdater = new Updater() {
+		@Override
+		public void update (SpriteBackend sprite, float delta) {
+		}
+	};
+	
 	/** Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and color set before it can be
 	 * drawn. */
 	public SpriteA () {
@@ -498,6 +503,11 @@ public class SpriteA  implements Poolable,Boundable,Animator,SpriteBackend{
 		}
 		
 		setRegion(keyFrames[frameNumber]);
+		mUpdater.update(this, delta);
+	}
+	
+	public void postUpdater(Updater updater){
+		this.mUpdater = updater;
 	}
 	
 	@Override
@@ -619,23 +629,36 @@ public class SpriteA  implements Poolable,Boundable,Animator,SpriteBackend{
 	}
 	
 	@Override
-	public float[] getExtractBound () {
-		final float[] edges = this.edges;
-		final float[] vertices = this.vertices;
-		
-		edges[0] = vertices[X1];
-		edges[1] = vertices[Y1];
-		
-		edges[2] = vertices[X2];
-		edges[3] = vertices[Y2];
-		
-		edges[4] = vertices[X3];
-		edges[5] = vertices[Y3];
-		
-		edges[6] = vertices[X4];
-		edges[7] = vertices[Y4];
-		
-		return edges;
+	public float[] getBoundingFloatRect () {
+		final float[] vertices = getVertices();
+
+		float minx = vertices[X1];
+		float miny = vertices[Y1];
+		float maxx = vertices[X1];
+		float maxy = vertices[Y1];
+
+		minx = minx > vertices[X2] ? vertices[X2] : minx;
+		minx = minx > vertices[X3] ? vertices[X3] : minx;
+		minx = minx > vertices[X4] ? vertices[X4] : minx;
+
+		maxx = maxx < vertices[X2] ? vertices[X2] : maxx;
+		maxx = maxx < vertices[X3] ? vertices[X3] : maxx;
+		maxx = maxx < vertices[X4] ? vertices[X4] : maxx;
+
+		miny = miny > vertices[Y2] ? vertices[Y2] : miny;
+		miny = miny > vertices[Y3] ? vertices[Y3] : miny;
+		miny = miny > vertices[Y4] ? vertices[Y4] : miny;
+
+		maxy = maxy < vertices[Y2] ? vertices[Y2] : maxy;
+		maxy = maxy < vertices[Y3] ? vertices[Y3] : maxy;
+		maxy = maxy < vertices[Y4] ? vertices[Y4] : maxy;
+
+		rect[0] = minx;
+		rect[1] = miny;
+		rect[2] = maxx - minx;
+		rect[3] = maxy - miny;
+
+		return rect;
 	}
 	
 	public Circle getBoundingCircle(){

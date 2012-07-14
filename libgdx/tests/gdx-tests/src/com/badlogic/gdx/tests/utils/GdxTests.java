@@ -45,7 +45,7 @@ import com.badlogic.gdx.tests.gles2.SimpleVertexShader;
  */
 public class GdxTests {
 	public static final Class[] tests = { AnimationTest.class,
-			AccelerometerTest.class, ActionTest.class,
+			AccelerometerTest.class, ActionTest.class,TouchpadTest.class,
 			ActionSequenceTest.class, GroupTest.class, AlphaTest.class,
 			AtlasIssueTest.class, AssetManagerTest.class,
 			FilterPerformanceTest.class, AudioDeviceTest.class,
