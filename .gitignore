@@ -1,0 +1,16 @@
+EasyGEngine/bin/
+eGe-Tests/bin/
+libgdx/backends/gdx-backend-android/bin/
+libgdx/backends/gdx-backend-jogl/bin/
+libgdx/backends/gdx-backend-lwjgl/bin/
+libgdx/backends/gdx-openal/bin/
+libgdx/extensions/gdx-audio/bin/
+libgdx/extensions/gdx-freetype/bin/
+libgdx/extensions/gdx-jnigen/bin/
+libgdx/extensions/gdx-stb-truetype/bin/
+libgdx/extensions/gdx-tools/bin/
+libgdx/extensions/gdx-image/bin/
+libgdx/gdx/bin/
+libgdx/tests/gdx-tests-android/bin/
+libgdx/tests/gdx-tests-lwjgl/bin/
+libgdx/tests/gdx-tests/bin/

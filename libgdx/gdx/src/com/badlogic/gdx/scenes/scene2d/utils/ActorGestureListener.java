@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.scenes.scene2d.utils;
 
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ActorEvent;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
@@ -69,22 +70,27 @@ public class ActorGestureListener implements EventListener {
 		}
 	});
 
-	ActorEvent event;
-	Actor actor;
+	InputEvent event;
+	Actor actor, touchDownTarget;
 
 	public boolean handle (Event e) {
-		if (!(e instanceof ActorEvent)) return false;
-		ActorEvent event = (ActorEvent)e;
+		if (!(e instanceof InputEvent)) return false;
+		InputEvent event = (InputEvent)e;
 
 		switch (event.getType()) {
 		case touchDown:
 			actor = event.getListenerActor();
+			touchDownTarget = event.getTarget();
 			detector.touchDown(event.getStageX(), event.getStageY(), event.getPointer(), event.getButton());
+			actor.stageToLocalCoordinates(Vector2.tmp.set(event.getStageX(), event.getStageY()));
+			touchDown(event, Vector2.tmp.x, Vector2.tmp.y, event.getPointer(), event.getButton());
 			return true;
 		case touchUp:
 			this.event = event;
 			actor = event.getListenerActor();
 			detector.touchUp(event.getStageX(), event.getStageY(), event.getPointer(), event.getButton());
+			actor.stageToLocalCoordinates(Vector2.tmp.set(event.getStageX(), event.getStageY()));
+			touchUp(event, Vector2.tmp.x, Vector2.tmp.y, event.getPointer(), event.getButton());
 			return true;
 		case touchDragged:
 			this.event = event;
@@ -95,28 +101,39 @@ public class ActorGestureListener implements EventListener {
 		return false;
 	}
 
-	public void tap (ActorEvent event, float x, float y, int count) {
+	public void touchDown (InputEvent event, float x, float y, int pointer, int button) {
+	}
+
+	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+	}
+
+	public void tap (InputEvent event, float x, float y, int count) {
 	}
 
 	/** If true is returned, additional gestures will not be triggered. No event is provided because this event is triggered by time
-	 * passing, not by an ActorEvent. */
+	 * passing, not by an InputEvent. */
 	public boolean longPress (Actor actor, float x, float y) {
 		return false;
 	}
 
-	public void fling (ActorEvent event, float velocityX, float velocityY) {
+	public void fling (InputEvent event, float velocityX, float velocityY) {
 	}
 
-	public void pan (ActorEvent event, float x, float y, float deltaX, float deltaY) {
+	/** The delta is the difference in stage coordinates since the last pan. */
+	public void pan (InputEvent event, float x, float y, float deltaX, float deltaY) {
 	}
 
-	public void zoom (ActorEvent event, float initialDistance, float distance) {
+	public void zoom (InputEvent event, float initialDistance, float distance) {
 	}
 
-	public void pinch (ActorEvent event, Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+	public void pinch (InputEvent event, Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
 	}
 
 	public GestureDetector getGestureDetector () {
 		return detector;
+	}
+
+	public Actor getTouchDownTarget () {
+		return touchDownTarget;
 	}
 }

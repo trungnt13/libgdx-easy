@@ -304,9 +304,8 @@ public class ShapeRenderer {
 	}
 	
 	/** Draws a filled rectangle in the x/y plane. The x and y coordinate specify the bottom left corner of the rectangle. The
-	 * {@link ShapeType} passed to begin has to be {@link ShapeType#FilledRectangle}. The 4 color parameters
-	 * specify the color for the bottom left, bottom right, top right and top left corner of the rectangle, allowing
-	 * you to create gradients.
+	 * {@link ShapeType} passed to begin has to be {@link ShapeType#FilledRectangle}. The 4 color parameters specify the color for
+	 * the bottom left, bottom right, top right and top left corner of the rectangle, allowing you to create gradients.
 	 * @param x
 	 * @param y
 	 * @param width

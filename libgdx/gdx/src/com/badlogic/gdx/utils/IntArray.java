@@ -185,7 +185,12 @@ public class IntArray {
 	public int peek () {
 		return items[size - 1];
 	}
-
+	
+	/** Returns the first item. */
+	public int first () {
+		return items[0];	
+    }
+	 
 	public void clear () {
 		size = 0;
 	}

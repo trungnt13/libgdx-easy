@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ActorEvent;
-import com.badlogic.gdx.scenes.scene2d.ActorListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 public class Slider extends Actor {
 	SliderStyle mStyle;
@@ -269,10 +269,10 @@ public class Slider extends Actor {
 	/*****************************************************
 	 * 
 	 *****************************************************/
-	class SliderController extends ActorListener{
+	class SliderController extends InputListener{
 
 		@Override
-		public boolean touchDown (ActorEvent event, float x, float y,
+		public boolean touchDown (InputEvent event, float x, float y,
 				int pointer, int button) {
 			if(hit(x, y) != null){
 				isFocusing = true;
@@ -285,13 +285,13 @@ public class Slider extends Actor {
 		}
 
 		@Override
-		public void touchUp (ActorEvent event, float x, float y, int pointer,
+		public void touchUp (InputEvent event, float x, float y, int pointer,
 				int button) {
 			isFocusing = false;
 		}
 
 		@Override
-		public void touchDragged (ActorEvent event, float x, float y,
+		public void touchDragged (InputEvent event, float x, float y,
 				int pointer) {
 			if(isFocusing){
 				calculatePositionAndValue(x);
@@ -301,7 +301,7 @@ public class Slider extends Actor {
 		}
 
 		@Override
-		public boolean mouseMoved (ActorEvent event, float x, float y) {
+		public boolean mouseMoved (InputEvent event, float x, float y) {
 			return super.mouseMoved(event, x, y);
 		}
 		

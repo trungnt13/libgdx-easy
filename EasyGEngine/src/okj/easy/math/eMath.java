@@ -25,6 +25,55 @@ public final class eMath {
 		
 	}
 	
+	/***************************************************************************
+	 * 
+	 ***************************************************************************/
+	public static float calVectorAngle(Vector2 lineStart,Vector2 lineEnd){
+		if(lineEnd.x == lineStart.x){
+			if(lineEnd.y > lineStart.y)
+				return 90;
+			if (lineEnd.y < lineStart.y)
+				return 270;
+		}
+		
+		if(lineEnd.y == lineStart.y){
+			if(lineStart.x < lineEnd.x)
+				return 360;
+			if(lineStart.x > lineEnd.x)
+				return 180;
+		}
+		
+		if(lineEnd.x > lineStart.x)
+			return (float) (180.0f/MathUtils.PI* Math.atan((lineEnd.y - lineStart.y)/(lineEnd.x - lineStart.x)));
+		if(lineEnd.x < lineStart.x)
+			return (float) (180.0f/MathUtils.PI* Math.atan((lineEnd.y - lineStart.y)/(lineEnd.x - lineStart.x))) - 180;
+		
+		return 0;
+	}
+	
+	public static float calVectorAngle(float x,float y,float x1,float y1){
+		if(x1 == x){
+			if(y1 > y)
+				return 90;
+			if (y1 < y)
+				return 270;
+		}
+		
+		if(y1 == y){
+			if(x < x1)
+				return 360;
+			if(x > x1)
+				return 180;
+		}
+		
+		if(x1 > x)
+			return (float) (180.0f/MathUtils.PI* Math.atan((y1 - y)/(x1 - x)));
+		if(x1 < x)
+			return (float) (180.0f/MathUtils.PI* Math.atan((y1 - y)/(x1 - x))) - 180;
+		
+		return 0;
+	}
+	
 	public static float calModule(Vector2 src,Vector2 dst){
 		return (float) Math.sqrt((src.x-dst.x)*(src.x-dst.x) + (src.y-dst.y)*(src.y-dst.y));
 	}
@@ -106,6 +155,7 @@ public final class eMath {
 	/***************************************************************************
 	 * 
 	 ***************************************************************************/
+	
 	public static Vector2 solveTheQuadricFunction(float a,float b,float c){
 		if(a == 0)
 			return new Vector2(-c / b, -c / b);

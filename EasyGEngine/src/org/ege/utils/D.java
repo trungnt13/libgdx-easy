@@ -2,6 +2,7 @@ package org.ege.utils;
 
 import java.util.Iterator;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
@@ -294,6 +295,5 @@ public final class D {
 	public static void heap(int id){
 		Gdx.app.log("Heap " + id +" ", "Java Heap:  " + Gdx.app.getJavaHeap() + "   Native Heap:  " + Gdx.app.getNativeHeap());
 	}
-
 }
 

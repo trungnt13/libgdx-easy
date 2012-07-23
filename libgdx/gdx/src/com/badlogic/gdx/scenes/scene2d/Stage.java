@@ -18,6 +18,7 @@ package com.badlogic.gdx.scenes.scene2d;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -27,11 +28,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ActorEvent.Type;
+import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -49,6 +49,7 @@ import com.badlogic.gdx.utils.SnapshotArray;
  * @author Nathan Sweet */
 public class Stage extends InputAdapter implements Disposable {
 	private float width, height;
+	private float gutterWidth, gutterHeight;
 	private float centerX, centerY;
 	private Camera camera;
 	private final SpriteBatch batch;
@@ -100,29 +101,39 @@ public class Stage extends InputAdapter implements Disposable {
 		setViewport(width, height, stretch);
 	}
 
-	/** Sets the dimensions of the stage's viewport. The viewport covers the entire screen. If keepAspectRatio is false and the
-	 * specified viewport size is not equal to the screen resolution, it is stretched to the screen resolution. If keepAspectRatio
-	 * is true and the specified viewport size is not equal to the screen resolution, it is enlarged in the shorter dimension. */
+	/** Sets the dimensions of the stage's viewport. The viewport covers the entire screen. If keepAspectRatio is false, the
+	 * viewport is simply stretched to the screen resolution, which may distort the aspect ratio. If keepAspectRatio is true, the
+	 * viewport is first scaled to fit then the shorter dimension is lengthened to fill the screen, which keeps the aspect ratio
+	 * from changing. The {@link #getGutterWidth()} and {@link #getGutterHeight()} provide access to the amount that was
+	 * lengthened. */
 	public void setViewport (float width, float height, boolean keepAspectRatio) {
 		if (keepAspectRatio) {
-			if (width > height && width / Gdx.graphics.getWidth() <= height / Gdx.graphics.getHeight()) {
-				float toDeviceSpace = Gdx.graphics.getHeight() / height;
-				float toViewportSpace = height / Gdx.graphics.getHeight();
-
-				float deviceWidth = width * toDeviceSpace;
-				this.width = width + (Gdx.graphics.getWidth() - deviceWidth) * toViewportSpace;
+			float screenWidth = Gdx.graphics.getWidth();
+			float screenHeight = Gdx.graphics.getHeight();
+			if (screenHeight / screenWidth < height / width) {
+				float toScreenSpace = screenHeight / height;
+				float toViewportSpace = height / screenHeight;
+				float deviceWidth = width * toScreenSpace;
+				float lengthen = (screenWidth - deviceWidth) * toViewportSpace;
+				this.width = width + lengthen;
 				this.height = height;
+				gutterWidth = lengthen / 2;
+				gutterHeight = 0;
 			} else {
-				float toDeviceSpace = Gdx.graphics.getWidth() / width;
-				float toViewportSpace = width / Gdx.graphics.getWidth();
-
-				float deviceHeight = height * toDeviceSpace;
-				this.height = height + (Gdx.graphics.getHeight() - deviceHeight) * toViewportSpace;
+				float toScreenSpace = screenWidth / width;
+				float toViewportSpace = width / screenWidth;
+				float deviceHeight = height * toScreenSpace;
+				float lengthen = (screenHeight - deviceHeight) * toViewportSpace;
+				this.height = height + lengthen;
 				this.width = width;
+				gutterWidth = 0;
+				gutterHeight = lengthen / 2;
 			}
 		} else {
 			this.width = width;
 			this.height = height;
+			gutterWidth = 0;
+			gutterHeight = 0;
 		}
 
 		centerX = this.width / 2;
@@ -142,6 +153,11 @@ public class Stage extends InputAdapter implements Disposable {
 		batch.end();
 	}
 
+	/** Calls {@link #act(float)} with {@link Graphics#getDeltaTime()}. */
+	public void act () {
+		act(Gdx.graphics.getDeltaTime());
+	}
+
 	/** Calls the {@link Actor#act(float)} method on each actor in the stage. Typically called each frame. This method also fires
 	 * enter and exit events.
 	 * @param delta Time in seconds since the last frame. */
@@ -155,8 +171,8 @@ public class Stage extends InputAdapter implements Disposable {
 					pointerOverActors[pointer] = null;
 					screenToStageCoordinates(stageCoords.set(Gdx.input.getX(pointer), Gdx.input.getY(pointer)));
 					// Exit over last.
-					ActorEvent event = Pools.obtain(ActorEvent.class);
-					event.setType(ActorEvent.Type.exit);
+					InputEvent event = Pools.obtain(InputEvent.class);
+					event.setType(InputEvent.Type.exit);
 					event.setStage(this);
 					event.setStageX(stageCoords.x);
 					event.setStageY(stageCoords.y);
@@ -183,20 +199,20 @@ public class Stage extends InputAdapter implements Disposable {
 		Actor over = hit(stageCoords.x, stageCoords.y);
 		if (over == overLast) return overLast;
 
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setStage(this);
 		event.setStageX(stageCoords.x);
 		event.setStageY(stageCoords.y);
 		event.setPointer(pointer);
 		// Exit overLast.
 		if (overLast != null) {
-			event.setType(ActorEvent.Type.exit);
+			event.setType(InputEvent.Type.exit);
 			event.setRelatedActor(over);
 			overLast.fire(event);
 		}
 		// Enter over.
 		if (over != null) {
-			event.setType(ActorEvent.Type.enter);
+			event.setType(InputEvent.Type.enter);
 			event.setRelatedActor(overLast);
 			over.fire(event);
 		}
@@ -208,7 +224,7 @@ public class Stage extends InputAdapter implements Disposable {
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
 		screenToStageCoordinates(stageCoords.set(screenX, screenY));
 
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setType(Type.touchDown);
 		event.setStage(this);
 		event.setStageX(stageCoords.x);
@@ -226,13 +242,13 @@ public class Stage extends InputAdapter implements Disposable {
 	}
 
 	/** Applies a touch moved event to the stage and returns true if an actor in the scene {@link Event#handle() handled} the event.
-	 * Only {@link ActorListener listeners} that returned true for touchDown will receive this event. */
+	 * Only {@link InputListener listeners} that returned true for touchDown will receive this event. */
 	public boolean touchDragged (int screenX, int screenY, int pointer) {
 		if (touchFocuses.size == 0) return false;
 
 		screenToStageCoordinates(stageCoords.set(screenX, screenY));
 
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setType(Type.touchDragged);
 		event.setStage(this);
 		event.setStageX(stageCoords.x);
@@ -256,13 +272,13 @@ public class Stage extends InputAdapter implements Disposable {
 	}
 
 	/** Applies a touch up event to the stage and returns true if an actor in the scene {@link Event#handle() handled} the event.
-	 * Only {@link ActorListener listeners} that returned true for touchDown will receive this event. */
+	 * Only {@link InputListener listeners} that returned true for touchDown will receive this event. */
 	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
 		if (touchFocuses.size == 0) return false;
 
 		screenToStageCoordinates(stageCoords.set(screenX, screenY));
 
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setType(Type.touchUp);
 		event.setStage(this);
 		event.setStageX(stageCoords.x);
@@ -280,7 +296,7 @@ public class Stage extends InputAdapter implements Disposable {
 			if (focus.listener.handle(event)) event.handle();
 		}
 		touchFocuses.end();
-	
+
 		for (int i = touchFocuses.size - 1; i >= 0; i--) {
 			TouchFocus focus = touchFocuses.get(i);
 			if (focus.pointer != pointer || focus.button != button) continue;
@@ -298,7 +314,7 @@ public class Stage extends InputAdapter implements Disposable {
 	public boolean mouseMoved (int screenX, int screenY) {
 		screenToStageCoordinates(stageCoords.set(screenX, screenY));
 
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setStage(this);
 		event.setType(Type.mouseMoved);
 		event.setStageX(stageCoords.x);
@@ -316,9 +332,9 @@ public class Stage extends InputAdapter implements Disposable {
 	 * event. This event only occurs on the desktop. */
 	public boolean scrolled (int amount) {
 		if (scrollFocus == null) return false;
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setStage(this);
-		event.setType(ActorEvent.Type.scrolled);
+		event.setType(InputEvent.Type.scrolled);
 		event.setScrollAmount(amount);
 		scrollFocus.fire(event);
 		Pools.free(event);
@@ -329,9 +345,9 @@ public class Stage extends InputAdapter implements Disposable {
 	 * true if the event was {@link Event#handle() handled}. */
 	public boolean keyDown (int keyCode) {
 		if (keyboardFocus == null) return false;
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setStage(this);
-		event.setType(ActorEvent.Type.keyDown);
+		event.setType(InputEvent.Type.keyDown);
 		event.setKeyCode(keyCode);
 		boolean handled = keyboardFocus.fire(event);
 		Pools.free(event);
@@ -342,9 +358,9 @@ public class Stage extends InputAdapter implements Disposable {
 	 * if the event was {@link Event#handle() handled}. */
 	public boolean keyUp (int keyCode) {
 		if (keyboardFocus == null) return false;
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setStage(this);
-		event.setType(ActorEvent.Type.keyUp);
+		event.setType(InputEvent.Type.keyUp);
 		event.setKeyCode(keyCode);
 		boolean handled = keyboardFocus.fire(event);
 		Pools.free(event);
@@ -355,9 +371,9 @@ public class Stage extends InputAdapter implements Disposable {
 	 * true if the event was {@link Event#handle() handled}. */
 	public boolean keyTyped (char character) {
 		if (keyboardFocus == null) return false;
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setStage(this);
-		event.setType(ActorEvent.Type.keyTyped);
+		event.setType(InputEvent.Type.keyTyped);
 		event.setCharacter(character);
 		boolean handled = keyboardFocus.fire(event);
 		Pools.free(event);
@@ -381,10 +397,10 @@ public class Stage extends InputAdapter implements Disposable {
 		SnapshotArray<TouchFocus> touchFocuses = this.touchFocuses;
 		for (int i = touchFocuses.size - 1; i >= 0; i--) {
 			TouchFocus focus = touchFocuses.get(i);
-			 if (focus.listener == listener && focus.actor == actor && focus.pointer == pointer && focus.button == button) {
-				 touchFocuses.removeIndex(i);
-				 Pools.free(focus);
-			 }		
+			if (focus.listener == listener && focus.actor == actor && focus.pointer == pointer && focus.button == button) {
+				touchFocuses.removeIndex(i);
+				Pools.free(focus);
+			}
 		}
 	}
 
@@ -395,14 +411,13 @@ public class Stage extends InputAdapter implements Disposable {
 	public void cancelTouchFocus () {
 		cancelTouchFocus(null, null);
 	}
-	
-	
+
 	/** Cancels touch focus for all listeners except the specified listener.
 	 * @see #cancelTouchFocus() */
 	public void cancelTouchFocus (EventListener listener, Actor actor) {
-		ActorEvent event = Pools.obtain(ActorEvent.class);
+		InputEvent event = Pools.obtain(InputEvent.class);
 		event.setStage(this);
-		event.setType(ActorEvent.Type.touchUp);
+		event.setType(InputEvent.Type.touchUp);
 		event.setStageX(Integer.MIN_VALUE);
 		event.setStageY(Integer.MIN_VALUE);
 
@@ -418,7 +433,7 @@ public class Stage extends InputAdapter implements Disposable {
 			focus.listener.handle(event);
 			// Cannot return TouchFocus to the pool, as it may still be in use (eg if cancelTouchFocus is called from touchDragged).
 		}
-		
+
 		Pools.free(event);
 	}
 
@@ -509,6 +524,18 @@ public class Stage extends InputAdapter implements Disposable {
 		return height;
 	}
 
+	/** Half the amount in the x direction that the stage's viewport was lengthened to fill the screen.
+	 * @see #setViewport(float, float, boolean) */
+	public float getGutterWidth () {
+		return gutterWidth;
+	}
+
+	/** Half the amount in the y direction that the stage's viewport was lengthened to fill the screen.
+	 * @see #setViewport(float, float, boolean) */
+	public float getGutterHeight () {
+		return gutterHeight;
+	}
+
 	public SpriteBatch getSpriteBatch () {
 		return batch;
 	}
@@ -571,8 +598,7 @@ public class Stage extends InputAdapter implements Disposable {
 		Actor actor;
 		EventListener listener;
 		int pointer, button;
-		
-		@Override
+
 		public void reset () {
 			actor = null;
 			listener = null;

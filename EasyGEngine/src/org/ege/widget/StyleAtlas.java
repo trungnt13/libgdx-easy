@@ -41,8 +41,7 @@ import com.badlogic.gdx.utils.SerializationException;
  * @author Nathan Sweet */
 public class StyleAtlas extends Skin {
 
-	public StyleAtlas (TextureAtlas atlas){
-		super(atlas);
+	public StyleAtlas(){
 	}
 	
 	public StyleAtlas (FileHandle skinFile) {

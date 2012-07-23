@@ -8,6 +8,7 @@ import org.ege.utils.Pauseable;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -87,7 +88,7 @@ public  class Layout extends Stage implements Pauseable{
 		
 		mBackground = new Image();
 		mBackground.setBounds(0, 0, getWidth(), getHeight());
-		mBackground.setTouchable(false);
+		mBackground.setTouchable(Touchable.disabled);
 		mBackground.setScaling(Scaling.stretch);
 		mBackground.setZIndex(Integer.MIN_VALUE);
 		
@@ -101,7 +102,7 @@ public  class Layout extends Stage implements Pauseable{
 		ID = LAYOUT_ID ++;
 		
 		mBackground = new Image(style.background);
-		mBackground.setTouchable(false);
+		mBackground.setTouchable(Touchable.disabled);
 		mBackground.setBounds(0, 0, UI_WIDTH, UI_HEIGHT);
 		mBackground.setZIndex(Integer.MIN_VALUE);
 		mBackground.setScaling(Scaling.stretch);
@@ -116,7 +117,7 @@ public  class Layout extends Stage implements Pauseable{
 		ID = LAYOUT_ID ++;
 		
 		mBackground = new Image();
-		mBackground.setTouchable(false);
+		mBackground.setTouchable(Touchable.disabled);
 		mBackground.setBounds(0, 0, UI_WIDTH, UI_HEIGHT);
 		mBackground.setZIndex(Integer.MIN_VALUE);
 		mBackground.setScaling(Scaling.stretch);
@@ -132,7 +133,7 @@ public  class Layout extends Stage implements Pauseable{
 		ID = LAYOUT_ID ++;
 		
 		mBackground = new Image(style.background);
-		mBackground.setTouchable(false);
+		mBackground.setTouchable(Touchable.disabled);
 		mBackground.setBounds(0, 0, UI_WIDTH, UI_HEIGHT);
 		mBackground.setZIndex(Integer.MIN_VALUE);
 		mBackground.setScaling(Scaling.stretch);
@@ -157,7 +158,7 @@ public  class Layout extends Stage implements Pauseable{
 	}
 
 	public Layout setEnable(boolean enable){
-		getRoot().setTouchable(enable);
+		mBackground.setTouchable(Touchable.enabled);
 		return this;
 	}
 	

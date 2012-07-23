@@ -99,11 +99,11 @@ public class Timer {
 
 		float delta = Gdx.graphics.getDeltaTime();
 		for (int i = 0, n = tasks.size; i < n; i++) {
-			Task task = tasks.get(i);
+			final Task task = tasks.get(i);
 			task.delaySeconds -= delta;
 			if (task.delaySeconds > 0) continue;
 			if (task.repeatCount != CANCELLED) {
-				if (task.repeatCount == 0) task.repeatCount = CANCELLED; // Set cancelled before run so it may be rescheduled in run.
+				if (task.repeatCount == 1) task.repeatCount = CANCELLED; // Set cancelled before run so it may be rescheduled in run.
 				task.run();
 			}
 			if (task.repeatCount == CANCELLED) {

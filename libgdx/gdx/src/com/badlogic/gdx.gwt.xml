@@ -119,10 +119,10 @@
 		<include name="math/Polygon.java"/>
 		<include name="utils/Pool.java"/>
 		<include name="utils/Pools.java"/>
-	   <include name="utils/SnapshotArray.java"/>
+		<include name="utils/SnapshotArray.java"/>
 		<include name="utils/PooledLinkedList.java"/>
 		<include name="utils/DelayedRemovalArray.java"/>
-      <include name="utils/Timer.java"/>
+		<include name="utils/Timer.java"/>
 		<include name="Preferences.java"/>
 		<include name="math/Quaternion.java"/>
 		<include name="math/collision/Ray.java"/>
@@ -175,7 +175,7 @@
 		<include name="utils/XmlWriter.java"/>
 		<include name="graphics/g2d/Animation.java"/>
 		<include name="graphics/g3d/Animation.java"/>
-		
+
 		<include name="utils/StringBuilder.java"/>
 		<include name="utils/compression/CRC.java"/>
 		<include name="utils/compression/ICodeProgress.java"/>
@@ -190,12 +190,13 @@
 		<include name="utils/compression/rangecoder/BitTreeEncoder.java"/>
 		<include name="utils/compression/rangecoder/Decoder.java"/>
 		<include name="utils/compression/rangecoder/Encoder.java"/>		
-		
+
 		<include name="scenes/scene2d/Action.java"/>
-      <include name="scenes/scene2d/Actions/*.java"/>
+		<include name="scenes/scene2d/actions/*.java"/>
 		<include name="scenes/scene2d/Actor.java"/>
-		<include name="scenes/scene2d/ActorEvent.java"/>
-		<include name="scenes/scene2d/ActorListener.java"/>
+		<include name="scenes/scene2d/InputEvent.java"/>
+		<include name="scenes/scene2d/Touchable.java"/>
+		<include name="scenes/scene2d/InputListener.java"/>
 		<include name="scenes/scene2d/Event.java"/>
 		<include name="scenes/scene2d/EventListener.java"/>
 		<include name="scenes/scene2d/Group.java"/>
@@ -205,7 +206,7 @@
 		<include name="scenes/scene2d/ui/CheckBox.java"/>
 		<include name="scenes/scene2d/ui/Image.java"/>
 		<include name="scenes/scene2d/ui/ImageButton.java"/>
-		<include name="scenes/scene2d/ui/Label.java"/>  
+		<include name="scenes/scene2d/ui/Label.java"/>		
 		<include name="scenes/scene2d/ui/List.java"/>
 		<include name="scenes/scene2d/ui/ScrollPane.java"/>
 		<include name="scenes/scene2d/ui/SelectBox.java"/>
@@ -219,6 +220,7 @@
 		<include name="scenes/scene2d/ui/Widget.java"/>
 		<include name="scenes/scene2d/ui/WidgetGroup.java"/>
 		<include name="scenes/scene2d/ui/Window.java"/>
+		<include name="scenes/scene2d/ui/Touchpad.java"/>
 		<include name="scenes/scene2d/utils/ActorGestureListener.java"/>
 		<include name="scenes/scene2d/utils/Align.java"/>
 		<include name="scenes/scene2d/utils/ChangeListener.java"/>

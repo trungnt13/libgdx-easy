@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ActorEvent;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -31,7 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.tests.utils.GdxTest;
-import com.badlogic.gdx.scenes.scene2d.ActorListener;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 public class TableLayoutTest extends GdxTest {
 	Stage stage;
@@ -59,13 +59,14 @@ public class TableLayoutTest extends GdxTest {
 		BitmapFont buttonFont = skin.getFont("default-font");
 
 		TextButton button = new TextButton("Button 1", skin);
-	    button.addListener(new ActorListener() {
-	    	public boolean touchDown (ActorEvent event, float x, float y, int pointer, int button) {
+	    button.addListener(new InputListener() {
+	    	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 	    		System.out.println("touchDown 1");
 	    		return false;
 	    	}
 	    });
 		table.add(button);
+		// table.setTouchable(Touchable.disabled);
 		
 		Table table2 = new Table();
 	    stage.addActor(table2);
@@ -73,8 +74,8 @@ public class TableLayoutTest extends GdxTest {
 	    table2.bottom();
 	
 	    TextButton button2 = new TextButton("Button 2", skin);
-	    button2.addListener(new ActorListener() {
-	      public boolean touchDown (ActorEvent event, float x, float y, int pointer, int button) {
+	    button2.addListener(new InputListener() {
+	      public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 	        System.out.println("touchDown 2");
 	        return false;
 	      }

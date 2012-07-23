@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ActorEvent.Type;
+import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -41,7 +41,7 @@ public class Actor {
 	private final DelayedRemovalArray<EventListener> captureListeners = new DelayedRemovalArray(0);
 	private final Array<Action> actions = new Array(0);
 
-	private boolean touchable = true;
+	private Touchable touchable = Touchable.enabled;
 	private boolean visible = true;
 	private float x, y;
 	private float width, height;
@@ -93,7 +93,7 @@ public class Actor {
 		}
 		event.setTarget(this);
 
-		// Collect ancestors so event propagation is unaffected by hierachy changes.
+		// Collect ancestors so event propagation is unaffected by hierarchy changes.
 		Array<Group> ancestors = Pools.obtain(Array.class);
 		Group parent = getParent();
 		while (parent != null) {
@@ -131,7 +131,7 @@ public class Actor {
 		}
 	}
 
-	/** Notifies this actor's listeners of the event. The event is not propagated to any parenst. Before notifying the listeners,
+	/** Notifies this actor's listeners of the event. The event is not propagated to any parents. Before notifying the listeners,
 	 * this actor is set as the {@link Event#getListenerActor() listener actor}. The event {@link Event#setTarget(Actor) target}
 	 * must be set before calling this method. If this actor is not in the stage, the stage must be set before calling this method.
 	 * @param capture If true, the capture listeners will be notified instead of the regular listeners.
@@ -155,10 +155,10 @@ public class Actor {
 			EventListener listener = listeners.get(i);
 			if (listener.handle(event)) {
 				event.handle();
-				if (event instanceof ActorEvent) {
-					ActorEvent actorEvent = (ActorEvent)event;
-					if (actorEvent.getType() == Type.touchDown)
-						event.getStage().addTouchFocus(listener, this, actorEvent.getPointer(), actorEvent.getButton());
+				if (event instanceof InputEvent) {
+					InputEvent inputEvent = (InputEvent)event;
+					if (inputEvent.getType() == Type.touchDown)
+						event.getStage().addTouchFocus(listener, this, inputEvent.getPointer(), inputEvent.getButton());
 				}
 			}
 		}
@@ -167,15 +167,15 @@ public class Actor {
 		return event.isCancelled();
 	}
 
-	/** Returns the deepest actor that contains the specified point and {@link #isTouchable() touchable} and {@link #isVisible()
-	 * visible}, or null if no actor was hit. The point is specified in the actor's local coordinate system (0,0 is the bottom left
-	 * of the actor and width,height is the upper right).	 
-	 *  <p>
+	/** Returns the deepest actor that contains the specified point and is {@link #getTouchable() touchable} and
+	 * {@link #isVisible() visible}, or null if no actor was hit. The point is specified in the actor's local coordinate system (0,0
+	 * is the bottom left of the actor and width,height is the upper right).
+	 * <p>
 	 * This method is used to delegate touchDown events. If this method returns null, touchDown will not occur.
 	 * <p>
 	 * The default implementation returns this actor if the point is within this actor's bounds. */
 	public Actor hit (float x, float y) {
-		return touchable && x >= 0 && x < width && y >= 0 && y < height ? this : null;
+		return touchable == Touchable.enabled && x >= 0 && x < width && y >= 0 && y < height ? this : null;
 	}
 
 	/** Removes this actor from its parent, if it has a parent. */
@@ -278,12 +278,12 @@ public class Actor {
 		this.parent = parent;
 	}
 
-	public boolean isTouchable () {
+	public Touchable getTouchable () {
 		return touchable;
 	}
 
-	/** If false, the actor will not touch events. Default is true. */
-	public void setTouchable (boolean touchable) {
+	/** Determines how touch events are distributed to this actor. Default is {@link Touchable#enabled}. */
+	public void setTouchable (Touchable touchable) {
 		this.touchable = touchable;
 	}
 
@@ -319,8 +319,8 @@ public class Actor {
 	}
 
 	public void translate (float x, float y) {
-		setX(this.x+x);
-		setY(this.y+y);
+		setX(this.x + x);
+		setY(this.y + y);
 	}
 
 	public float getWidth () {
@@ -347,7 +347,7 @@ public class Actor {
 
 	/** Adds the specified size to the current size. */
 	public void size (float size) {
-		setWidth(this.width + size);
+		setWidth(width + size);
 		setHeight(height + size);
 	}
 
@@ -431,13 +431,13 @@ public class Actor {
 		return rotation;
 	}
 
-	public void setRotation (float rotation) {
-		this.rotation = rotation;
+	public void setRotation (float degrees) {
+		this.rotation = degrees;
 	}
 
 	/** Adds the specified rotation to the current rotation. */
-	public void rotate (float amount) {
-		setRotation(this.rotation + amount);
+	public void rotate (float amountInDegrees) {
+		setRotation(rotation + amountInDegrees);
 	}
 
 	public void setColor (Color color) {
@@ -463,8 +463,8 @@ public class Actor {
 		setZIndex(0);
 	}
 
-	/** Sets the z-index of a child. The z-index is the index into the parent's {@link Group#getChildren() children}, where a lower
-	 * index is below a higher index. Setting a z-index out of range will move the child to the front. */
+	/** Sets the z-index of this actor. The z-index is the index into the parent's {@link Group#getChildren() children}, where a
+	 * lower index is below a higher index. Setting a z-index higher than the number of children will move the child to the front. */
 	public void setZIndex (int index) {
 		Group parent = getParent();
 		if (parent == null) return;
@@ -477,13 +477,14 @@ public class Actor {
 			children.insert(index, this);
 	}
 
-	/** Returns the z-index of this actor. */
+	/** Returns the z-index of this actor.
+	 * @see #setZIndex(int) */
 	public int getZIndex () {
 		Group parent = getParent();
 		if (parent == null) return -1;
 		return parent.getChildren().indexOf(this, true);
 	}
-	 
+
 	/** Transforms the specified point in the stage's coordinates to the actor's local coordinate system. */
 	public void stageToLocalCoordinates (Vector2 stageCoords) {
 		if (parent == null) return;
@@ -492,16 +493,16 @@ public class Actor {
 	}
 
 	/** Transforms the specified point in the actor's coordinates to be in the stage's coordinates. Note this method will ONLY work
-	 * properly for screen aligned, unrotated, unscaled actors! */
+	 * for screen aligned, unrotated, unscaled actors! */
 	public void localToStageCoordinates (Vector2 localCoords) {
 		Actor actor = this;
-	    while (actor != null) {
-	      if (actor.getRotation() != 0 || actor.getScaleX() != 1 || actor.getScaleY() != 1)
-	        throw new GdxRuntimeException("Only unrotated and unscaled actors may use this method.");
-	      localCoords.x += actor.getX();
-	      localCoords.y += actor.getY();
-	      actor = actor.getParent();
-	    }
+		while (actor != null) {
+			if (actor.getRotation() != 0 || actor.getScaleX() != 1 || actor.getScaleY() != 1)
+				throw new GdxRuntimeException("Only unrotated and unscaled actors may use this method.");
+			localCoords.x += actor.getX();
+			localCoords.y += actor.getY();
+			actor = actor.getParent();
+		}
 	}
 
 	/** Converts the coordinates given in the parent's coordinate system to this actor's coordinate system. */
@@ -561,9 +562,8 @@ public class Actor {
 					final float tox = parentCoords.x - childX;
 					final float toy = parentCoords.y - childY;
 
-					parentCoords.x = (tox * cos + toy * sin)/scaleX;
-					parentCoords.y = (tox * -sin + toy * cos)/scaleY;
-
+					parentCoords.x = (tox * cos + toy * sin) / scaleX;
+					parentCoords.y = (tox * -sin + toy * cos) / scaleY;
 				} else {
 					final float worldOriginX = childX + originX;
 					final float worldOriginY = childY + originY;
@@ -573,8 +573,8 @@ public class Actor {
 					final float x1 = cos * fx - sin * fy + worldOriginX;
 					final float y1 = sin * fx + cos * fy + worldOriginY;
 
-					float tox = parentCoords.x - x1;
-					float toy = parentCoords.y - y1;
+					final float tox = parentCoords.x - x1;
+					final float toy = parentCoords.y - y1;
 
 					parentCoords.x = (tox * cos + toy * sin) / scaleX;
 					parentCoords.y = (tox * -sin + toy * cos) / scaleY;
@@ -585,8 +585,8 @@ public class Actor {
 
 	public String toString () {
 		String name = getClass().getName();
-	    int dotIndex = name.lastIndexOf('.');
-	    if (dotIndex != -1) name = name.substring(dotIndex + 1);
-	    return name + " " + x + "," + y + " " + width + "x" + height;
+		int dotIndex = name.lastIndexOf('.');
+		if (dotIndex != -1) name = name.substring(dotIndex + 1);
+		return name + " " + x + "," + y + " " + width + "x" + height;
 	}
 }

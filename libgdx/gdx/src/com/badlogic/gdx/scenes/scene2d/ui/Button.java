@@ -16,25 +16,28 @@
 
 package com.badlogic.gdx.scenes.scene2d.ui;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ActorEvent;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 /** A button is a {@link Table} with a checked state and additional {@link ButtonStyle style} fields for pressed, unpressed, and
  * checked. Each time a button is clicked, the checked state is toggled. Being a table, a button can contain any other actors.
  * <p>
-	{@link ChangeEvent} is fired when the button is clicked. Cancelling the event will restore the checked button state to what is
+ * {@link ChangeEvent} is fired when the button is clicked. Cancelling the event will restore the checked button state to what is
  * was previously.
- *  <p>
+ * <p>
  * The preferred size of the button is determined by the background and the button contents.
  * @author Nathan Sweet */
 public class Button extends Table {
 	private ButtonStyle style;
-	boolean isChecked;
+	boolean isChecked, isDisabled;
 	ButtonGroup buttonGroup;
 	private ClickListener clickListener;
 
@@ -70,12 +73,17 @@ public class Button extends Table {
 	}
 
 	private void initialize () {
-		setTouchable(true);
+		setTouchable(Touchable.enabled);
 		addListener(clickListener = new ClickListener() {
-			public void clicked (ActorEvent event, float x, float y) {
+			public void clicked (InputEvent event, float x, float y) {
+				if (isDisabled) return;
 				boolean wasChecked = isChecked;
 				setChecked(!isChecked);
-				if (wasChecked != isChecked && fire(new ChangeEvent())) setChecked(wasChecked);
+				if (wasChecked != isChecked) {
+					ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
+					if (fire(changeEvent)) setChecked(wasChecked);
+					Pools.free(changeEvent);
+				}
 			}
 		});
 	}
@@ -109,10 +117,30 @@ public class Button extends Table {
 		return clickListener.isPressed();
 	}
 
+	public boolean isDisabled () {
+		return isDisabled;
+	}
+
+	/** When true, the button will not toggle {@link #isChecked()} when clicked and will not fire a {@link ChangeEvent}. */
+	public void setDisabled (boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
 	public void setStyle (ButtonStyle style) {
 		if (style == null) throw new IllegalArgumentException("style cannot be null.");
 		this.style = style;
-		setBackground((clickListener.isPressed() && style.down != null) ? style.down : style.up);
+
+		Drawable background = style.up;
+		if (background == null) {
+			background = style.down;
+			if (background == null) background = style.checked;
+		}
+		if (background != null) {
+			padBottom(background.getBottomHeight());
+			padTop(background.getTopHeight());
+			padLeft(background.getLeftWidth());
+			padRight(background.getRightWidth());
+		}
 		invalidateHierarchy();
 	}
 
@@ -123,26 +151,38 @@ public class Button extends Table {
 	}
 
 	public void draw (SpriteBatch batch, float parentAlpha) {
+		validate();
+
+		Drawable background = null;
 		float offsetX = 0, offsetY = 0;
-		if (clickListener.isPressed()) {
-			setBackground(style.down == null ? style.up : style.down);
+		if (clickListener.isPressed() && !isDisabled) {
+			background = style.down == null ? style.up : style.down;
 			offsetX = style.pressedOffsetX;
 			offsetY = style.pressedOffsetY;
 		} else {
 			if (style.checked == null)
-				setBackground(style.up);
+				background = style.up;
 			else
-				setBackground(isChecked ? style.checked : style.up);
+				background = isChecked ? style.checked : style.up;
 			offsetX = style.unpressedOffsetX;
 			offsetY = style.unpressedOffsetY;
 		}
-		validate();
+
+		if (background != null) {
+			Color color = getColor();
+			batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
+			background.draw(batch, getX(), getY(), getWidth(), getHeight());
+		}
+
 		Array<Actor> children = getChildren();
 		for (int i = 0; i < children.size; i++)
 			children.get(i).translate(offsetX, offsetY);
 		super.draw(batch, parentAlpha);
 		for (int i = 0; i < children.size; i++)
 			children.get(i).translate(-offsetX, -offsetY);
+	}
+
+	protected void drawBackground (SpriteBatch batch, float parentAlpha) {
 	}
 
 	public float getPrefWidth () {

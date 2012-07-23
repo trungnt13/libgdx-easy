@@ -114,7 +114,10 @@ public class Rectangle implements Serializable {
 	/** @param rectangle the other {@link Rectangle}
 	 * @return whether this rectangle overlaps the other rectangle. */
 	public boolean overlaps (Rectangle rectangle) {
-		return !(x > rectangle.x + rectangle.width || x + width < rectangle.x || y > rectangle.y + rectangle.height || y + height < rectangle.y);
+		return !(x > rectangle.x + rectangle.width || 
+				  x + width < rectangle.x 			||
+				  y > rectangle.y + rectangle.height || 
+				  y + height < rectangle.y);
 	}
 
 	public void set (float x, float y, float width, float height) {

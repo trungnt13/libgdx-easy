@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 
@@ -221,7 +222,7 @@ public class Actions {
 
 	static public AlphaAction fadeIn (float duration, Interpolation interpolation) {
 		AlphaAction action = action(AlphaAction.class);
-		action.setAlpha(0);
+		action.setAlpha(1);
 		action.setDuration(duration);
 		action.setInterpolation(interpolation);
 		return action;
@@ -241,7 +242,7 @@ public class Actions {
 		return action;
 	}
 
-	static public TouchableAction touchable (boolean touchable) {
+	 static public TouchableAction touchable (Touchable touchable) {
 		TouchableAction action = action(TouchableAction.class);
 		action.setTouchable(touchable);
 		return action;

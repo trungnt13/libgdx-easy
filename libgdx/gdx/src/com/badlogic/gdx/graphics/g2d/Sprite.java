@@ -505,9 +505,14 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 		maxy = maxy < vertices[Y3] ? vertices[Y3] : maxy;
 		maxy = maxy < vertices[Y4] ? vertices[Y4] : maxy;
 
+		final float[] rect = Sprite.this.rect;
+		// x
 		rect[0] = minx;
+		// y
 		rect[1] = miny;
+		// width
 		rect[2] = maxx - minx;
+		// height
 		rect[3] = maxy - miny;
 
 		return rect;

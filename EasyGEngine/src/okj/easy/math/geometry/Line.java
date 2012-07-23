@@ -1,5 +1,6 @@
 package okj.easy.math.geometry;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -57,6 +58,12 @@ public class Line implements Disposable{
 	/*************************************************************
 	 * 
 	 *************************************************************/
+	public Line set(float x,float y,float x1,float y1){
+		lineStart.set(x, y);
+		lineEnd.set(x1, y1);
+		return this;
+	}
+	
 	private void set (Vector2 startPoint, Vector2 endPoint) {
 		lineStart = startPoint;
 		lineEnd = endPoint;
@@ -89,23 +96,31 @@ public class Line implements Disposable{
 		return mTMP.set(lineEnd.x - lineStart.x, lineEnd.y - lineStart.y);
 	}
 
+	/**
+	 * Get the angle between this line and 0x line
+	 * @return result is in range [0,360]
+	 */
 	public float getAngleFactor(){
-		if(lineEnd.x == lineStart.x && lineEnd.y > lineStart.y){
-			return 90;
+		if(lineEnd.x == lineStart.x){
+			if(lineEnd.y > lineStart.y)
+				return 90;
+			if (lineEnd.y < lineStart.y)
+				return 270;
 		}
-		if(lineEnd.x == lineStart.x && lineEnd.y < lineStart.y)
-			return 270;
 		
-		if(lineEnd.y == lineStart.y && lineStart.x < lineEnd.x)
-			return 360;
+		if(lineEnd.y == lineStart.y){
+			if(lineStart.x < lineEnd.x)
+				return 360;
+			if(lineStart.x > lineEnd.x)
+				return 180;
+		}
 		
-		if(lineEnd.y == lineStart.y && lineStart.x > lineEnd.x)
-			return 180;
+		if(lineEnd.x > lineStart.x)
+			return (float) (180.0f/MathUtils.PI* Math.atan((lineEnd.y - lineStart.y)/(lineEnd.x - lineStart.x)));
+		if(lineEnd.x < lineStart.x)
+			return (float) (180.0f/MathUtils.PI* Math.atan((lineEnd.y - lineStart.y)/(lineEnd.x - lineStart.x))) - 180;
 		
-		float tmp= (float) Math.toDegrees(Math.atan((float)(lineEnd.y - lineStart.y)/ (float)(lineEnd.x - lineStart.x)));
-		if(tmp  < 0 )
-			tmp = 360 + tmp;
-		return tmp;
+		return 0;
 	}
 	
 	public float getConstantOfLine(){

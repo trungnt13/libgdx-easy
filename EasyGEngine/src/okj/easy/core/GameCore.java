@@ -20,6 +20,7 @@ public abstract class GameCore implements ApplicationListener{
 	Layout mLayout;
 
 	private final BridgePool bridgePool;
+	
 	//	----------------------------------------------------------
 
 	public GameCore(){

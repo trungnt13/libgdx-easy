@@ -1,6 +1,7 @@
 package org.ege.widget;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -17,7 +18,7 @@ public class Panel extends Group{
 		
 		mBackground = new Image();
 		mBackground.setBounds(0, 0, getWidth(), getHeight());
-		mBackground.setTouchable(false);
+		mBackground.setTouchable(Touchable.disabled);
 		mBackground.setScaling(Scaling.stretch);
 		mBackground.setZIndex(Integer.MIN_VALUE);
 		
@@ -30,7 +31,7 @@ public class Panel extends Group{
 		
 		mBackground = new Image();
 		mBackground.setBounds(0, 0, getWidth(), getHeight());
-		mBackground.setTouchable(false);
+		mBackground.setTouchable(Touchable.disabled);
 		mBackground.setScaling(Scaling.stretch);
 		mBackground.setZIndex(Integer.MIN_VALUE);
 
@@ -43,7 +44,7 @@ public class Panel extends Group{
 		
 		mBackground = new Image(region);
 		mBackground.setBounds(0, 0, getWidth(), getHeight());
-		mBackground.setTouchable(false);
+		mBackground.setTouchable(Touchable.disabled);
 		mBackground.setScaling(Scaling.stretch);
 		mBackground.setZIndex(Integer.MIN_VALUE);
 		
