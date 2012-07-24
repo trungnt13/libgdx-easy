@@ -2,11 +2,16 @@ package org.ege.utils;
 
 import java.util.Iterator;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public final class D {
+	
+	public static final int MB = 1;
+	public static final int GB = 2;
+	public static final int KB = 3;
+	public static final int B = 4;
+	
 	
 	public static float DELAY = 1.3f;
 	
@@ -288,10 +293,48 @@ public final class D {
 		Gdx.app.log("Native Heap : ", "" + Gdx.app.getNativeHeap());
 	}
 	
-	public static void javaHeap(){
-		Gdx.app.log("Java Heap   : ", "" + Gdx.app.getJavaHeap());
+	public static void javaHeap(int type){
+		switch (type) {
+			case MB:
+				Gdx.app.log("Java Heap   : ", "" + Gdx.app.getJavaHeap()/1024/1024);
+				break;
+			case GB:
+				Gdx.app.log("Java Heap   : ", "" + Gdx.app.getJavaHeap()/1024/1024/1024);
+				break;
+			case KB:
+				Gdx.app.log("Java Heap   : ", "" + Gdx.app.getJavaHeap()/1024);
+				break;
+
+			default:
+				Gdx.app.log("Java Heap   : ", "" + Gdx.app.getJavaHeap());
+				break;
+		}
 	}
 	
+	public static long jHeap(int type){
+		switch (type) {
+			case MB:
+				return Gdx.app.getJavaHeap()/1024/1024;
+			case KB:
+				return Gdx.app.getJavaHeap()/1024;
+			case GB:
+				return Gdx.app.getJavaHeap()/1024l/1024l/1024l;
+		}
+		return Gdx.app.getJavaHeap();
+	}
+
+	public static long nHeap(int type){
+		switch (type) {
+			case MB:
+				return Gdx.app.getNativeHeap()/1024/1024;
+			case KB:
+				return Gdx.app.getNativeHeap()/1024;
+			case GB:
+				return Gdx.app.getNativeHeap()/1024l/1024l/1024l;
+		}
+		return Gdx.app.getNativeHeap();
+	}
+
 	public static void heap(int id){
 		Gdx.app.log("Heap " + id +" ", "Java Heap:  " + Gdx.app.getJavaHeap() + "   Native Heap:  " + Gdx.app.getNativeHeap());
 	}

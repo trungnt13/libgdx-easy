@@ -87,10 +87,14 @@ public class LongMap<V> {
 		if (key == 0) {
 			V oldValue = zeroValue;
 			zeroValue = value;
-			hasZeroValue = true;
-			size++;
+			if (!hasZeroValue) {
+				hasZeroValue = true;
+				size++;
+			}
 			return oldValue;
 		}
+
+		long[] keyTable = this.keyTable;
 
 		// Check for existing keys.
 		int index1 = (int)(key & mask);
@@ -115,6 +119,15 @@ public class LongMap<V> {
 			V oldValue = valueTable[index3];
 			valueTable[index3] = value;
 			return oldValue;
+		}
+
+		// Update key in the stash.
+		for (int i = capacity, n = i + stashSize; i < n; i++) {
+			if (keyTable[i] == key) {
+				V oldValue = valueTable[i];
+				valueTable[i] = value;
+				return oldValue;
+			}
 		}
 
 		// Check for empty buckets.
@@ -262,14 +275,6 @@ public class LongMap<V> {
 			resize(capacity << 1);
 			put(key, value);
 			return;
-		}
-		// Update key in the stash.
-		long[] keyTable = this.keyTable;
-		for (int i = capacity, n = i + stashSize; i < n; i++) {
-			if (keyTable[i] == key) {
-				valueTable[i] = value;
-				return;
-			}
 		}
 		// Store key in the stash.
 		int index = capacity + stashSize;

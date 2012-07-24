@@ -33,12 +33,12 @@ public  class Layout extends Stage implements Pauseable{
 			case FIXED_RESOLUTION_MODE:
 				if(screenWIdth > screenHEight){
 					ORIENTATION = Orientation.LANDSCAPE;
-					UI_WIDTH = 600;
-					UI_HEIGHT = 400;
+					UI_WIDTH = 800;
+					UI_HEIGHT = 500;
 				}else{
 					ORIENTATION = Orientation.PORTRAIT;
-					UI_WIDTH = 400;
-					UI_HEIGHT = 640;
+					UI_WIDTH = 500;
+					UI_HEIGHT = 800;
 				}
 				break;
 			case MULTI_RESOLUTION_MODE:
@@ -74,6 +74,7 @@ public  class Layout extends Stage implements Pauseable{
 	public static final void setResolutionHandle(byte resolutionMode){
 		mCurrentMode = resolutionMode;
 	}
+	
 	//	-----------------------------------------------------
 	
 	public final int ID;

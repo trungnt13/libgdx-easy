@@ -87,6 +87,8 @@ public class ObjectMap<K, V> {
 	}
 
 	private V put_internal (K key, V value) {
+		K[] keyTable = this.keyTable;
+
 		// Check for existing keys.
 		int hashCode = key.hashCode();
 		int index1 = hashCode & mask;
@@ -111,6 +113,15 @@ public class ObjectMap<K, V> {
 			V oldValue = valueTable[index3];
 			valueTable[index3] = value;
 			return oldValue;
+		}
+
+		// Update key in the stash.
+		for (int i = capacity, n = i + stashSize; i < n; i++) {
+			if (key.equals(keyTable[i])) {
+				V oldValue = valueTable[i];
+				valueTable[i] = value;
+				return oldValue;
+			}
 		}
 
 		// Check for empty buckets.
@@ -254,14 +265,6 @@ public class ObjectMap<K, V> {
 			resize(capacity << 1);
 			put_internal(key, value);
 			return;
-		}
-		// Update key in the stash.
-		K[] keyTable = this.keyTable;
-		for (int i = capacity, n = i + stashSize; i < n; i++) {
-			if (key.equals(keyTable[i])) {
-				valueTable[i] = value;
-				return;
-			}
 		}
 		// Store key in the stash.
 		int index = capacity + stashSize;
@@ -621,12 +624,9 @@ public class ObjectMap<K, V> {
 				array.add(next());
 			return array;
 		}
-		
-		/**
-		 * Adds the value entries to the given array.
-		 * @param array
-		 */
-		public void toArray(Array<V> array) {
+
+		/** Adds the remaining values to the specified array. */
+		public void toArray (Array<V> array) {
 			while (hasNext)
 				array.add(next());
 		}

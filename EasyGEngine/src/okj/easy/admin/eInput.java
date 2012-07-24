@@ -15,6 +15,8 @@ import com.badlogic.gdx.Input.Orientation;
 import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ObjectMap;
 
 
@@ -28,8 +30,13 @@ public class eInput implements InputProcessor{
 	private final ArrayList<MotionCallBack> mMotionList = new ArrayList<MotionCallBack>();
 	private final ArrayList<KeyCallBack> mKeysList = new ArrayList<KeyCallBack>();
 	
+	//	-----------------------------------------------
 	
-
+	private static final OrthographicCamera mCamera = new OrthographicCamera();
+	private static float mProjectedX = Float.NaN;
+	private static float mProjectedY = Float.NaN;
+	
+	
 	OnBackKeyListener mBackKeyListener = null;
 	
 	int tmp;
@@ -41,6 +48,10 @@ public class eInput implements InputProcessor{
 	public eInput () {
 	}
 
+	public OrthographicCamera cam(){
+		return mCamera;
+	}
+	
 	/**
 	 * Add a new processor at a specified index( the index must in range [0,size]
 	 * @param index your index
@@ -358,6 +369,22 @@ public class eInput implements InputProcessor{
 		return Gdx.input.getX();
 	}
 
+	public float getProjectedX(){
+		mCamera.unproject(Vector3.tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+		mProjectedX = Vector3.tmp.x;
+		mProjectedY = Vector3.tmp.y;
+
+		return mProjectedX;
+	}
+	
+	public float getProjectedY(){
+		mCamera.unproject(Vector3.tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+		mProjectedX = Vector3.tmp.x;
+		mProjectedY = Vector3.tmp.y;
+
+		return mProjectedY;
+	}
+	
 	public  int getX(int pointer) {
 		return Gdx.input.getX(pointer);
 	}

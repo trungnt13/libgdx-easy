@@ -7,8 +7,8 @@ package com.badlogic.gdx.utils;
 public interface Updater {
 	public static final Updater instance = new Updater() {
 		@Override
-		public void update (SpriteBackend sprite, float delta) {
+		public void update (final SpriteBackend sprite, float delta) {
 		}
 	};
-	public void update(SpriteBackend sprite,float delta);
+	public void update(final SpriteBackend sprite,float delta);
 }

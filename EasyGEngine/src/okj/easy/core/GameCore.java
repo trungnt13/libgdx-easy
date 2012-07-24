@@ -190,5 +190,12 @@ public abstract class GameCore implements ApplicationListener{
 		}
 		return null;
 	}
+
+	/**********************************************
+	 * 
+	 **********************************************/
 	
+	public abstract int getWidth();
+	
+	public abstract int getHeight();
 }

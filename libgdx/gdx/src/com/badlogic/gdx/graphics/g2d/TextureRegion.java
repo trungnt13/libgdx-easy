@@ -81,10 +81,16 @@ public class TextureRegion {
 	public void setRegion (int x, int y, int width, int height) {
 		float invTexWidth = 1f / texture.getWidth();
 		float invTexHeight = 1f / texture.getHeight();
-		this.u = x * invTexWidth;
-		this.v = y * invTexHeight;
-		this.u2 = (x + width) * invTexWidth;
-		this.v2 = (y + height) * invTexHeight;
+//		this.u = x * invTexWidth;
+//		this.v = y * invTexHeight;
+//		this.u2 = (x + width) * invTexWidth;
+//		this.v2 = (y + height) * invTexHeight;
+//		regionWidth = Math.abs(width);
+//		regionHeight = Math.abs(height);
+		
+//		float invTexWidth = 1f / texture.getWidth();
+//		float invTexHeight = 1f / texture.getHeight();
+		setRegion(x * invTexWidth, y * invTexHeight, (x + width) * invTexWidth, (y + height) * invTexHeight);
 		regionWidth = Math.abs(width);
 		regionHeight = Math.abs(height);
 	}
@@ -238,16 +244,6 @@ public class TextureRegion {
 		int y = getRegionY();
 		int width = regionWidth;
 		int height = regionHeight;
-
-		if (width < 0) {
-			x = x - width;
-			width = -width;
-		}
-
-		if (height < 0) {
-			y = y - height;
-			height = -height;
-		}
 
 		int rows = height / tileHeight;
 		int cols = width / tileWidth;
