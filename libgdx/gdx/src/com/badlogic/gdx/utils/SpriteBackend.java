@@ -65,6 +65,8 @@ public interface SpriteBackend extends Poolable,Boundable{
 
 	public void postUpdater(Updater updater);
 	
+	public void noUpdater();
+	
 	public void update(float delta);
 	
 	public void draw(SpriteBatch batch);

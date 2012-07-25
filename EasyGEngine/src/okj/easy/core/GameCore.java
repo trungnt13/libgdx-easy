@@ -44,12 +44,12 @@ public abstract class GameCore implements ApplicationListener{
 		
 		mLayout = new Layout(true);
 		Dialog.DIALOG_NUMBER = 0;
-		onGameCreate();
+		onGameConfig();
 	}
 	/**
 	 * Initialize all game components
 	 */
-	protected abstract void onGameCreate();
+	protected abstract void onGameConfig();
 
 	/* ---------------------------------------------------------- */
 	
@@ -194,8 +194,13 @@ public abstract class GameCore implements ApplicationListener{
 	/**********************************************
 	 * 
 	 **********************************************/
+	/*
+	 * Get game preference width
+	 */
+	public abstract int gameWidth();
 	
-	public abstract int getWidth();
-	
-	public abstract int getHeight();
+	/*
+	 * Get game preference height
+	 */
+	public abstract int gameHeight();
 }

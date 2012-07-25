@@ -98,11 +98,7 @@ public class SpriteA  implements Animator,SpriteBackend{
 	
 	//	---------------------------------------------------------
 
-	private Updater mUpdater = new Updater() {
-		@Override
-		public void update (SpriteBackend sprite, float delta) {
-		}
-	};
+	private Updater mUpdater = Updater.instance;
 	
 	/** Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and color set before it can be
 	 * drawn. */
@@ -508,6 +504,10 @@ public class SpriteA  implements Animator,SpriteBackend{
 	
 	public void postUpdater(Updater updater){
 		this.mUpdater = updater;
+	}
+	
+	public void noUpdater(){
+		this.mUpdater = Updater.instance;
 	}
 	
 	@Override

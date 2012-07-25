@@ -46,17 +46,19 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	private float w;
 	private float h;
 
-	private Updater mUpdater = new Updater() {
-		@Override
-		public void update (SpriteBackend sprite, float delta) {
-		}
-	};
+	private Updater mUpdater = Updater.instance;
 	
-	
+	/**
+	 * Construct a default spriter with size 13 child sprite
+	 */
 	public Spriter(){
 		this(13);
 	}
 	
+	/**
+	 * Construct a spriter with given sprite limit ( should override this method)
+	 * @param limit
+	 */
 	protected Spriter(int limit){
 		this.limit = limit;
 		
@@ -91,7 +93,7 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 		return scale;
 	}
 	
-	public void setOriginLayer(SpriteBackend sprite){
+	public void bindOriginLayer(SpriteBackend sprite){
 		w = mOriginWidth = sprite.getWidth();
 		h = mOriginHeight = sprite.getHeight();
 		this.x = sprite.getX();
@@ -709,6 +711,10 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	
 	public void postUpdater(Updater updater){
 		this.mUpdater = updater;
+	}
+	
+	public void noUpdater(){
+		this.mUpdater = Updater.instance;
 	}
 
 	/********************************************************

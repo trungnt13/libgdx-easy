@@ -98,11 +98,7 @@ public class SpriteCA  implements SpriteBackend,Disposable,Animator{
 	
 	private final Rectangle mBound = new Rectangle();
 
-	private Updater mUpdater = new Updater() {
-		@Override
-		public void update (SpriteBackend sprite, float delta) {
-		}
-	};
+	private Updater mUpdater = Updater.instance;
 	
 	public SpriteCA(){
 		this(13);
@@ -913,6 +909,9 @@ public class SpriteCA  implements SpriteBackend,Disposable,Animator{
 		this.mUpdater = updater;
 	}
 
+	public void noUpdater(){
+		this.mUpdater = Updater.instance;
+	}
 	/**********************************************************
 	 * 
 	 **********************************************************/

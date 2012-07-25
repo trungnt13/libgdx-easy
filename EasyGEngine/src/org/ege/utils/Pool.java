@@ -58,6 +58,10 @@ public class Pool<T> {
 			if (object instanceof Poolable) ((Poolable)object).reset();
 		}
 	}
+	
+	public int size(){
+		return freeObjects.size;
+	}
 
 	/** Removes all free objects from this pool. */
 	public void clear () {

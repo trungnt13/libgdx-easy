@@ -173,7 +173,7 @@ public class eContext {
 		 return (T) mPools.get(type).obtain();
 	 }
 
-	 public <T> T newSpriteCA(Class<T> type,Object...objects){
+	 public <T> T newObject(Class<T> type,Object...objects){
 		 return (T) mPools.get(type).obtain(objects);
 	 }
 	 
@@ -181,7 +181,7 @@ public class eContext {
 		 mCurrentPool.free(obj);
 	 }
 
-	 public <T> void freeSpriteCA(Array<T> objs){
+	 public <T> void free(Array<T> objs){
 		 mCurrentPool.free(objs);
 	 }
 
@@ -189,15 +189,23 @@ public class eContext {
 		 ((Pool<T>)mPools.get(type)).free(obj);
 	 }
 
-	 public <T> void freeSpriteCA(Class<T> type,Array<T> objs){
+	 public <T> void free(Class<T> type,Array<T> objs){
 		 ((Pool<T>)mPools.get(type)).free(objs);
 	 }
 
-	 public void clearSpriteCAPool(){
+	 public int poolSize(){
+		 return mCurrentPool.size();
+	 }
+	 
+	 public <T> int poolSize(Class<T> type){
+		 return mPools.get(type).size();
+	 }
+	 
+	 public void clearPool(){
 		 mCurrentPool.clear();
 	 }
 	 
-	 public void clearSpriteCAPool(Class<?> type){
+	 public void clearPool(Class<?> type){
 		 mPools.get(type).clear();
 	 }
 }

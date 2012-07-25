@@ -76,11 +76,7 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 	
 	//	---------------------------------------------------------
 
-	private Updater mUpdater = new Updater() {
-		@Override
-		public void update (SpriteBackend sprite, float delta) {
-		}
-	};
+	private Updater mUpdater = Updater.instance;
 	
 	/** Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and color set before it can be
 	 * drawn. */
@@ -540,6 +536,10 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 		this.mUpdater= updater;
 	}
 	
+	public void noUpdater(){
+		this.mUpdater = Updater.instance;
+	}
+	
 	public float getX () {
 		return x;
 	}
@@ -624,10 +624,7 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 	}
 
 	public void setRegion (float u, float v, float u2, float v2) {
-		this.u = u;
-		this.v = v;
-		this.u2 = u2;
-		this.v2 = v2;
+		super.setRegion(u, v, u2, v2);
 
 		float[] vertices = Sprite.this.vertices;
 		vertices[U1] = u;
@@ -644,25 +641,25 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 	}
 
 	public void setU (float u) {
-		this.u = u;
+		super.setU(u);
 		vertices[U1] = u;
 		vertices[U2] = u;
 	}
 
 	public void setV (float v) {
-		this.v = v;
+		super.setV(v);
 		vertices[V2] = v;
 		vertices[V3] = v;
 	}
 
 	public void setU2 (float u2) {
-		this.u2 = u2;
+		super.setU2(u2);
 		vertices[U3] = u2;
 		vertices[U4] = u2;
 	}
 
 	public void setV2 (float v2) {
-		this.v2 = v2;
+		super.setV2(v2);
 		vertices[V1] = v2;
 		vertices[V4] = v2;
 	}

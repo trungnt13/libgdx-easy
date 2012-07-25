@@ -129,7 +129,7 @@ public class GridSimulationF extends SimulationAdapter{
 	
 	private void turnToTopLeftSystem(Vector2[] poss){
 		for(int i = 0;i < poss.length;i++){
-			poss[i].set(poss[i].x, eAdmin.getWidth()-poss[i].y);
+			poss[i].set(poss[i].x, eAdmin.gameWidth()-poss[i].y);
 		}
 	}
 
