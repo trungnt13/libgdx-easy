@@ -112,7 +112,7 @@ public final class eMath {
 	 * @param y2
 	 * @return the angle in degree
 	 */
-	public static float CalAngle(float x,float y,float x1, float y1,float x2, float y2){
+	public static float calAngle(float x,float y,float x1, float y1,float x2, float y2){
 		float a;
 		float b;
 		float c;

@@ -10,7 +10,9 @@ import org.ege.utils.Pool;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 import org.ege.widget.StyleAtlas;
 
+import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.ResolutionFileResolver.Resolution;
@@ -139,6 +141,33 @@ public class eContext {
 		return manager.getProgress();
 	}
 	
+	/*******************************************************************************
+	 * Custom data manager 
+	 ********************************************************************************/
+
+	public <T, P extends AssetLoaderParameters<T>> void setDataLoader(Class<T> type, AssetLoader<T, P> loader){
+		manager.setLoader(type, loader);
+	}
+	
+	public  <T> T getData(String name,Class<T> type){
+		return manager.get(name, type);
+	}
+	
+	public <T> void loadData(String name,Class<T> type){
+		manager.load(name, type);
+	}
+
+	public <T> void loadData(String name,Class<T> type,AssetLoaderParameters<T> param){
+		manager.load(name, type,param);
+	}
+
+	public void unloadData(String name){
+		manager.unload(name);
+	}
+	
+	public boolean isDataLoaded(String name){
+		return manager.isLoaded(name);
+	}
 	 /*******************************************************************************
 	  * Pool Manager 
 	  ********************************************************************************/

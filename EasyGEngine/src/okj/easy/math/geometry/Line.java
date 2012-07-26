@@ -64,6 +64,16 @@ public class Line implements Disposable{
 		return this;
 	}
 	
+	public Line setEnd(float x,float y){
+		lineEnd.set(x,y);
+		return this;
+	}
+	
+	public Line setStart(float x,float y){
+		lineStart.set(x, y);
+		return this;
+	}
+	
 	private void set (Vector2 startPoint, Vector2 endPoint) {
 		lineStart = startPoint;
 		lineEnd = endPoint;
