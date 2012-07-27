@@ -6,7 +6,7 @@
 	<property name="env.NDK_HOME" value="/home/trung/android-ndk-r8"/>
 	
 	<!-- library version -->
-	<property name="version" value="0.9.3"/>
+	<property name="version" value="0.9.7"/>
 	
 	<!-- define distribution/output directory -->
 	<property name="distDir" value="${basedir}/dist"/>

@@ -8,6 +8,7 @@ import okj.easy.admin.eInput;
 import okj.easy.core.utils.Bridge;
 import okj.easy.core.utils.BridgePool;
 
+import org.ege.utils.EasyNativeLoader;
 import org.ege.widget.Dialog;
 import org.ege.widget.Layout;
 
@@ -36,7 +37,7 @@ public abstract class GameCore implements ApplicationListener{
 		eAdmin.egraphics = new eGraphics();
 		eAdmin.eaudio = new eAudio();
 		eAdmin.econtext = new eContext();
-		
+		EasyNativeLoader.load();
 		Gdx.input.setInputProcessor(eAdmin.einput);
 		
 		Screen.SCREEN_WIDTH = Gdx.graphics.getWidth();

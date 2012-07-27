@@ -16,3 +16,16 @@ libgdx/tests/gdx-tests-lwjgl/bin/
 libgdx/tests/gdx-tests/bin/
 libgdx/demos/invaders/gdx-invaders-android/bin/
 libgdx/demos/invaders/gdx-invaders/bin/
+libgdx/backends/gdx-backend-android/target/
+libgdx/backends/gdx-backend-jogl/target/
+libgdx/backends/gdx-backend-lwjgl/target/
+libgdx/backends/gdx-openal/target/
+libgdx/backends/gdx-backends-gwt/target/
+libgdx/extensions/gdx-audio/target/
+libgdx/extensions/gdx-freetype/target/
+libgdx/extensions/gdx-image/target/
+libgdx/extensions/gdx-jnigen/target/
+libgdx/extensions/gdx-stb-truetype/target/
+libgdx/extensions/gdx-tools/target/
+libgdx/gdx/target/
+libgdx/extensions/gdx-tiled-preprocessor/target/

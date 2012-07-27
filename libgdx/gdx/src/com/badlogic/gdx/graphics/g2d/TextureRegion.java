@@ -91,8 +91,8 @@ public class TextureRegion {
 //		float invTexWidth = 1f / texture.getWidth();
 //		float invTexHeight = 1f / texture.getHeight();
 		setRegion(x * invTexWidth, y * invTexHeight, (x + width) * invTexWidth, (y + height) * invTexHeight);
-		regionWidth = Math.abs(width);
-		regionHeight = Math.abs(height);
+//		regionWidth = Math.abs(width);
+//		regionHeight = Math.abs(height);
 	}
 
 	public void setRegion (float u, float v, float u2, float v2) {
