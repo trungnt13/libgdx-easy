@@ -85,6 +85,13 @@ public final class eMath {
 	public static Vector2 calMiddle(Vector2 v1,Vector2 v2){
 		return new Vector2( (v1.x+v2.x)/2, (v1.y+v2.y)/2);
 	}
+
+	public static void calCenterPoint(Vector2 result,float x,float y,float x1,float y1){
+		result.set((x+x1)/2, (y+y1)/2);
+	}
+	/*************************************************************
+	 * 
+	 *************************************************************/
 	
 	public static float getXinLine(int y,Vector2 src,Vector2 dst){
 		float delta = ( (float)(src.x-dst.x) / (float)(src.y-dst.y) );

@@ -371,18 +371,12 @@ public class eInput implements InputProcessor{
 
 	public float getProjectedX(){
 		mCamera.unproject(Vector3.tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-		mProjectedX = Vector3.tmp.x;
-		mProjectedY = Vector3.tmp.y;
-
-		return mProjectedX;
+		return Vector3.tmp.x;
 	}
 	
 	public float getProjectedY(){
 		mCamera.unproject(Vector3.tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-		mProjectedX = Vector3.tmp.x;
-		mProjectedY = Vector3.tmp.y;
-
-		return mProjectedY;
+		return Vector3.tmp.y;
 	}
 	
 	public  int getX(int pointer) {

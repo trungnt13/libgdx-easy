@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.SpriteBackend;
 import com.badlogic.gdx.utils.Updater;
 
@@ -20,11 +21,18 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	private final SpriteBackend[] mSpriteList;
 	private final Scaler[] 	    mScaler;
 	
+	// Config
 	private final int[] mDrawable;
 	private int drawableSize = 0;
 	
 	private final int[] mRunnable;
 	private int runnbaleSize = 0;
+	
+	private final int[] mCollision;
+	private int collisionSize = 0;
+	
+	// param
+	
 	private boolean RUN;
 	
 	private final int limit;
@@ -34,7 +42,7 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	private float mOriginWidth;
 	private float mOriginHeight;
 	
-	private final float[] rect = new float[4];
+	private final FloatArray rect = new FloatArray(4);
 	//	--------------------------------------------------
 	
 	private int idx = 0;
@@ -68,6 +76,7 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 		
 		mDrawable = new int[limit];
 		mRunnable = new int[limit];
+		mCollision = new int[limit];
 		
 		for(int i = 0;i < limit;i++){
 			mRunnable[i] = mDrawable[i] = -1;
@@ -75,8 +84,9 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	}
 	
 	/********************************************************
-	 * 
+	 * Layer manage
 	 ********************************************************/
+	
 	private Scaler calculateScaler(int id,SpriteBackend sprite,float x,float y,float width,float height){
 		if(mScaler[id] == null){
 			mScaler[id] = new Scaler();
@@ -180,7 +190,7 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	}
 	
 	/********************************************************
-	 * 
+	 * Color method
 	 ********************************************************/
 	
 	public void setColor(float r,float g,float b,float a){
@@ -237,7 +247,7 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	}
 	
 	/********************************************************
-	 * 
+	 * Configuration
 	 ********************************************************/
 	
 	@Override
@@ -360,7 +370,7 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	}
 
 	/********************************************************
-	 * 
+	 * Getter
 	 ********************************************************/
 	
 	@Override
@@ -478,8 +488,93 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	/********************************************************
 	 * 
 	 ********************************************************/
+	
+	@Override
+	public Rectangle getBoundingRectangle () {
+		final Rectangle origin = mOriginSprite.getBoundingRectangle();
+		for(int i = 0; i < collisionSize;i++)
+			origin.merge(mSpriteList[mCollision[i]].getBoundingRectangle());
+		return origin;
+	}
+	
+	@Override
+	public float[] getBoundingFloatRect () {
+		final FloatArray result = Spriter.this.rect;
+		result.clear();
+		for(int i = 0;i < collisionSize;i++){
+			final float[] rect = mSpriteList[mCollision[i]].getBoundingFloatRect();
+			result.addAll(rect);
+		}
+		if(result.size != result.items.length)
+			result.shrink();
+		return result.items;
+	}
+	
+	@Override
+	public Circle getBoundingCircle () {
+		return null;
+	}
+	
+	private boolean containCollision(int layer){
+		for(int i = 0; i < collisionSize;i++)
+			if(mCollision[i] == layer)
+				return true;
+		return false;
+	}
+	
+	public Spriter addCollisionLayer(int layer){
+		if(collisionSize < limit && !containCollision(layer) && mSpriteList[layer] != null)
+			mCollision[collisionSize++] = layer;
+		return this;
+	}
+	
+	public Spriter setCollisionLayer(int...layer){
+		if(layer.length > limit)
+			return this;
+		collisionSize = 0;
+		for(int i:layer){
+			if(mSpriteList[i]!= null)
+				mCollision[collisionSize++]=i;
+		}
+		return this;
+	}
+	
+	public Spriter removeCollisionLayer(int layer){
+		int i ;
+		outer:
+			for(i = 0; i < collisionSize;i++)
+				if(mCollision[i] == layer)
+					break outer;
+		System.arraycopy(mCollision, i+1, mCollision, i, collisionSize-i);
+		mCollision[--collisionSize] = -1;
+		return this;
+	}
+	
+	public Spriter removeCollsionLayer(int[] layer){
+		if(layer.length > collisionSize)
+			return this;
+		
+		for(int i:layer){
+			removeCollisionLayer(i);
+		}
+		return this;
+	}
+	
+	public int[] getCollisionLayer(){
+		return mCollision;
+	}
+
+	public void clearCollision(){
+		for(int i = 0;i < limit;i++)
+			mCollision[i] = -1;
+		collisionSize = 0; 
+	}
+	/********************************************************
+	 * 
+	 ********************************************************/
+	
 	private boolean containDrawable(int layer){
-		for(int i =0 ;i < size;i++)
+		for(int i =0 ;i < drawableSize;i++)
 			if(mDrawable[i] == layer)
 				return true;
 		
@@ -556,7 +651,7 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	 * 
 	 ********************************************************/
 	private boolean containRunnable(int layer){
-		for(int i =0 ;i < size;i++)
+		for(int i =0 ;i < runnbaleSize;i++)
 			if(mRunnable[i] == layer)
 				return true;
 		
@@ -739,21 +834,6 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 			mSpriteList[i] = null;
 		}
 		mOriginSprite = null;
-	}
-
-	@Override
-	public Rectangle getBoundingRectangle () {
-		return mOriginSprite.getBoundingRectangle();
-	}
-	
-	@Override
-	public float[] getBoundingFloatRect () {
-		return mOriginSprite.getBoundingFloatRect();
-	}
-	
-	@Override
-	public Circle getBoundingCircle () {
-		return null;
 	}
 
 	private void refresh () {

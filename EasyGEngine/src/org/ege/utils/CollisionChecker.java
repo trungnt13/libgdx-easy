@@ -30,21 +30,20 @@ public final class CollisionChecker {
 	 *****************************************************/
 	
 	private static final int[] mResultSet = new int[20000];
-	private static int mResultSize =-1 ;
 	private static int tmp = -1;
 	
+	/**
+	 * @Note you should carefull when use this method , when the size2 = 0 it will automatically <p>
+	 * think that you want to check collision inside the array1 so the result will maybe not <p>
+	 * ass you expected
+	 * @param boundingRectArray1 the bounding float rect of list 1
+	 * @param size1 the size of bounding float  of list 1
+	 * @param boundingRectArray2 the bounding float rect of list 2
+	 * @param size2 the size of bounding float  of list 2
+	 * @return the number of collision happen * 2
+	 */
 	public static int process(float[] boundingRectArray1,int size1,float[] boundingRectArray2,int size2){
-		mResultSize = checkCollision(mResultSet, boundingRectArray1,size1,boundingRectArray2,size2);
-		return getResultSize();
-	}
-	
-	private static int getResultSize(){
-		if(mResultSize >= 0){
-			tmp = mResultSize;
-			mResultSize  = -1;
-			return tmp;
-		}
-		return -1;
+		return checkCollision(mResultSet, boundingRectArray1,size1,boundingRectArray2,size2);
 	}
 	
 	public static int[] getResultSet(){

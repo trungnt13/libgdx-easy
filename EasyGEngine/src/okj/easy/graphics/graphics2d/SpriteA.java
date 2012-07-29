@@ -95,7 +95,7 @@ public class SpriteA  implements Animator,SpriteBackend{
 	private float scaleX = 1, scaleY = 1;
 	private boolean dirty = true;
 	private final Rectangle bounds ;
-	
+	private int frameNumber;
 	//	---------------------------------------------------------
 
 	private Updater mUpdater = Updater.instance;
@@ -468,7 +468,7 @@ public class SpriteA  implements Animator,SpriteBackend{
 		
 		mStateTime += delta;
 		
-		int frameNumber = (int)(mStateTime / mFrameDuration);
+		frameNumber = (int)(mStateTime / mFrameDuration);
 
 		switch (mPlayMode) {
 		case NORMAL:
@@ -500,6 +500,18 @@ public class SpriteA  implements Animator,SpriteBackend{
 		
 		setRegion(keyFrames[frameNumber]);
 		mUpdater.update(this, delta);
+	}
+	
+	/**
+	 * Get current frame number ( unsafe method)
+	 * @return
+	 */
+	public int getFrameNumber(){
+		return frameNumber;
+	}
+	
+	public TextureRegion[] getKeyFrames(){
+		return this.keyFrames;
 	}
 	
 	public void postUpdater(Updater updater){
@@ -838,6 +850,7 @@ public class SpriteA  implements Animator,SpriteBackend{
 		return false;
 	}
 
+	
 	@Override
 	public void reset () {
 		stop();
