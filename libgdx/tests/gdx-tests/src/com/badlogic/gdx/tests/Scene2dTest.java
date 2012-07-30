@@ -51,7 +51,7 @@ public class Scene2dTest extends GdxTest {
 		Gdx.input.setInputProcessor(stage);
 
 		final TextureRegion region = new TextureRegion(new Texture("data/badlogic.jpg"));
-		Actor actor = new Actor() {
+		final Actor actor = new Actor() {
 			public void draw (SpriteBatch batch, float parentAlpha) {
 				Color color = getColor();
 				batch.setColor(color.r, color.g, color.b, parentAlpha);

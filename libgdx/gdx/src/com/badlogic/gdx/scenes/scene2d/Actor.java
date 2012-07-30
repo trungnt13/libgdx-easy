@@ -86,11 +86,7 @@ public class Actor {
 	 * it will not propagate to the next actor.
 	 * @return true of the event was {@link Event#cancel() cancelled}. */
 	public boolean fire (Event event) {
-		if (event.getStage() == null) {
-			Stage stage = getStage();
-			if (stage == null) throw new IllegalStateException("Stage must be set.");
-			event.setStage(stage);
-		}
+		if (event.getStage() == null) event.setStage(getStage());
 		event.setTarget(this);
 
 		// Collect ancestors so event propagation is unaffected by hierarchy changes.
@@ -144,12 +140,8 @@ public class Actor {
 
 		event.setListenerActor(this);
 		event.setCapture(capture);
-		if (event.getStage() == null) {
-			Stage stage = getStage();
-			if (stage == null) throw new IllegalStateException("Stage must be set.");
-			event.setStage(stage);
-		}
-
+		if (event.getStage() == null) event.setStage(stage);
+		
 		listeners.begin();
 		for (int i = 0, n = listeners.size; i < n; i++) {
 			EventListener listener = listeners.get(i);
@@ -157,8 +149,9 @@ public class Actor {
 				event.handle();
 				if (event instanceof InputEvent) {
 					InputEvent inputEvent = (InputEvent)event;
-					if (inputEvent.getType() == Type.touchDown)
-						event.getStage().addTouchFocus(listener, this, inputEvent.getPointer(), inputEvent.getButton());
+					if (inputEvent.getType() == Type.touchDown) {
+						event.getStage().addTouchFocus(listener, this, inputEvent.getTarget(), inputEvent.getPointer(),inputEvent.getButton());
+					}
 				}
 			}
 		}
@@ -464,8 +457,10 @@ public class Actor {
 	}
 
 	/** Sets the z-index of this actor. The z-index is the index into the parent's {@link Group#getChildren() children}, where a
-	 * lower index is below a higher index. Setting a z-index higher than the number of children will move the child to the front. */
+	 * lower index is below a higher index. Setting a z-index higher than the number of children will move the child to the front.
+	 * Setting a z-index less than zero is invalid. */
 	public void setZIndex (int index) {
+		if (index < 0) throw new IllegalArgumentException("ZIndex cannot be < 0.");
 		Group parent = getParent();
 		if (parent == null) return;
 		Array<Actor> children = parent.getChildren();

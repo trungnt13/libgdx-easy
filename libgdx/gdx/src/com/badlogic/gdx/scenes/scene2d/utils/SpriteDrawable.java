@@ -16,6 +16,7 @@
 
 package com.badlogic.gdx.scenes.scene2d.utils;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -39,7 +40,10 @@ public class SpriteDrawable extends EmptyDrawable {
 
 	public void draw (SpriteBatch batch, float x, float y, float width, float height) {
 		sprite.setBounds(x, y, width, height);
+		Color color = sprite.getColor();
+		sprite.setColor(Color.tmp.set(color).mul(batch.getColor()));
 		sprite.draw(batch);
+		sprite.setColor(color);
 	}
 
 	public void setSprite (Sprite sprite) {
