@@ -463,8 +463,10 @@ public class SpriteA  implements Animator,SpriteBackend{
 	}
 	
 	public void update(float delta){
-		if(!RUN || mFrameDuration == 0)
+		if(!RUN || mFrameDuration == 0){
+			mUpdater.update(this, delta);
 			return;
+		}
 		
 		mStateTime += delta;
 		

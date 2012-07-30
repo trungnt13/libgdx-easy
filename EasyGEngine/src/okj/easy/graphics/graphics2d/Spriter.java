@@ -796,8 +796,11 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	}
 	
 	public void update(float delta){
-		if(!RUN)
+		if(!RUN){
+			mUpdater.update(this, delta);
 			return;
+		}
+		
 		final int[] runnable  = this.mRunnable;
 		for(int i = 0; i < runnbaleSize;i++)
 			((Animator)mSpriteList[runnable[i]]).update(delta);

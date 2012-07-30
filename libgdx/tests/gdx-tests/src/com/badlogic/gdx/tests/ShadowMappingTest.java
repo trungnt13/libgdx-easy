@@ -18,6 +18,7 @@ package com.badlogic.gdx.tests;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -41,7 +42,6 @@ import com.badlogic.gdx.tests.utils.PerspectiveCamController;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class ShadowMappingTest extends GdxTest {
-
 	@Override
 	public boolean needsGL20 () {
 		return true;
