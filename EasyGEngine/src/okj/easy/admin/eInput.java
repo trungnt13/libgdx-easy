@@ -33,8 +33,6 @@ public class eInput implements InputProcessor{
 	//	-----------------------------------------------
 	
 	private static final OrthographicCamera mCamera = new OrthographicCamera();
-	private static float mProjectedX = Float.NaN;
-	private static float mProjectedY = Float.NaN;
 	
 	
 	OnBackKeyListener mBackKeyListener = null;

@@ -14,7 +14,7 @@ public class eAdmin{
 	}
 	
 	public static void destroy(){
-		egraphics.dispose();
+		econtext.dispose();
 		eaudio.dispose();
 	}
 	

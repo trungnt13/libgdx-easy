@@ -91,7 +91,7 @@ public  class Layout extends Stage implements Pauseable{
 		mBackground.setBounds(0, 0, getWidth(), getHeight());
 		mBackground.setTouchable(Touchable.disabled);
 		mBackground.setScaling(Scaling.stretch);
-		mBackground.setZIndex(Integer.MIN_VALUE);
+		mBackground.setZIndex(0);
 		
 		eAdmin.einput.addProcessor(ID, this);
 		

@@ -60,13 +60,11 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 
 	@Override
 	public void update(float delta) {
-		isDone = eAdmin.egraphics.update() & (eAdmin.egraphics.getQueueAssets() == 0) ;
+		isDone = eAdmin.econtext.update() & (eAdmin.econtext.getQueueAssets() == 0) ;
 		isDone = isDone & eAdmin.eaudio.update() & (eAdmin.eaudio.getQueueAssets() == 0);
-		isDone = isDone & eAdmin.econtext.update() &  (eAdmin.econtext.getQueueAssets() == 0);
 		
 		progress = (   eAdmin.econtext.getProgress() 
-					+  eAdmin.eaudio.getProgress()
-					+  eAdmin.egraphics.getProgress()) / 3;
+					+  eAdmin.eaudio.getProgress() ) /2;
 	}
 
 	

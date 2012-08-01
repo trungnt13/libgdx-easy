@@ -229,6 +229,7 @@ public class Button extends Table {
 		public float unpressedOffsetX, unpressedOffsetY;
 
 		public ButtonStyle () {
+			
 		}
 
 		public ButtonStyle (Drawable up, Drawable down, Drawable checked, float pressedOffsetX, float pressedOffsetY,

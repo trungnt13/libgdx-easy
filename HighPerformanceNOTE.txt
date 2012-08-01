@@ -70,3 +70,5 @@ Rectangle p = (Rectangle) q;
 However,
 Rectangle p = new Rectangle ();
 boolean b = (p instanceof Rectangle);
+
+**************Reference ko bao h tro? den Reference ma tro? den gia' tri cuoi cung cua no'
