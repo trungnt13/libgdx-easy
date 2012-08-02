@@ -27,7 +27,7 @@ public class ParticleLoader extends SynchronousAssetLoader<ParticleEffect, Parti
 			if(parameter.imgDir != null)
 				effect.load(resolve(fileName), resolve(parameter.imgDir));
 			else if(parameter.atlasPath != null){
-				TextureAtlas atlas = new TextureAtlas(resolve(parameter.imgDir));
+				TextureAtlas atlas = new TextureAtlas(resolve(parameter.atlasPath));
 				effect.loadEmitters(resolve(fileName));
 				effect.loadEmitterImages(atlas);
 			}else{
@@ -49,7 +49,7 @@ public class ParticleLoader extends SynchronousAssetLoader<ParticleEffect, Parti
 	 * @author trung
 	 */
 	public static class ParticleParameter extends AssetLoaderParameters<ParticleEffect>{
-		String imgDir;
-		String atlasPath;
+		public String imgDir;
+		public String atlasPath;
 	}
 }
