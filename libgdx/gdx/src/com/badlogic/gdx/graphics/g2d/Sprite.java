@@ -486,7 +486,7 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 	}
 	
 	@Override
-	public float[] getBoundingFloatRect () {
+	public float[] getBoundingFloatRect (float offset) {
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -512,13 +512,13 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 
 		final float[] rect = Sprite.this.rect;
 		// x
-		rect[0] = minx;
+		rect[0] = minx+offset;
 		// y
-		rect[1] = miny;
+		rect[1] = miny+offset;
 		// width
-		rect[2] = maxx - minx;
+		rect[2] = maxx - minx - offset;
 		// height
-		rect[3] = maxy - miny;
+		rect[3] = maxy - miny - offset;
 
 		return rect;
 	}

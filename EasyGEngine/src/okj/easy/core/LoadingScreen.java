@@ -121,7 +121,7 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 		return mGameCore.newBridge(firstClass, secondClass);
 	}
 	
-	public Bridge newBridge(String firstName,String secondName){
-		return mGameCore.newBridge(firstName, secondName);
+	public Bridge newBridge(String name){
+		return mGameCore.newBridge(name);
 	}
 }

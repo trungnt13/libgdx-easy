@@ -12,7 +12,7 @@ public interface Boundable {
 	
 	public Rectangle getBoundingRectangle();
 	
-	public float[] getBoundingFloatRect();
+	public float[] getBoundingFloatRect(float offset);
 	
 	public Circle getBoundingCircle();
 }

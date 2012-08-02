@@ -643,7 +643,7 @@ public class SpriteA  implements Animator,SpriteBackend{
 	}
 	
 	@Override
-	public float[] getBoundingFloatRect () {
+	public float[] getBoundingFloatRect (float offset) {
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -667,10 +667,10 @@ public class SpriteA  implements Animator,SpriteBackend{
 		maxy = maxy < vertices[Y3] ? vertices[Y3] : maxy;
 		maxy = maxy < vertices[Y4] ? vertices[Y4] : maxy;
 
-		rect[0] = minx;
-		rect[1] = miny;
-		rect[2] = maxx - minx;
-		rect[3] = maxy - miny;
+		rect[0] = minx + offset;
+		rect[1] = miny + offset;
+		rect[2] = maxx - minx - offset;
+		rect[3] = maxy - miny - offset;
 
 		return rect;
 	}

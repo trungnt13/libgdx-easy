@@ -167,10 +167,10 @@ public abstract class GameCore implements ApplicationListener{
 		return tmp;
 	}
 	
-	protected Bridge newBridge(String firstName,String secondName){
-		Bridge tmp = getBridge(firstName, secondName);
+	protected Bridge newBridge(String name){
+		Bridge tmp = getBridge(name);
 		if(tmp == null)
-			return this.bridgePool.obtain(firstName, secondName);
+			return this.bridgePool.obtain(name);
 		return tmp;
 	}
 	
@@ -183,10 +183,10 @@ public abstract class GameCore implements ApplicationListener{
 		return null;
 	}
 	
-	private Bridge getBridge(String firstName,String secondName){
-		int size = bridgePool.getUsingBridges().size;
+	private Bridge getBridge(String name){
+		final int size = bridgePool.getUsingBridges().size;
 		for(int i =0;i < size;i++){
-			if(bridgePool.getUsingBridges().get(i).equals(firstName, secondName))
+			if(bridgePool.getUsingBridges().get(i).equals(name))
 				return bridgePool.getUsingBridges().get(i);
 		}
 		return null;

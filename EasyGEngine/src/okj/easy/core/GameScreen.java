@@ -130,8 +130,8 @@ public abstract class GameScreen extends Screen  {
 		return mGameCore.newBridge(firstClass, secondClass);
 	}
 	
-	public Bridge newBridge(String firstName,String secondName){
-		return mGameCore.newBridge(firstName, secondName);
+	public Bridge newBridge(String name){
+		return mGameCore.newBridge(name);
 	}
 	
 }

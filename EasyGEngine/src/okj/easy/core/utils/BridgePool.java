@@ -2,8 +2,6 @@ package okj.easy.core.utils;
 
 import org.ege.utils.OnRecycleListener;
 
-import vn.easy.content.ComponentName;
-
 import com.badlogic.gdx.utils.Array;
 
 
@@ -34,21 +32,24 @@ public class BridgePool implements OnRecycleListener<Bridge>{
 	 * 
 	 ***************************************************************/
 
-	protected Bridge newObject(String firstName,String lastName) {
-		return new  Bridge(firstName,lastName);
+	protected Bridge newObject(String name) {
+		return new  Bridge(name);
 	}
 	
+	protected Bridge newObject(Class c1,Class c2){
+		return new  Bridge(c1, c2);
+	}
 	
 	public Bridge obtain(Class<?> firstClass,Class<?> secondClass){
-		Bridge tmp =  freeObjects.size == 0 ? newObject(firstClass.getName(),secondClass.getName()) : 
-											  freeObjects.pop().set(new ComponentName(firstClass.getName(), secondClass.getName()));
+		Bridge tmp =  freeObjects.size == 0 ? newObject(firstClass,secondClass) : 
+											  freeObjects.pop().set(firstClass, secondClass);
 		this.usingBridge.add(tmp);
 		return tmp;
 	}
 	
-	public Bridge obtain(String firstName,String secondName){
-		Bridge tmp = freeObjects.size == 0 ? newObject(firstName,secondName) : 
-											 freeObjects.pop().set(new ComponentName(firstName, secondName));
+	public Bridge obtain(String name){
+		Bridge tmp = freeObjects.size == 0 ? newObject(name) : 
+											 freeObjects.pop().set(name);
 		this.usingBridge.add(tmp);
 		return tmp;
 	}

@@ -498,11 +498,11 @@ public class Spriter  implements SpriteBackend,Disposable,Animator{
 	}
 	
 	@Override
-	public float[] getBoundingFloatRect () {
+	public float[] getBoundingFloatRect (float offset) {
 		final FloatArray result = Spriter.this.rect;
 		result.clear();
 		for(int i = 0;i < collisionSize;i++){
-			final float[] rect = mSpriteList[mCollision[i]].getBoundingFloatRect();
+			final float[] rect = mSpriteList[mCollision[i]].getBoundingFloatRect(offset);
 			result.addAll(rect);
 		}
 		if(result.size != result.items.length)

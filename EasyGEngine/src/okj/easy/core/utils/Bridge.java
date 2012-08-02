@@ -7,8 +7,6 @@ import okj.easy.core.Screen;
 
 import org.ege.utils.OnRecycleListener;
 
-import vn.easy.content.ComponentName;
-
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class Bridge {
@@ -17,7 +15,7 @@ public class Bridge {
 	
 	//	-------------------------------------------------------------
 
-	private ComponentName mName;
+	private String mName;
 	private ObjectMap<String, Object> mMap;
 	
 	//	-------------------------------------------------------------
@@ -25,22 +23,22 @@ public class Bridge {
 	/*-------------------------------------------------------------*/
 
 	public Bridge(Class<?> firstClass,Class<?> secondClass){
-		mName = new ComponentName(firstClass, secondClass);
+		mName = firstClass.getName() + secondClass.getName();
 		mMap = new ObjectMap<String, Object>();
 	}
 
-	public Bridge(String firstName,String secondName){
-		mName = new ComponentName(firstName, secondName);
+	public Bridge(String name){
+		mName = name;
 		mMap = new ObjectMap<String, Object>();
 	}
 	
-	public Bridge(ComponentName componentName){
-		mName = componentName;
-		mMap = new ObjectMap<String, Object>();
+	public Bridge set(String name){
+		this.mName = name;
+		return this;
 	}
 	
-	Bridge set(ComponentName componentName){
-		this.mName = componentName;
+	public Bridge set(Class c1,Class c2){
+		mName = c1.getName() + c2.getName();
 		return this;
 	}
 	
@@ -74,11 +72,11 @@ public class Bridge {
 	}
 	
 	public boolean equals(Class<?> firstClass,Class<?> secondClass){
-		return mName.equals(firstClass, secondClass);
+		return mName.equals(firstClass.getName() + secondClass.getName());
 	}
 	
-	public boolean equals(String firstName,String secondName){
-		return mName.equals(firstName, secondName);
+	public boolean equals(String name){
+		return mName.equals(name);
 	}
 	
 	/*-------------------------------------------------------------*/
