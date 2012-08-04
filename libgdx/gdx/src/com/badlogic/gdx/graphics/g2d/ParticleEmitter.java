@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.BitSet;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -393,8 +394,12 @@ public class ParticleEmitter {
 			particle.rotationDiff = rotationValue.newHighValue();
 			if (!rotationValue.isRelative()) particle.rotationDiff -= particle.rotation;
 			float rotation = particle.rotation + particle.rotationDiff * rotationValue.getScale(0);
-			if (aligned) rotation += angle;
-			particle.setRotation(rotation);
+			//trungnt13 fix
+			if (aligned){
+				rotation+=particle.angle+particle.angleDiff;
+				particle.setRotation(rotation); 
+			}else
+				particle.setRotation(rotation);
 		}
 
 		if (windValue.active) {
@@ -900,6 +905,13 @@ public class ParticleEmitter {
 		public Particle (Sprite sprite) {
 			super(sprite);
 		}
+
+		@Override
+		public void draw (SpriteBatch spriteBatch) {
+			super.draw(spriteBatch);
+		}
+		
+		
 	}
 
 	static public class ParticleValue {
