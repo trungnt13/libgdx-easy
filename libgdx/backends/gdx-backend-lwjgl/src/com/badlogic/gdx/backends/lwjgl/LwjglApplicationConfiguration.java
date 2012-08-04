@@ -13,14 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.backends.lwjgl;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxNativesLoader;
 
 public class LwjglApplicationConfiguration {
 	/** whether to use OpenGL ES 2.0 or not. default: false **/
@@ -31,8 +40,10 @@ public class LwjglApplicationConfiguration {
 	public int depth = 16, stencil = 0;
 	/** number of samples for MSAA **/
 	public int samples = 0;
-	/** width & height of application **/
+	/** width & height of application window **/
 	public int width = 480, height = 320;
+	/** x & y of application window, -1 for center **/
+	public int x = -1, y = -1;
 	/** fullscreen **/
 	public boolean fullscreen = false;
 	/** whether to use CPU synching or not. If this is false display vsynching is used, which might not work in windowed mode **/
@@ -49,6 +60,17 @@ public class LwjglApplicationConfiguration {
 	public int audioDeviceBufferSize = 512;
 	/** the audio device buffer count **/
 	public int audioDeviceBufferCount = 9;
+	public Color initialBackgroundColor = Color.BLACK;
+
+	Array<String> iconPaths = new Array();
+	Array<FileType> iconFileTypes = new Array();
+
+	/** Adds a window icon. Icons are tried in the order added, the first one that works is used. Typically three icons should be
+	 * provided: 128x128 (for Mac), 32x32 (for Windows and Linux), and 16x16 (for Windows). */	
+	public void addIcon (String path, FileType fileType) {
+		iconPaths.add(path);
+		iconFileTypes.add(fileType);
+	}
 
 	/** Sets the r, g, b and a bits per channel based on the given {@link DisplayMode} and sets the fullscreen flag to true.
 	 * @param mode */
