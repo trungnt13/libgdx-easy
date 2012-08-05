@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class eContext {
-	public static AssetManager manager;
+	public final AssetManager manager;
 	
 	ObjectMap<String, Context> mContextMap = new ObjectMap<String, Context>();
 	ObjectMap<String, Class<?>> mNoManageData = new ObjectMap<String, Class<?>>();

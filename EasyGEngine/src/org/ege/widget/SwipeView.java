@@ -3,7 +3,6 @@ package org.ege.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ege.utils.D;
 import org.ege.utils.Debug;
 import org.ege.utils.Orientation;
 import org.ege.utils.Property;
@@ -155,7 +154,7 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 				final float containerPadLeft = getPadLeft().get(null);
 				final float containerPadRight =getPadRight().get(null);
 				containerSize = (int)(getPrefWidth() - containerPadLeft - containerPadRight);
-				D.out("container " + containerPadLeft + " " + containerPadRight + "  " + containerSize);
+//				D.out("container " + containerPadLeft + " " + containerPadRight + "  " + containerSize);
 				break;
 			case VERTICAL:
 				final float containerPadTop = getPadTop().get(null);
@@ -174,7 +173,7 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 				final Cell sampleCell = mTable.getCells().get(0);
 				cellSize =  sampleCell.getPrefWidth().get(null);
 				spacing = 	sampleCell.getSpaceRight().get(null);
-				D.out("flick " +cellSize + " " + spacing + " " );
+//				D.out("flick " +cellSize + " " + spacing + " " );
 				break;
 			case VERTICAL:
 				final Cell sampleCell1 = mTable.getCells().get(0);

@@ -9,6 +9,7 @@ import okj.easy.core.utils.Bridge;
 import okj.easy.core.utils.BridgePool;
 
 import org.ege.utils.EasyNativeLoader;
+import org.ege.utils.Timer;
 import org.ege.widget.Dialog;
 import org.ege.widget.Layout;
 
@@ -16,7 +17,9 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 
 public abstract class GameCore implements ApplicationListener{
+	
 	//	----------------------------------------------------------
+	
 	protected Screen screen;
 	Layout mLayout;
 
@@ -37,7 +40,10 @@ public abstract class GameCore implements ApplicationListener{
 		eAdmin.egraphics = new eGraphics();
 		eAdmin.eaudio = new eAudio();
 		eAdmin.econtext = new eContext();
+		
 		EasyNativeLoader.load();
+		Timer.instance.reset();
+		
 		Gdx.input.setInputProcessor(eAdmin.einput);
 		
 		Screen.SCREEN_WIDTH = Gdx.graphics.getWidth();

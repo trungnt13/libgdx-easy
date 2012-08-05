@@ -13,7 +13,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class eAudio implements LoadedCallback,DeeJayBackend{
-	public static AssetManager manager ;
+	public final AssetManager manager ;
 	
 	static final ObjectMap<String, Album> mAlbumMap = new ObjectMap<String, Album>();
 	

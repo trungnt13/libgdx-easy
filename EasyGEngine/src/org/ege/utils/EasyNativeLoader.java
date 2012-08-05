@@ -8,10 +8,12 @@ public class EasyNativeLoader {
 
 	public static void load(){
 		if(isLinux){
-			System.load("/home/trung/EngineResearchTeam/libgdx-easy/EasyGEngine/libs/libenative.so");
+			try{
+				System.loadLibrary("enative");
+			}catch (UnsatisfiedLinkError e) {
+				System.load("/home/trung/EngineResearchTeam/libgdx-easy/EasyGEngine/libs/libenative.so");
+			}
 		}else if(isWindows)
 			throw new UnsupportedOperationException("I haven't support native for window");
-		else
-			System.loadLibrary("enative");
 	}
 }

@@ -70,6 +70,7 @@ public class Timer {
 	/** Stops the timer, tasks will not be executed and time that passes will not be applied to the task delays. */
 	public void stop () {
 		stopped = true;
+		posted = false;
 	}
 
 	/** Starts the timer if it was stopped. */
@@ -78,6 +79,12 @@ public class Timer {
 		postRunnable();
 	}
 
+	public void reset(){
+		posted = false;
+		stopped = false;
+		clear();
+	}
+	
 	/** Cancels all tasks. */
 	public void clear () {
 		for (int i = 0, n = tasks.size; i < n; i++)
@@ -93,7 +100,6 @@ public class Timer {
 
 	void update () {
 		if (stopped) {
-			posted = false;
 			return;
 		}
 
