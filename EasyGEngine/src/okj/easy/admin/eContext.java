@@ -3,10 +3,8 @@ package okj.easy.admin;
 
 import java.util.Iterator;
 
-import org.ege.assets.DataLoader;
 import org.ege.assets.StyleLoader;
 import org.ege.assets.StyleLoader.StyleParameter;
-import org.ege.utils.DataSSD;
 import org.ege.utils.Factory;
 import org.ege.utils.GraphicsHelper;
 import org.ege.utils.Pool;
@@ -36,7 +34,7 @@ public class eContext {
 	
 	public eContext(){
 		manager = new AssetManager();
-		manager.setLoader(DataSSD.class,new DataLoader(new InternalFileHandleResolver())); 
+		manager.setLoader(StyleAtlas.class, new StyleLoader(new InternalFileHandleResolver()));
 	}
 	
 	/*******************************************************************************

@@ -54,7 +54,7 @@ public class ScrollPane extends WidgetGroup {
 	private final Rectangle widgetCullingArea = new Rectangle();
 	private final Rectangle scissorBounds = new Rectangle();
 	private ActorGestureListener gestureListener;
-
+	
 	boolean scrollX, scrollY;
 	float amountX, amountY;
 	float maxX, maxY;
@@ -171,7 +171,7 @@ public class ScrollPane extends WidgetGroup {
 				cancelTouchFocusedChild(event);
 			}
 
-			public void fling (InputEvent event, float x, float y) {
+			public void fling (InputEvent event, float x, float y, int pointer, int button) {
 				if (Math.abs(x) > 150) {
 					flingTimer = flingTime;
 					velocityX = x;
@@ -195,7 +195,8 @@ public class ScrollPane extends WidgetGroup {
 		addListener(gestureListener);
 
 		addListener(new InputListener() {
-			public boolean scrolled (InputEvent event, int amount) {
+			 public boolean scrolled (InputEvent event, int amount) {
+				resetFade();
 				if (scrollY)
 					setScrollY(amountY + Math.max(areaHeight * 0.9f, maxY * 0.1f) / 4 * amount);
 				else if (scrollX) //

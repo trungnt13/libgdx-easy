@@ -60,17 +60,17 @@ public class Button extends Table {
 	public Button (Actor child, Skin skin, String styleName) {
 		this(child, skin.get(styleName, ButtonStyle.class));
 	}
-	
-	public Button (ButtonStyle style) {
+
+	public Button (Actor child, ButtonStyle style) {
 		initialize();
+		add(child);
 		setStyle(style);
 		setWidth(getPrefWidth());
 		setHeight(getPrefHeight());
 	}
 
-	public Button (Actor child, ButtonStyle style) {
+	public Button (ButtonStyle style) {
 		initialize();
-		add(child);
 		setStyle(style);
 		setWidth(getPrefWidth());
 		setHeight(getPrefHeight());
@@ -107,9 +107,11 @@ public class Button extends Table {
 		if (this.isChecked == isChecked) return;
 		if (buttonGroup != null && !buttonGroup.canCheck(this, isChecked)) return;
 		this.isChecked = isChecked;
-		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
-		if (fire(changeEvent)) this.isChecked = !isChecked;
-		Pools.free(changeEvent);
+		if (!isDisabled) {
+			ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
+			if (fire(changeEvent)) this.isChecked = !isChecked;
+			Pools.free(changeEvent);
+		}
 	}
 
 	/** Toggles the checked state. This method changes the checked state, which fires a {@link ChangeEvent}, so can be used to
@@ -117,7 +119,7 @@ public class Button extends Table {
 	public void toggle () {
 		setChecked(!isChecked);
 	}
-	
+
 	public boolean isChecked () {
 		return isChecked;
 	}
@@ -169,7 +171,9 @@ public class Button extends Table {
 			offsetX = style.pressedOffsetX;
 			offsetY = style.pressedOffsetY;
 		} else {
-			if (style.checked == null)
+			if (isDisabled && style.disabled != null)
+				background = style.disabled;
+			else if (style.checked == null)
 				background = style.up;
 			else
 				background = isChecked ? style.checked : style.up;
@@ -222,14 +226,13 @@ public class Button extends Table {
 	 * @author mzechner */
 	static public class ButtonStyle {
 		/** Optional. */
-		public Drawable down, up, checked;
+		public Drawable down, up, checked, disabled;
 		/** Optional. */
 		public float pressedOffsetX, pressedOffsetY;
 		/** Optional. */
 		public float unpressedOffsetX, unpressedOffsetY;
 
 		public ButtonStyle () {
-			
 		}
 
 		public ButtonStyle (Drawable up, Drawable down, Drawable checked, float pressedOffsetX, float pressedOffsetY,

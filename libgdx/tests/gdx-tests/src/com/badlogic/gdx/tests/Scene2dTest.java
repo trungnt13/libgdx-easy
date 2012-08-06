@@ -23,23 +23,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.FloatAction;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.EmptyDrawable;
 import com.badlogic.gdx.tests.utils.GdxTest;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class Scene2dTest extends GdxTest {
 	Stage stage;
@@ -75,12 +72,11 @@ public class Scene2dTest extends GdxTest {
 
 		Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 
-
 		final TextButton button = new TextButton("Fancy Background", skin);
 		button.pad(100).debug();
 
 // button.addListener(new ClickListener() {
-// public void clicked (ActorEvent event, float x, float y) {
+// public void clicked (InputEvent event, float x, float y) {
 // System.out.println("click! " + x + " " + y);
 // }
 // });
@@ -91,7 +87,7 @@ public class Scene2dTest extends GdxTest {
 				return true;
 			}
 
-			public void fling (InputEvent event, float velocityX, float velocityY) {
+			public void fling (InputEvent event, float velocityX, float velocityY, int pointer, int button) {
 				System.out.println("fling " + velocityX + ", " + velocityY);
 			}
 
@@ -127,12 +123,25 @@ public class Scene2dTest extends GdxTest {
 
 		meow.setDuration(2);
 
-		 actor.addAction(forever(sequence(moveBy(50, 0, 2),moveBy(-50, 0, 2))));
+		actor.addAction(forever(sequence(moveBy(50, 0, 2), moveBy(-50, 0, 2), run(new Runnable() {
+			public void run () {
+				actor.setZIndex(0);
+			}
+		}))));
 		// actor.addAction(parallel(rotateBy(90, 2), rotateBy(90, 2)));
 		// actor.addAction(parallel(moveTo(250, 250, 2, elasticOut), color(RED, 6), delay(0.5f), rotateTo(180, 5, swing)));
 		// actor.addAction(forever(sequence(scaleTo(2, 2, 0.5f), scaleTo(1, 1, 0.5f), delay(0.5f))));
 
 		patch = skin.getPatch("default-round");
+
+		Window window = new Window("Moo", skin);
+		Label lbl = new Label("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJ", skin);
+		lbl.setWrap(true);
+		window.row();
+		window.add(lbl).width(400);
+		window.pack();
+		window.pack();
+		stage.addActor(window);
 	}
 
 	public void render () {
