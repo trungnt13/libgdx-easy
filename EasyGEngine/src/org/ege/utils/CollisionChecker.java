@@ -53,7 +53,15 @@ public final class CollisionChecker {
 	/*****************************************************
 	 * Sprite Manager
 	 *****************************************************/
-	
+	/**
+	 * @Note this is unsafe method process directly with native method without any check
+	 * @param result
+	 * @param boundingRectArray1
+	 * @param size1
+	 * @param boundingRectArray2
+	 * @param size2
+	 * @return
+	 */
 	public static native int checkCollision(int[] result,float[] boundingRectArray1,int size1,float[] boundingRectArray2,int size2);
 
 }

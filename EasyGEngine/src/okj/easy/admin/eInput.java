@@ -30,7 +30,7 @@ public class eInput implements InputProcessor{
 	private final ArrayList<MotionCallBack> mMotionList = new ArrayList<MotionCallBack>();
 	private final ArrayList<KeyCallBack> mKeysList = new ArrayList<KeyCallBack>();
 	
-	//	-----------------------------------------------
+	//	==============================================	
 	
 	private static final OrthographicCamera mCamera = new OrthographicCamera();
 	
@@ -39,9 +39,9 @@ public class eInput implements InputProcessor{
 	
 	int tmp;
 	
-	/***************************************************************
-	 * 
-	 ***************************************************************/
+	//	==============================================	
+
+	private int mLastTouchPointer;
 	
 	public eInput () {
 	}
@@ -176,6 +176,8 @@ public class eInput implements InputProcessor{
 	 * @param button the button
 	 * @return whether the input was processed */
 	public boolean touchDown (int X, int Y, int pointer, int button) {
+		mLastTouchPointer = pointer;
+		
 		if(Dialog.DIALOG_NUMBER > 0)
 			return eAdmin.egame.getLayout().touchDown(X, Y, pointer, button);
 		
@@ -350,6 +352,10 @@ public class eInput implements InputProcessor{
 	/***************************************************************
 	 * Method from Gdx.input
 	 ***************************************************************/
+	
+	public int getLastTouchPointer(){
+		return mLastTouchPointer;
+	}
 	
 	public float getAccelerometerX() {
 		return Gdx.input.getAccelerometerX();
