@@ -12,6 +12,6 @@
 
 void getNearestSprite(int*,int,float*,float*,int);
 
-void getNearestSprite(int,int);
+void getNearestSprite(int*,int,float,float,float*,int);
 
 #endif /* SPRITEPROCESSOR_H_ */

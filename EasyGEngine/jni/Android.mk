@@ -8,6 +8,7 @@ LOCAL_SRC_FILES := CollisionProcessor.cpp\
 	utils/Array.cpp\
 	utils/GridSimulation.cpp\
 	utils/math/eMath.cpp\
-	utils/math/Vector2.cpp
-
+	utils/math/Vector2.cpp\
+	org_ege_utils_SpriteUtils.cpp\
+	SpriteProcessor.cpp
 include $(BUILD_SHARED_LIBRARY)
