@@ -13,6 +13,8 @@
 
 #define lengthOf(a) ( sizeof ( a ) / sizeof ( *a ) )
 
+float calDistance(float,float,float,float);
+
 // primitive converter
 
 #endif /* EMATH_H_ */

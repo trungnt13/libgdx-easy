@@ -1,8 +1,22 @@
 package org.ege.utils;
 
+
 public class SpriteUtils {
 	private static final int[] mResultSet = new int[113];
-	private static int mResultSize = 0; 
+	
+	public static int[] processNearestSprite(int numberOfResult,float originSpriteX,float originSpriteY,float[] spriteList,int spriteSize){
+		getNearestSprite(mResultSet, numberOfResult, originSpriteX, originSpriteY, spriteList, spriteSize);
+		return mResultSet;
+	}
+
+	public static int[] processNearestSprite(int numberOfResult,float[] originSprite,float[] spriteList,int spriteSize){
+		getNearestSprite(mResultSet, numberOfResult, originSprite[0], originSprite[1], spriteList, spriteSize);
+		return mResultSet;
+	}
+
+	/***********************************************************
+	 * Native method
+	 ***********************************************************/
 	
 	/**
 	 * Get the list of nearest sprite to the origin sprite
