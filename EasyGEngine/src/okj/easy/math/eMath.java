@@ -16,8 +16,7 @@ public final class eMath {
 	public static final int COUNTER_CLOCKWISE = 1;
 	public static final int CLOCKWISE = 2;
 	
-	private static final Vector2 v1 = new Vector2();
-	private static final Vector2 v2 = new Vector2();
+	static public final float PI = 3.1415927f;
 	/**
 	 * Noone can instance this class
 	 */
@@ -44,9 +43,9 @@ public final class eMath {
 		}
 		
 		if(lineEnd.x > lineStart.x)
-			return (float) (180.0f/MathUtils.PI* Math.atan((lineEnd.y - lineStart.y)/(lineEnd.x - lineStart.x)));
+			return (float) (180.0f/PI* Math.atan((lineEnd.y - lineStart.y)/(lineEnd.x - lineStart.x)));
 		if(lineEnd.x < lineStart.x)
-			return (float) (180.0f/MathUtils.PI* Math.atan((lineEnd.y - lineStart.y)/(lineEnd.x - lineStart.x))) - 180;
+			return (float) (180.0f/PI* Math.atan((lineEnd.y - lineStart.y)/(lineEnd.x - lineStart.x))) - 180;
 		
 		return 0;
 	}

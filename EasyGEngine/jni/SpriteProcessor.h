@@ -10,6 +10,52 @@
 
 #include "utils.h"
 
+class TOP {
+public:
+	bool check(float originX,float originY,float x,float y){
+		return y > originY;
+	}
+};
+
+class LEFT{
+public:
+	bool check(float originX,float originY,float x,float y){
+		return x < originX;
+	}
+};
+
+class RIGHT {
+public:
+	bool check(float originX,float originY,float x,float y){
+		return x > originX;
+	}
+};
+
+class BOTTOM{
+public:
+	bool check(float originX,float originY,float x,float y){
+		return y < originY;
+	}
+};
+
+class Checker : public TOP,
+				 public LEFT,
+				 public RIGHT,
+				 public BOTTOM{
+public:
+	bool check(float,float,float,float);
+};
+
+const Checker checker;
+
+// direction method
+
+void getNearestSprite(int*,int,int,float*,float*,int);
+
+void getNearestSprite(int*,int,int,float,float,float*,int);
+
+// no direction method
+
 void getNearestSprite(int*,int,float*,float*,int);
 
 void getNearestSprite(int*,int,float,float,float*,int);
