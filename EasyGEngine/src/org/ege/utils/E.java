@@ -16,4 +16,11 @@ public final class E {
 		public static final int RIGHT = 1<<2;
 		public static final int BOTTOM = 1<<3;
 	}
+	
+	public static final class orientation{
+		public static final int HORIZONTAL= 1;
+		public static final int VERTICAL = 2;
+		public static final int LANDSCAPE = 1;
+		public static final int PORTRAIT = 2;
+	}
 }

@@ -2,7 +2,7 @@ package org.ege.widget;
 
 import okj.easy.admin.eAdmin;
 
-import org.ege.utils.Orientation;
+import org.ege.utils.E;
 import org.ege.utils.Pauseable;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,7 +24,7 @@ public  class Layout extends Stage implements Pauseable{
 	public static int UI_HEIGHT = 320;
 	public static int UI_WIDTH = 480;
 	public static float TOAST_WIDTH = 220;
-	public static Orientation ORIENTATION = Orientation.LANDSCAPE;
+	public static int ORIENTATION = E.orientation.LANDSCAPE;
 	
 	private static byte mCurrentMode = FIXED_RESOLUTION_MODE;
 	
@@ -32,11 +32,11 @@ public  class Layout extends Stage implements Pauseable{
 		switch (mCurrentMode) {
 			case FIXED_RESOLUTION_MODE:
 				if(screenWIdth > screenHEight){
-					ORIENTATION = Orientation.LANDSCAPE;
+					ORIENTATION = E.orientation.LANDSCAPE;
 					UI_WIDTH = 800;
 					UI_HEIGHT = 500;
 				}else{
-					ORIENTATION = Orientation.PORTRAIT;
+					ORIENTATION = E.orientation.PORTRAIT;
 					UI_WIDTH = 500;
 					UI_HEIGHT = 800;
 				}
@@ -45,9 +45,9 @@ public  class Layout extends Stage implements Pauseable{
 				UI_WIDTH =  screenWIdth;
 				UI_HEIGHT = screenHEight;
 				if(screenWIdth > screenHEight){
-					ORIENTATION = Orientation.LANDSCAPE;
+					ORIENTATION = E.orientation.LANDSCAPE;
 				}else{
-					ORIENTATION = Orientation.PORTRAIT;
+					ORIENTATION = E.orientation.PORTRAIT;
 				}
 				break;
 			case FIXED_MULTI_RESOLUTION_MODE:
@@ -55,16 +55,16 @@ public  class Layout extends Stage implements Pauseable{
 				UI_WIDTH =  (int) (ratio * 320);
 				UI_HEIGHT = 320;
 				if(screenWIdth > screenHEight){
-					ORIENTATION = Orientation.LANDSCAPE;
+					ORIENTATION = E.orientation.LANDSCAPE;
 				}else{
-					ORIENTATION = Orientation.PORTRAIT;
+					ORIENTATION = E.orientation.PORTRAIT;
 				}
 				break;
 			case MANUAL_RESOLUTION_MODE:
 				if(screenWIdth > screenHEight){
-					ORIENTATION = Orientation.LANDSCAPE;
+					ORIENTATION = E.orientation.LANDSCAPE;
 				}else{
-					ORIENTATION = Orientation.PORTRAIT;
+					ORIENTATION = E.orientation.PORTRAIT;
 				}
 				break;
 		}

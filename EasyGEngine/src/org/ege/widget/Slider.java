@@ -1,6 +1,6 @@
 package org.ege.widget;
 
-import org.ege.utils.Orientation;
+import org.ege.utils.E;
 import org.ege.widget.callback.OnValueListener;
 
 import com.badlogic.gdx.graphics.Color;
@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 public class Slider extends Actor {
 	SliderStyle mStyle;
 	
-	Orientation mOrientaion;
+	int mOrientaion;
 	OnValueListener mValueListener;
 
 	private float rotation;
@@ -66,7 +66,7 @@ public class Slider extends Actor {
 		
 		setBounds(0, 0, 100, 13);
 		
-		setRotation(mOrientaion == Orientation.LANDSCAPE ? 0 : 90);
+		setRotation(mOrientaion == E.orientation.LANDSCAPE ? 0 : 90);
 	
 		/*	-----------------------------	*/
 		
@@ -98,7 +98,7 @@ public class Slider extends Actor {
 			mFirstHeight = 0;
 		}
 		
-		if(mOrientaion == Orientation.LANDSCAPE){
+		if(mOrientaion == E.orientation.LANDSCAPE){
 			mKnobX = (mCurrentValuePercent*(getWidth() - mKnobWidth))+ getX();
 			mKnobY = getY() + getHeight()/2 - mKnobHeight/2;
 			mProcessWidth  = mKnobX + mKnobWidth/2 - getX();
@@ -151,7 +151,7 @@ public class Slider extends Actor {
 		mKnobHeight = height * mKnobSizePercent;
 		mKnobWidth = mKnobWHRatio*mKnobHeight;
 		
-		if(mOrientaion == Orientation.LANDSCAPE){
+		if(mOrientaion == E.orientation.LANDSCAPE){
 			mKnobX = (mCurrentValuePercent*(width - mKnobWidth))+ getX();
 			mKnobY = getY() + height/2 - mKnobHeight/2;
 			mProcessWidth  = mKnobX + mKnobWidth/2 - getX();
@@ -213,7 +213,7 @@ public class Slider extends Actor {
 		
 		batch.setColor(color.r, color.g, color.b, color.a* parentAlpha);
 		
-		if(mOrientaion == Orientation.LANDSCAPE){
+		if(mOrientaion == E.orientation.LANDSCAPE){
 			rotation = 0;
 			mKnobX = (mCurrentValuePercent*(width - mKnobWidth))+ x;
 			mKnobY = y + height/2 - mKnobHeight/2;
@@ -335,7 +335,7 @@ public class Slider extends Actor {
 		public TextureRegion knob;
 		public TextureRegion process[];
 		
-		public Orientation orientation = Orientation.LANDSCAPE;
+		public int orientation = E.orientation.LANDSCAPE;
 		
 		public float min = 0;
 		public float max =100;

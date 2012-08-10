@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import okj.easy.admin.eAdmin;
 
-import org.ege.utils.Orientation;
+import org.ege.utils.E;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -39,11 +39,11 @@ public class GridSimulationF extends SimulationAdapter{
 	
 	float padding = 0;
 	
-	Orientation orientation;
+	int orientation;
 
 	//	----------------------------------------------------------
 
-	public GridSimulationF(float startX,float startY,float padding,Orientation orientation){
+	public GridSimulationF(float startX,float startY,float padding,int orientation){
 		this.startX = startX;
 		this.startY = startY;
 		this.padding = padding;
@@ -75,7 +75,7 @@ public class GridSimulationF extends SimulationAdapter{
 	 */
 	public Vector2[] unproject(int numberOfView,byte zeroPointInSytem){
 		ArrayList<Vector2> tmp = new ArrayList<Vector2>();
-		if(orientation == Orientation.LANDSCAPE){
+		if(orientation == E.orientation.LANDSCAPE){
 			if(maxCols <= 0){
 				for(int i = 0;i < numberOfView;i++){
 					float y = startY + (height * (i % maxRows));
@@ -141,7 +141,7 @@ public class GridSimulationF extends SimulationAdapter{
 		float y = yPosition - startY;
 		x = x - (x % width);
 		y = y - (y % height);
-		if(orientation == Orientation.LANDSCAPE){
+		if(orientation == E.orientation.LANDSCAPE){
 			return (int) (maxRows*(x/width+1) - (maxRows - y/height));
 		}else{
 			return (int) (maxCols*(y/height+1) - (maxCols - x/width));
@@ -149,7 +149,7 @@ public class GridSimulationF extends SimulationAdapter{
 	}
 
 	public Vector2 toRealPos(int ID){
-		if(orientation == Orientation.LANDSCAPE){
+		if(orientation == E.orientation.LANDSCAPE){
 			return new Vector2(startX + (width *(ID / maxRows)), 
 							    startY + (height *(ID % maxRows)));
 		}else

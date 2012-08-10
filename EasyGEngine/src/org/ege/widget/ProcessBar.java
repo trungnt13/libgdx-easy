@@ -1,7 +1,7 @@
 package org.ege.widget;
 
 
-import org.ege.utils.Orientation;
+import org.ege.utils.E;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,7 +24,7 @@ public class ProcessBar extends Actor{
 	private int mKeyFrame;
 	
 	private ProcessMode mMode;
-	private Orientation mOrientation;
+	private int mOrientation;
 	
 	boolean isAnimation = false;
 	
@@ -41,7 +41,7 @@ public class ProcessBar extends Actor{
 		
 		mCurrentPercent = (mMode == ProcessMode.COUNT_UP) ? 0 : 1;
 		mCurrentTime = (mMode == ProcessMode.COUNT_UP) ? 0 : mStyle.time;
-		setRotation((mOrientation == Orientation.LANDSCAPE) ? 0 : 90);
+		setRotation((mOrientation == E.orientation.LANDSCAPE) ? 0 : 90);
 		
 		mFirstWidth = mStyle.process[0].getRegionWidth();
 		mFirstHeight = mStyle.process[0].getRegionHeight();
@@ -185,7 +185,7 @@ public class ProcessBar extends Actor{
 		public float frameduration;
 		
 		public ProcessMode mode = ProcessMode.COUNT_UP;
-		public Orientation orientation = Orientation.LANDSCAPE;
+		public int orientation = E.orientation.LANDSCAPE;
 	}
 	
 	public static interface OnProcessListener {

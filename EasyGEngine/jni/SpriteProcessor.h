@@ -46,8 +46,6 @@ public:
 	bool check(float,float,float,float);
 };
 
-const Checker checker;
-
 // direction method
 
 void getNearestSprite(int*,int,int,float*,float*,int);

@@ -6,7 +6,6 @@ import java.util.Iterator;
 import org.ege.assets.StyleLoader;
 import org.ege.assets.StyleLoader.StyleParameter;
 import org.ege.utils.Factory;
-import org.ege.utils.GraphicsHelper;
 import org.ege.utils.Pool;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 import org.ege.widget.StyleAtlas;
@@ -336,7 +335,7 @@ public class eContext {
 	public TextureRegion[] findGRegionsByName(String regionName){
 		if(mCurAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz use eAdmin.egraphics.atlasQuery(...) first");
-		return GraphicsHelper.regionConvert(mCurAtlas.findRegions(regionName));
+		return eGraphics.regionConvert(mCurAtlas.findRegions(regionName));
 	}
 	
 	 /*******************************************************************************

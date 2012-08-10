@@ -113,7 +113,7 @@ public class Sprite extends TextureRegion implements SpriteBackend{
 	public Sprite (TextureRegion region) {
 		setRegion(region);
 		setColor(1, 1, 1, 1);
-		setSize(Math.abs(region.getRegionWidth()), Math.abs(region.getRegionHeight()));
+		setSize(region.getRegionWidth(), region.getRegionHeight());
 		setOrigin(width / 2, height / 2);
 	}
 

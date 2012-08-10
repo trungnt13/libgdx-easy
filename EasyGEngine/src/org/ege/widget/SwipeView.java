@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ege.utils.Debug;
-import org.ege.utils.Orientation;
+import org.ege.utils.E;
 import org.ege.utils.Property;
 import org.ege.utils.Refreshable;
 
@@ -28,7 +28,7 @@ import com.esotericsoftware.tablelayout.Value;
 
 public abstract class SwipeView extends Table implements Refreshable,Debug,Disposable{
     
-	private Orientation orientation;
+	private int orientation;
 	
 	private final ScrollPane 	mFlickScrollPane ;
 	private final FlickTable	mTable;
@@ -147,16 +147,16 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	 ****************************************************************/
 	
 	private void generateContainerData(){
-		if(orientation == null)
+		if(orientation == 0)
 			return;
 		switch (orientation) {
-			case HORIZONTAL:
+			case E.orientation.HORIZONTAL:
 				final float containerPadLeft = getPadLeft().get(null);
 				final float containerPadRight =getPadRight().get(null);
 				containerSize = (int)(getPrefWidth() - containerPadLeft - containerPadRight);
 //				D.out("container " + containerPadLeft + " " + containerPadRight + "  " + containerSize);
 				break;
-			case VERTICAL:
+			case E.orientation.VERTICAL:
 				final float containerPadTop = getPadTop().get(null);
 				final float containerPadBottom = getPadBottom().get(null);
 				containerSize = (int)(getPrefHeight() - containerPadBottom - containerPadTop);
@@ -166,16 +166,16 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 
 
 	private void generateFlickData(){
-		if(mTable.getCells().size() == 0 || orientation == null)
+		if(mTable.getCells().size() == 0 || orientation == 0)
 			return;
 		switch (orientation) {
-			case HORIZONTAL:
+			case E.orientation.HORIZONTAL:
 				final Cell sampleCell = mTable.getCells().get(0);
 				cellSize =  sampleCell.getPrefWidth().get(null);
 				spacing = 	sampleCell.getSpaceRight().get(null);
 //				D.out("flick " +cellSize + " " + spacing + " " );
 				break;
-			case VERTICAL:
+			case E.orientation.VERTICAL:
 				final Cell sampleCell1 = mTable.getCells().get(0);
 				cellSize = sampleCell1.getPrefHeight().get(null);
 				spacing = sampleCell1.getSpaceBottom().get(null);
@@ -205,11 +205,11 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 		
 		if(mCurrentFocusID == 0 && mTable.getCells().size() > 1)
 			switch (orientation) {
-				case HORIZONTAL:
+				case E.orientation.HORIZONTAL:
 					for(int i =0 ;i <= mCurrentRow;i++)
 						effect.CurrentFocusChild(getChild(i, 0));
 					break;
-				case VERTICAL:
+				case E.orientation.VERTICAL:
 					final int max = mCurrentRow ;
 					for(int i =0 ;i < max ;i++)
 						effect.CurrentFocusChild(getChild(0, i));
@@ -218,7 +218,7 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	}
 	
 	public void setAutoFocusScroll(boolean isAuto){
-		if(orientation != Orientation.HORIZONTAL && orientation != Orientation.VERTICAL )
+		if(orientation != E.orientation.HORIZONTAL && orientation != E.orientation.VERTICAL )
 			isAutoFocusScroll = false;
 		else
 			isAutoFocusScroll = isAuto;
@@ -245,11 +245,11 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 			
 			if(!mFlickScrollPane.isFlinging() && !mFlickScrollPane.isPanning()){
 				switch (orientation) {
-					case HORIZONTAL:
+					case E.orientation.HORIZONTAL:
 						if(checkAutoFocusX || justPanning)
 							autoScrollX();
 						break;
-					case VERTICAL:
+					case E.orientation.VERTICAL:
 						if(checkAutoFocusY || justPanning)
 							autoScrollY();
 						break;
@@ -265,12 +265,12 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	public void act (float delta) {
 		super.act(delta);
 		
-		if(orientation == null)
+		if(orientation == 0)
 			return;
 		
 		if(mFlickScrollPane.isFlinging() || mFlickScrollPane.isPanning()){
 				switch (orientation) {
-					case HORIZONTAL:
+					case E.orientation.HORIZONTAL:
 						//Caculate current focus ID
 						mCurrentFocusID = (int) ((mFlickScrollPane.getScrollX() + spacing/2  + (containerSize/2))  
 												/ 
@@ -303,7 +303,7 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 						mLastFocusID = mCurrentFocusID;
 						break;
 						
-					case VERTICAL:
+					case E.orientation.VERTICAL:
 						//Caculate current focus ID
 						mCurrentFocusID = (int) ((mFlickScrollPane.getScrollY()  + (spacing/2) + (containerSize/2))  
 												/ 
@@ -348,10 +348,10 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 			float alpha = mAutoScrollInterpolation.apply(Math.min(1f, timer/1.5f));
 			
 			switch (orientation) {
-				case HORIZONTAL:
+				case E.orientation.HORIZONTAL:
 					mFlickScrollPane.setScrollX(currentScroll+ mdelta*alpha);
 					break;
-				case VERTICAL:
+				case E.orientation.VERTICAL:
 					mFlickScrollPane.setScrollY(currentScroll+ mdelta*alpha);
 					break;
 			}
@@ -441,7 +441,7 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 		return isAutoFocusScroll;
 	}
 
-	public Orientation getOrientation(){
+	public int getOrientation(){
 		return orientation;
 	}
 	
@@ -495,12 +495,12 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 		return this;
 	}
 	
-	public SwipeView setSwipeOrientation(Orientation orientation){
-		if(orientation == Orientation.HORIZONTAL ||orientation == Orientation.LANDSCAPE){
-			this.orientation = Orientation.HORIZONTAL;
+	public SwipeView setSwipeOrientation(int orientation){
+		if(orientation == E.orientation.HORIZONTAL ||orientation == E.orientation.LANDSCAPE){
+			this.orientation = E.orientation.HORIZONTAL;
 			mFlickScrollPane.setScrollingDisabled(false, true);
-		}else if(orientation == Orientation.VERTICAL ||orientation == Orientation.PORTRAIT){
-			this.orientation = Orientation.VERTICAL;
+		}else if(orientation == E.orientation.VERTICAL ||orientation == E.orientation.PORTRAIT){
+			this.orientation = E.orientation.VERTICAL;
 			mFlickScrollPane.setScrollingDisabled(true, false);
 		}else{
 			mFlickScrollPane.setScrollingDisabled(true, true);

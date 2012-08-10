@@ -15,12 +15,6 @@ package org.ege.widget;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ege.utils.Info;
-import org.ege.utils.Orientation;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -32,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.ReadOnlySerializer;
-import com.badlogic.gdx.utils.Json.Serializer;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.SerializationException;
@@ -158,69 +151,42 @@ public class StyleAtlas extends Skin {
 
 		/*	------------------------------------------------	*/
 
-		json.setSerializer(Orientation.class, new Serializer<Orientation>() {
-
-			@Override
-			public void write (Json json, Orientation object, Class knownType) {
-				json.writeObjectStart();
-				switch (object) {
-					case HORIZONTAL:
-						json.writeValue("orientation", "HORIZONTAL");
-						break;
-					case VERTICAL:
-						json.writeValue("orientation", "VERTICAL");
-						break;
-					case LANDSCAPE:
-						json.writeValue("orientation", "LANDSCAPE");
-						break;
-					case PORTRAIT:
-						json.writeValue("orientation", "PORTRAIT");
-						break;
-				}
-				json.writeObjectEnd();
-			}
-
-			@Override
-			public Orientation read (Json json, Object jsonData, Class type) {
-				String ori = (String)jsonData;
-				ori = ori.toLowerCase();
-				if(ori.equals("landscape"))
-					return Orientation.LANDSCAPE;
-				else if(ori.equals("portrait"))
-					return Orientation.PORTRAIT;
-				else if(ori.equals("vertical"))
-					return Orientation.VERTICAL;
-				return Orientation.HORIZONTAL;
-			}
-			
-		});
-		
-		/*	------------------------------------------------	*/
-
-		json.setSerializer(Info.class, new ReadOnlySerializer<Info>() {
-
-			@Override
-			public Info read (Json json, Object jsonData, Class type) {
-				String name = json.readValue("type", String.class,jsonData);
-				if(name == null){
-					Info info = new Info();
-					info.value = (ArrayList) json.readValue("value", List.class,jsonData);
-					return info;
-				}
-			
-				Class clazz = null;
-				try {
-					clazz = Class.forName(name);
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				Info info = new Info();
-				List test= json.readValue("value", List.class, jsonData);
-				for(int i =0 ; i < test.size();i++)
-					info.value.add(json.readValue(clazz, test.get(i)));
-				return info;
-			}
-		});
+//		json.setSerializer(Orientation.class, new Serializer<Orientation>() {
+//
+//			@Override
+//			public void write (Json json, Orientation object, Class knownType) {
+//				json.writeObjectStart();
+//				switch (object) {
+//					case HORIZONTAL:
+//						json.writeValue("orientation", "HORIZONTAL");
+//						break;
+//					case VERTICAL:
+//						json.writeValue("orientation", "VERTICAL");
+//						break;
+//					case LANDSCAPE:
+//						json.writeValue("orientation", "LANDSCAPE");
+//						break;
+//					case PORTRAIT:
+//						json.writeValue("orientation", "PORTRAIT");
+//						break;
+//				}
+//				json.writeObjectEnd();
+//			}
+//
+//			@Override
+//			public Orientation read (Json json, Object jsonData, Class type) {
+//				String ori = (String)jsonData;
+//				ori = ori.toLowerCase();
+//				if(ori.equals("landscape"))
+//					return Orientation.LANDSCAPE;
+//				else if(ori.equals("portrait"))
+//					return Orientation.PORTRAIT;
+//				else if(ori.equals("vertical"))
+//					return Orientation.VERTICAL;
+//				return Orientation.HORIZONTAL;
+//			}
+//			
+//		});
 		
 		/*	------------------------------------------------	*/
 

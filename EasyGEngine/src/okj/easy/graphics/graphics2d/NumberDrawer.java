@@ -2,9 +2,10 @@ package okj.easy.graphics.graphics2d;
 
 import java.util.ArrayList;
 
+import okj.easy.admin.eGraphics;
+
 import org.ege.utils.CharUtils;
-import org.ege.utils.GraphicsHelper;
-import org.ege.utils.Orientation;
+import org.ege.utils.E;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,30 +32,30 @@ public class NumberDrawer {
 	
 	private ArrayList<Integer> number= new ArrayList<Integer>();
 	
-	private Orientation orientation;
+	private int orientation;
 	
 	public NumberDrawer (Texture numberTexture,int tileWidth){
-		numbers = GraphicsHelper.split(numberTexture, 10, tileWidth, numberTexture.getHeight(), 0);
+		numbers = eGraphics.split(numberTexture, 10, tileWidth, numberTexture.getHeight(), 0);
 		set();
 	}
 	
 	public NumberDrawer (Texture numberTexture, int tileWidth,int tileHeight){
-		numbers = GraphicsHelper.split(numberTexture, 10, tileWidth, tileHeight, 0);
+		numbers = eGraphics.split(numberTexture, 10, tileWidth, tileHeight, 0);
 		set();
 	}
 	
     public NumberDrawer (Texture numberTexture,int tileWidth,int tileHeight,int padding){
-		numbers = GraphicsHelper.split(numberTexture, 10, tileWidth,tileHeight,padding);
+		numbers = eGraphics.split(numberTexture, 10, tileWidth,tileHeight,padding);
 		set();
 	}
 	
 	public NumberDrawer (TextureRegion numberRegion,int padding){
-		numbers = GraphicsHelper.split(numberRegion, 10, 10, 1, padding);
+		numbers = eGraphics.split(numberRegion, 10, 10, 1, padding);
 		set();
 	}
 	
 	public NumberDrawer (TextureRegion numberRegion){
-		numbers = GraphicsHelper.split(numberRegion, 10, 10, 1, 0);
+		numbers = eGraphics.split(numberRegion, 10, 10, 1, 0);
 		set();
 	}
 	
@@ -67,15 +68,15 @@ public class NumberDrawer {
 		setRotation(0);
 		setDrawingNumber(0);
 		setPadding(0);
-		setOrientation(Orientation.HORIZONTAL);
+		setOrientation(E.orientation.HORIZONTAL);
 	}
 	
-	public void setOrientation(Orientation orientaion){
-		if(orientaion == Orientation.VERTICAL || 
-		   orientaion == Orientation.PORTRAIT)
-			this.orientation = Orientation.VERTICAL;
+	public void setOrientation(int orientaion){
+		if(orientaion == E.orientation.VERTICAL || 
+		   orientaion == E.orientation.PORTRAIT)
+			this.orientation = E.orientation.VERTICAL;
 		else 
-			this.orientation = Orientation.HORIZONTAL;
+			this.orientation = E.orientation.HORIZONTAL;
 	}
 	
 	public void setDrawingNumber(String number){
@@ -187,13 +188,13 @@ public class NumberDrawer {
 		return this.padding;
 	}
 	
-	public Orientation getOrientaion(){
+	public int getOrientaion(){
 		return this.orientation;
 	}
 	//	---------------------------------------------------------
 
 	public void draw(SpriteBatch batch){
-		if(orientation == Orientation.HORIZONTAL){
+		if(orientation == E.orientation.HORIZONTAL){
 			float startX = getX();
 			for(int i = 0;i < number.size();i++){
 				batch.draw(numbers[number.get(i)],startX,getY(),getOriginX(),getOriginY(),getWidth(),getHeight(),1f,1f,getRotation()	);
@@ -210,7 +211,7 @@ public class NumberDrawer {
 	
 	public void draw(SpriteBatch batch,int yourNumber){
 		setDrawingNumber(yourNumber);
-		if(orientation == Orientation.HORIZONTAL){
+		if(orientation == E.orientation.HORIZONTAL){
 			float startX = getX();
 			for(int i = 0;i < number.size();i++){
 				batch.draw(numbers[number.get(i)],startX,getY(),getOriginX(),getOriginY(),getWidth(),getHeight(),1f,1f,getRotation()	);

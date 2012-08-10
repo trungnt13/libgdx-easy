@@ -1,4 +1,4 @@
-package okj.easy.math.geometry;
+package com.badlogic.gdx.math;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;

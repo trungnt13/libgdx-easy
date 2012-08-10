@@ -7,6 +7,8 @@
 
 #include "SpriteProcessor.h"
 
+Checker checker;
+
 // inline method
 inline bool checkProcess(int j,float originX,float originY,float x,float y){
 	switch (j){

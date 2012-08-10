@@ -250,5 +250,20 @@ public class Tree extends WidgetGroup {
 		public Drawable plus, minus;
 		/** Optional. */
 		public Drawable selection;
+
+		public TreeStyle () {
+		}
+
+		public TreeStyle (Drawable plus, Drawable minus, Drawable selection) {
+			this.plus = plus;
+			this.minus = minus;
+			this.selection = selection;
+		}
+
+		public TreeStyle (TreeStyle style) {
+			this.plus = style.plus;
+			this.minus = style.minus;
+			this.selection = style.selection;
+		}
 	}
 }

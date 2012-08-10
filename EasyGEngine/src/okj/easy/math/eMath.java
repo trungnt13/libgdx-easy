@@ -1,9 +1,9 @@
 package okj.easy.math;
 
 
-import okj.easy.math.geometry.Line;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Line;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -17,9 +17,14 @@ public final class eMath {
 	public static final int CLOCKWISE = 2;
 	
 	static public final float PI = 3.1415927f;
+	static public final float MAX_ANGLE = 360000 ;
+	
 	/**
 	 * Noone can instance this class
 	 */
+	public static float tmp;
+	public static float tmp1;
+	
 	private eMath() {
 		
 	}
@@ -27,6 +32,24 @@ public final class eMath {
 	/***************************************************************************
 	 * 
 	 ***************************************************************************/
+	public static float claimAngle(float degrees){
+		tmp = degrees + MAX_ANGLE;
+		tmp1 = tmp % 360;
+		return tmp1;
+	}
+	
+	public static int shortestPath(float originDegrees,float destDegrees){
+		if(destDegrees > originDegrees){
+			if(destDegrees-originDegrees < 180)
+				return 1;
+			else return -1;
+		}else{
+			if(originDegrees - destDegrees < 180)
+				return -1;
+			else return 1;
+		}
+	}
+	
 	public static float calVectorAngle(Vector2 lineStart,Vector2 lineEnd){
 		if(lineEnd.x == lineStart.x){
 			if(lineEnd.y > lineStart.y)
@@ -214,12 +237,6 @@ public final class eMath {
 					return -1;
 			}
 		}
-	}
-	
-	public static void swap(float a,float b){
-		float tmp = a;
-		a = b;
-		b = tmp;
 	}
 	
 	public static float minDivisibleNumber(float yourDividend,float divisor){
