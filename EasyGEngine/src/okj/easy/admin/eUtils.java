@@ -2,18 +2,20 @@ package okj.easy.admin;
 
 import java.util.ArrayList;
 
+import org.ege.utils.exception.EasyGEngineRuntimeException;
+
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Base64Coder;
 
 public final class eUtils {
 	
 	public static final class base64{
-		public static final String format = ".256encoded";
+		public static final String format = "256encoded";
 		
 		public static void encodeAndSave(FileHandle file){
 			String tmp = Base64Coder.encodeString(file.readString());
 			String path = file.file().getAbsolutePath();
-			path = path.replace("." + file.extension(), format);
+			path = path.replace(file.extension(), format);
 			FileHandle newFile = new FileHandle(path);
 			newFile.writeString(tmp, false);
 		}
@@ -39,6 +41,8 @@ public final class eUtils {
 		public static void decodeAndSave(FileHandle file,String extension){
 			String tmp = Base64Coder.decodeString(file.readString());
 			String path = file.file().getAbsolutePath();
+			if(!path.contains(format))
+				throw new EasyGEngineRuntimeException("Your file is not 64 encoded");
 			path = path.replace(format, extension);
 			FileHandle newFile = new FileHandle(path);
 			newFile.writeString(tmp, false);

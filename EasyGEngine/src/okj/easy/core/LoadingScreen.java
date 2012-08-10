@@ -14,8 +14,7 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	protected boolean isDone = false;
 	boolean autoChangeScreen = true;
 	
-	public LoadingScreen(GameScreen nextScreen){
-		this.nextScreen = nextScreen;
+	public LoadingScreen(){
 		this.isDone = false;
 	}
 
@@ -36,6 +35,11 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	public void setAutoChangeScreen(boolean isAuto){
 		this.autoChangeScreen = isAuto;
 	}
+	
+	/**********************************************************
+	 * 
+	 **********************************************************/
+	
 	/**
 	 * Create rendering component for drawing loading screen (just a dynamic component and 
 	 * you should release them right after this screen by call override dispose)
@@ -51,11 +55,15 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	@Override
 	public void render(float delta) {
 		if(isDone & autoChangeScreen)
-			setScreen(nextScreen, RELEASE);
+			setScreen(onChangedScreen(), RELEASE);
 		if(batch != null)
 			onRender(delta);
 	}
-	
+
+	/**********************************************************
+	 * 
+	 **********************************************************/
+
 	public abstract void onRender(float delta);
 
 	@Override
@@ -67,6 +75,9 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 					+  eAdmin.eaudio.getProgress() ) /2;
 	}
 
+	/**********************************************************
+	 * 
+	 **********************************************************/
 	
 	@Override
 	public void resize(int width, int height) {
@@ -74,7 +85,13 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	}
 
 	public abstract void onSizeChanged(int width, int height) ;
-	
+
+	public abstract Screen onChangedScreen();
+
+	/**********************************************************
+	 * 
+	 **********************************************************/
+
 	@Override
 	public void pause() {
 		
@@ -82,12 +99,13 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 
 	@Override
 	public void resume() {
-		onResume();
+	
 	}
 
-	public void onResume(){
-		
-	}
+
+	/**********************************************************
+	 * 
+	 **********************************************************/
 
 	/**
 	 * You should call override this method for effective release memory(just release the rendering resource)
@@ -100,12 +118,17 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 
 	public abstract void onDestroy () ;
 
+
+	/**********************************************************
+	 * 
+	 **********************************************************/
+	
 	/**
 	 * Set screen which lead to the new screen and the destroy mode of old screen
 	 * @param screen new screen
 	 * @param destroyMode destroy mode(RELEASE for totally destroy , HIDE -just make it invisible)
 	 */
-	protected void setScreen(Screen screen,int destroyMode) {
+	private void setScreen(Screen screen,int destroyMode) {
 		mGameCore.setScreen(screen,destroyMode);
 	}
 
