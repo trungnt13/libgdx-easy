@@ -42,6 +42,10 @@ public class Matrix3 implements Serializable {
 		idt();
 	}
 
+	public Matrix3 (Matrix3 matrix) {
+		set(matrix);
+	}
+
 	/** Sets this matrix to the identity matrix
 	 * @return this matrix */
 	public Matrix3 idt () {
@@ -89,7 +93,7 @@ public class Matrix3 implements Serializable {
 	}
 
 	/** Sets this matrix to a rotation matrix that will rotate any vector in counter clockwise order around the z-axis.
-	 * @param angle the angle in degrees.
+	 * @param degrees the angle in degrees.
 	 * @return this matrix */
 	public Matrix3 setToRotation (float degrees) {
 		float angle = DEGREE_TO_RAD * degrees;
@@ -153,14 +157,20 @@ public class Matrix3 implements Serializable {
 	}
 
 	public String toString () {
-		return "[" + val[0] + "|" + val[3] + "|" + val[6] + "]\n" + "[" + val[1] + "|" + val[4] + "|" + val[7] + "]\n" + "["
-			+ val[2] + "|" + val[5] + "|" + val[8] + "]";
+		String[] values = {Float.toString(val[M00]), Float.toString(val[M01]), Float.toString(val[M02]), Float.toString(val[M10]),
+			Float.toString(val[M11]), Float.toString(val[M12]), Float.toString(val[M20]), Float.toString(val[M21]),
+			Float.toString(val[M22])};
+		int max1 = Math.max(values[0].length(), Math.max(values[3].length(), values[6].length()));
+		int max2 = Math.max(values[1].length(), Math.max(values[4].length(), values[7].length()));
+		int max3 = Math.max(values[2].length(), Math.max(values[5].length(), values[8].length()));
+		return String.format("%" + max1 + "s, %" + max2 + "s, %" + max3 + "s\n%" + max1 + "s, %" + max2 + "s, %" + max3 + "s\n%"
+			+ max1 + "s, %" + max2 + "s, %" + max3 + "s", (Object[])values);
 	}
 
 	/** @return the determinant of this matrix */
 	public float det () {
-		return val[0] * val[4] * val[8] + val[3] * val[7] * val[2] + val[6] * val[1] * val[5] - val[0] * val[7]
-			* val[5] - val[3] * val[1] * val[8] - val[6] * val[4] * val[2];
+		return val[0] * val[4] * val[8] + val[3] * val[7] * val[2] + val[6] * val[1] * val[5] - val[0] * val[7] * val[5] - val[3]
+			* val[1] * val[8] - val[6] * val[4] * val[2];
 	}
 
 	/** Inverts this matrix given that the determinant is != 0
@@ -206,8 +216,8 @@ public class Matrix3 implements Serializable {
 		val[8] = mat.val[8];
 		return this;
 	}
-	
-	public Matrix3 set(Matrix4 mat) {
+
+	public Matrix3 set (Matrix4 mat) {
 		val[0] = mat.val[0];
 		val[1] = mat.val[1];
 		val[2] = mat.val[2];
@@ -308,16 +318,38 @@ public class Matrix3 implements Serializable {
 	public float[] getValues () {
 		return val;
 	}
-	
+
 	public Matrix3 scl (Vector3 scale) {
 		val[M00] *= scale.x;
 		val[M11] *= scale.y;
 		return this;
 	}
-	
+
 	public Matrix3 scl (float scale) {
 		val[M00] *= scale;
 		val[M11] *= scale;
+		return this;
+	}
+
+	public Matrix3 transpose () {
+		float v00 = val[M00];
+		float v01 = val[M10];
+		float v02 = val[M20];
+		float v10 = val[M01];
+		float v11 = val[M11];
+		float v12 = val[M21];
+		float v20 = val[M02];
+		float v21 = val[M12];
+		float v22 = val[M22];
+		val[M00] = v00;
+		val[M01] = v01;
+		val[M02] = v02;
+		val[M10] = v10;
+		val[M11] = v11;
+		val[M12] = v12;
+		val[M20] = v20;
+		val[M21] = v21;
+		val[M22] = v22;
 		return this;
 	}
 

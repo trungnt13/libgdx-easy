@@ -48,7 +48,7 @@ import com.esotericsoftware.tablelayout.Toolkit;
 import com.esotericsoftware.tablelayout.Value;
 
 /** A group that sizes and positions children using table constraints. By default, {@link #getTouchable()} is
- * {@link Touchable#onlyChildren}.
+ * {@link Touchable#childrenOnly}.
  * <p>
  * The preferred and minimum sizes are that of the children when laid out in columns and rows.
  * @author Nathan Sweet */
@@ -61,6 +61,7 @@ public class Table extends WidgetGroup {
 	private Drawable background;
 	private boolean clip;
 	private Skin skin;
+	private boolean disableLayout;
 
 	public Table () {
 		this(null);
@@ -72,7 +73,7 @@ public class Table extends WidgetGroup {
 		layout = new TableLayout();
 		layout.setTable(this);
 		setTransform(false);
-		setTouchable(Touchable.onlyChildren);
+		setTouchable(Touchable.childrenOnly);
 	}
 
 	public void draw (SpriteBatch batch, float parentAlpha) {
@@ -121,8 +122,14 @@ public class Table extends WidgetGroup {
 	}
 
 	public void invalidate () {
+		if (disableLayout) return;
 		layout.invalidate();
 		super.invalidate();
+	}
+
+	public void invalidateHierarchy () {
+		if (disableLayout) return;
+		super.invalidateHierarchy();
 	}
 
 	public float getPrefWidth () {
@@ -198,7 +205,7 @@ public class Table extends WidgetGroup {
 
 	/** Adds a cell without a widget. */
 	public Cell add () {
-		return add(new Actor());
+		return add((Actor)null);
 	}
 
 	/** Adds a new cell to the table with the specified actor.

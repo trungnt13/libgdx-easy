@@ -171,7 +171,8 @@ public class Actor {
 		return touchable == Touchable.enabled && x >= 0 && x < width && y >= 0 && y < height ? this : null;
 	}
 
-	/** Removes this actor from its parent, if it has a parent. */
+	/** Removes this actor from its parent, if it has a parent.
+	 * @see Group#removeActor(Actor) */
 	public boolean remove () {
 		if (parent != null) return parent.removeActor(this);
 		return false;
@@ -332,6 +333,17 @@ public class Actor {
 		this.height = height;
 	}
 
+	
+	/** Returns y plus height. */
+	public float getTop () {
+		return getY() + getHeight();
+  	}
+
+  	/** Returns x plus width. */
+  	public float getRight () {
+  		return getX() + getWidth();
+  	}
+	
 	/** Sets the width and height. */
 	public void setSize (float width, float height) {
 		setWidth(width);

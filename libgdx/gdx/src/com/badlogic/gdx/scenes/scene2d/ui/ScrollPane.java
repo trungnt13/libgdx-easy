@@ -23,9 +23,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Cullable;
@@ -54,7 +54,7 @@ public class ScrollPane extends WidgetGroup {
 	private final Rectangle widgetCullingArea = new Rectangle();
 	private final Rectangle scissorBounds = new Rectangle();
 	private ActorGestureListener gestureListener;
-	
+
 	boolean scrollX, scrollY;
 	float amountX, amountY;
 	float maxX, maxY;
@@ -195,7 +195,7 @@ public class ScrollPane extends WidgetGroup {
 		addListener(gestureListener);
 
 		addListener(new InputListener() {
-			 public boolean scrolled (InputEvent event, int amount) {
+			public boolean scrolled (InputEvent event, int amount) {
 				resetFade();
 				if (scrollY)
 					setScrollY(amountY + Math.max(areaHeight * 0.9f, maxY * 0.1f) / 4 * amount);
@@ -349,8 +349,8 @@ public class ScrollPane extends WidgetGroup {
 		// Set the widget area bounds.
 		widgetAreaBounds.set(bgLeftWidth, bgBottomHeight, areaWidth, areaHeight);
 
-		// Make sure widgets are drawn under fading scrollbars.
 		if (fade) {
+			// Make sure widgets are drawn under fading scrollbars.
 			if (scrollX && hScrollKnob != null) areaHeight -= hScrollKnob.getMinHeight();
 			if (scrollY && vScrollKnob != null) areaWidth -= vScrollKnob.getMinWidth();
 		} else {
@@ -368,6 +368,11 @@ public class ScrollPane extends WidgetGroup {
 
 		maxX = widgetWidth - areaWidth;
 		maxY = widgetHeight - areaHeight;
+		// Make sure widgets are drawn under fading scrollbars.
+		if (fade) {
+			if (scrollX && hScrollKnob != null) maxY -= hScrollKnob.getMinHeight();
+			if (scrollY && vScrollKnob != null) maxX -= vScrollKnob.getMinWidth();
+		}
 		amountX = MathUtils.clamp(amountX, 0, maxX);
 		amountY = MathUtils.clamp(amountY, 0, maxY);
 
@@ -490,9 +495,8 @@ public class ScrollPane extends WidgetGroup {
 	}
 
 	/** Sets the {@link Actor} embedded in this scroll pane.
-	 * @param widget the Actor */
+	 * @param widget May be null to remove any current actor. */
 	public void setWidget (Actor widget) {
-		if (widget == null) throw new IllegalArgumentException("widget cannot be null.");
 		if (this.widget != null) super.removeActor(this.widget);
 		this.widget = widget;
 		if (widget != null) super.addActor(widget);
@@ -511,7 +515,9 @@ public class ScrollPane extends WidgetGroup {
 	}
 
 	public boolean removeActor (Actor actor) {
-		throw new UnsupportedOperationException("Use ScrollPane#setWidget(null).");
+		if (actor != widget) return false;
+		setWidget(null);
+		return true;
 	}
 
 	public Actor hit (float x, float y) {
@@ -554,6 +560,7 @@ public class ScrollPane extends WidgetGroup {
 	}
 
 	public void setFlickScroll (boolean flickScroll) {
+		if (this.flickScroll == flickScroll) return;
 		this.flickScroll = flickScroll;
 		if (flickScroll)
 			addListener(gestureListener);
@@ -657,8 +664,10 @@ public class ScrollPane extends WidgetGroup {
 	}
 
 	public void setFadeScrollBars (boolean fadeScrollBars) {
+		if (this.fadeScrollBars == fadeScrollBars) return;
 		this.fadeScrollBars = fadeScrollBars;
 		if (!fadeScrollBars) fadeAlpha = 1;
+		invalidate();
 	}
 
 	public void setupFadeScrollBars (float fadeAlphaSeconds, float fadeDelaySeconds) {

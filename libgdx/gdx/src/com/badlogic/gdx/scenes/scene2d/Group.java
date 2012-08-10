@@ -23,7 +23,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.Cullable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 /** 2D scene graph node that may contain other actors.
@@ -70,7 +69,7 @@ public class Group extends Actor implements Cullable {
 			// Draw children only if inside culling area.
 			if (transform) {
 				for (int i = 0, n = children.size; i < n; i++) {
-					 Actor child = actors[i];
+					Actor child = actors[i];
 					if (!child.isVisible()) continue;
 					float x = child.getX();
 					float y = child.getY();
@@ -171,42 +170,6 @@ public class Group extends Actor implements Cullable {
 
 		batchTransform.set(worldTransform);
 		return batchTransform;
-	}
-
-	
-	private void updateTransform () {
-		Matrix3 temp = worldTransform;
-
-		float originX = getOriginX();
-		float originY = getOriginY();
-		float rotation = getRotation();
-		float scaleX = getScaleX();
-		float scaleY = getScaleY();
-
-		if (originX != 0 || originY != 0)
-			localTransform.setToTranslation(originX, originY);
-		else
-			localTransform.idt();
-		if (rotation != 0) localTransform.mul(temp.setToRotation(rotation));
-		if (scaleX != 1 || scaleY != 1) localTransform.mul(temp.setToScaling(scaleX, scaleY));
-		if (originX != 0 || originY != 0) localTransform.mul(temp.setToTranslation(-originX, -originY));
-		localTransform.trn(getX(), getY());
-
-		// Find the first parent that transforms.
-		Group parentGroup = getParent();
-		while (parentGroup != null) {
-			if (parentGroup.transform) break;
-			parentGroup = parentGroup.getParent();
-		}
-
-		if (parentGroup != null) {
-			worldTransform.set(parentGroup.worldTransform);
-			worldTransform.mul(localTransform);
-		} else {
-			worldTransform.set(localTransform);
-		}
-
-		batchTransform.set(worldTransform);
 	}
 
 	/** Restores the SpriteBatch transform to what it was before {@link #applyTransform(SpriteBatch, Matrix4)}. Note this causes the
@@ -335,7 +298,7 @@ public class Group extends Actor implements Cullable {
 	}
 
 	/** Returns an ordered list of child actors in this group. */
-	public Array<Actor> getChildren () {
+	public SnapshotArray<Actor> getChildren () {
 		return children;
 	}
 

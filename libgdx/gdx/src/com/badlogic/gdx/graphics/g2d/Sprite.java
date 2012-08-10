@@ -37,17 +37,14 @@ import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y2;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y3;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y4;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Boundable;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.SpriteBackend;
 import com.badlogic.gdx.utils.Updater;
-import com.badlogic.gdx.utils.Pool.Poolable;
 
 /** Holds the geometry, color, and texture information for drawing 2D sprites using {@link SpriteBatch}. A Sprite has a position
  * and a size given as width and height. The position is relative to the origin of the coordinate system specified via

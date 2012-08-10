@@ -23,12 +23,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.Clipboard;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -115,18 +114,29 @@ public class TextField extends Widget {
 				if (stage != null) stage.setKeyboardFocus(TextField.this);
 				keyboard.show(true);
 				clearSelection();
+				setCursorPosition(x);
+				selectionStart = cursor;
+				return true;
+			}
+
+			public void touchDragged (InputEvent event, float x, float y, int pointer) {
 				lastBlink = 0;
 				cursorOn = false;
-				x = x - renderOffset;
+				setCursorPosition(x);
+				hasSelection = true;
+			}
+
+			private void setCursorPosition (float x) {
+				lastBlink = 0;
+				cursorOn = false;
+				x -= renderOffset;
 				for (int i = 0; i < glyphPositions.size; i++) {
-					float pos = glyphPositions.items[i];
-					if (pos > x) {
+					if (glyphPositions.items[i] > x) {
 						cursor = Math.max(0, i - 1);
-						return true;
+						return;
 					}
 				}
 				cursor = Math.max(0, glyphPositions.size - 1);
-				return true;
 			}
 
 			public boolean keyDown (InputEvent event, int keycode) {
@@ -363,8 +373,8 @@ public class TextField extends Widget {
 		Stage stage = getStage();
 		boolean focused = stage != null && stage.getKeyboardFocus() == this;
 		if (focused && hasSelection && selection != null) {
-			selection.draw(batch, x + selectionX + bgLeftWidth + renderOffset,
-				y + textY - textBounds.height - font.getDescent() / 2, selectionWidth, textBounds.height);
+			selection.draw(batch, x + selectionX + bgLeftWidth + renderOffset, y + textY - textBounds.height - font.getDescent(),
+				selectionWidth, textBounds.height + font.getDescent() / 2);
 		}
 
 		if (displayText.length() == 0) {
