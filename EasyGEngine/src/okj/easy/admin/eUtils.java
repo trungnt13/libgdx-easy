@@ -8,10 +8,42 @@ import com.badlogic.gdx.utils.Base64Coder;
 public final class eUtils {
 	
 	public static final class base64{
+		public static final String format = ".256encoded";
+		
 		public static void encodeAndSave(FileHandle file){
 			String tmp = Base64Coder.encodeString(file.readString());
-			file.writeString(tmp, false);
+			String path = file.file().getAbsolutePath();
+			path = path.replace("." + file.extension(), format);
+			FileHandle newFile = new FileHandle(path);
+			newFile.writeString(tmp, false);
 		}
+		
+		public static String decodeToString(FileHandle file){
+			String tmp = Base64Coder.decodeString(file.readString());
+			return tmp;
+		}
+
+		public static String decodeToString(byte[] encoded){
+			return Base64Coder.decodeString(new String(encoded));
+		}
+		
+		public static String decodeToString(String s){
+			String tmp = Base64Coder.decodeString(s);
+			return tmp;
+		}
+		
+		public static String decodeToString(char[] encoded){
+			return new String(Base64Coder.decode(encoded));
+		}
+
+		public static void decodeAndSave(FileHandle file,String extension){
+			String tmp = Base64Coder.decodeString(file.readString());
+			String path = file.file().getAbsolutePath();
+			path = path.replace(format, extension);
+			FileHandle newFile = new FileHandle(path);
+			newFile.writeString(tmp, false);
+		}
+		
 	}
 	
 	/**
