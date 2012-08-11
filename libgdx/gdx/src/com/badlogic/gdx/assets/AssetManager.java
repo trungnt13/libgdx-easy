@@ -27,7 +27,6 @@ import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
-import com.badlogic.gdx.assets.loaders.ParticleLoader;
 import com.badlogic.gdx.assets.loaders.PixmapLoader;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.SoundLoader;
@@ -41,7 +40,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.tiled.TileAtlas;
 import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
@@ -54,11 +52,8 @@ import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
 
-/**
- * Loads and stores assets like textures, bitmapfonts, tile maps, sounds, music and so on.
- * @author mzechner
- *
- */
+/** Loads and stores assets like textures, bitmapfonts, tile maps, sounds, music and so on.
+ * @author mzechner */
 public class AssetManager implements Disposable {
 	final ObjectMap<Class, ObjectMap<String, RefCountedContainer>> assets = new ObjectMap<Class, ObjectMap<String, RefCountedContainer>>();
 	final ObjectMap<String, Class> assetTypes = new ObjectMap<String, Class>();
@@ -91,7 +86,6 @@ public class AssetManager implements Disposable {
 		setLoader(Skin.class, new SkinLoader(resolver));
 		setLoader(TileAtlas.class, new TileAtlasLoader(resolver));
 		setLoader(TileMapRenderer.class, new TileMapRendererLoader(resolver));
-		setLoader(ParticleEffect.class, new ParticleLoader(resolver));
 		threadPool = Executors.newFixedThreadPool(1, new ThreadFactory() {
 			@Override
 			public Thread newThread (Runnable r) {
@@ -181,7 +175,7 @@ public class AssetManager implements Disposable {
 	 * @return whether the asset is contained in this manager */
 	public synchronized <T> boolean containsAsset (T asset) {
 		ObjectMap<String, RefCountedContainer> typedAssets = assets.get(asset.getClass());
-		if(typedAssets == null) return false;
+		if (typedAssets == null) return false;
 		for (String fileName : typedAssets.keys()) {
 			T otherAsset = (T)typedAssets.get(fileName).getObject(Object.class);
 			if (otherAsset == asset || asset.equals(otherAsset)) return true;
@@ -311,9 +305,7 @@ public class AssetManager implements Disposable {
 		}
 	}
 
-	/**
-	 * blocks until all assets are loaded.
-	 */
+	/** blocks until all assets are loaded. */
 	public void finishLoading () {
 		log.debug("Waiting for loading to complete...");
 		while (!update())
