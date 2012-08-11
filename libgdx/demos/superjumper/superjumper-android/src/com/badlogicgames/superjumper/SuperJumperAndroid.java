@@ -17,9 +17,7 @@
 package com.badlogicgames.superjumper;
 
 import android.os.Bundle;
-import android.widget.ImageView;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 
 public class SuperJumperAndroid extends AndroidApplication {
@@ -27,7 +25,6 @@ public class SuperJumperAndroid extends AndroidApplication {
 	@Override
 	public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ImageView img = new ImageView(this);
 		initialize(new SuperJumper(), false);
 	}
 }

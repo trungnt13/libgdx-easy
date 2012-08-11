@@ -13,17 +13,17 @@
 
 package com.badlogic.gdxinvaders;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.jogl.JoglApplication;
+import com.badlogic.gdx.backends.jogl.JoglApplicationConfiguration;
 
 /** Entry point for desktop version of Gdx Invaders. Constructs a JoglApplication and registers the renderer.
  * @author mzechner */
 public class GdxInvadersDesktop {
 	public static void main (String[] argv) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		JoglApplicationConfiguration config = new JoglApplicationConfiguration();
 		config.title = "Gdx Invaders";
 		config.vSyncEnabled = true;
 		config.useGL20 = true;
-		new LwjglApplication(new GdxInvaders(), config);
+		new JoglApplication(new GdxInvaders(), config);
 	}
 }
