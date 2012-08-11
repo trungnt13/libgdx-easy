@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
@@ -35,9 +34,6 @@ public class Box2DDebugRenderer {
 
 	/** the immediate mode renderer to output our debug drawings **/
 	protected ShapeRenderer renderer;
-
-	/** a spritebatch and a font for text rendering **/
-	public SpriteBatch batch;
 
 	/** vertices for polygon rendering **/
 	private static Vector2[] vertices = new Vector2[1000];
@@ -57,9 +53,6 @@ public class Box2DDebugRenderer {
 	public Box2DDebugRenderer (boolean drawBodies, boolean drawJoints, boolean drawAABBs, boolean drawInactiveBodies) {
 		// next we setup the immediate mode renderer
 		renderer = new ShapeRenderer();
-
-		// next we create a SpriteBatch and a font
-		batch = new SpriteBatch();
 
 		lower = new Vector2();
 		upper = new Vector2();
@@ -94,10 +87,9 @@ public class Box2DDebugRenderer {
 		if (drawBodies || drawAABBs) {
 			for (Iterator<Body> iter = world.getBodies(); iter.hasNext();) {
 				Body body = iter.next();
-				
-				if (body.isActive() == false && !drawInactiveBodies)
-					continue;
-				
+
+				if (body.isActive() == false && !drawInactiveBodies) continue;
+
 				Transform transform = body.getTransform();
 				int len = body.getFixtureList().size();
 				List<Fixture> fixtures = body.getFixtureList();
@@ -302,7 +294,7 @@ public class Box2DDebugRenderer {
 		Vector2 point = worldManifold.getPoints()[0];
 		renderer.point(point.x, point.y, 0);
 	}
-	
+
 	public boolean isDrawBodies () {
 		return drawBodies;
 	}
@@ -344,6 +336,6 @@ public class Box2DDebugRenderer {
 	}
 
 	public void dispose () {
-		batch.dispose();
+		renderer.dispose();
 	}
 }
