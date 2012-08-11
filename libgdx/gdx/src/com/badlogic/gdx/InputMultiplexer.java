@@ -32,14 +32,14 @@ public class InputMultiplexer implements InputProcessor {
 			this.processors.add(processors[i]);
 	}
 
-	public void addProcessor(int index, InputProcessor processor) {
+	public void addProcessor (int index, InputProcessor processor) {
 		processors.insert(index, processor);
 	}
-	
-	public void removeProcessor(int index) {
+
+	public void removeProcessor (int index) {
 		processors.removeIndex(index);
 	}
-	
+
 	public void addProcessor (InputProcessor processor) {
 		processors.add(processor);
 	}
@@ -48,13 +48,11 @@ public class InputMultiplexer implements InputProcessor {
 		processors.removeValue(processor, true);
 	}
 
-	/**
-	 * @return the number of processors in this multiplexer
-	 */
-	public int size() {
+	/** @return the number of processors in this multiplexer */
+	public int size () {
 		return processors.size;
 	}
-	
+
 	public void clear () {
 		processors.clear();
 	}
@@ -99,7 +97,7 @@ public class InputMultiplexer implements InputProcessor {
 
 	public boolean touchDragged (int screenX, int screenY, int pointer) {
 		for (int i = 0, n = processors.size; i < n; i++)
-			if (processors.get(i).touchDragged(screenX,screenY, pointer)) return true;
+			if (processors.get(i).touchDragged(screenX, screenY, pointer)) return true;
 		return false;
 	}
 

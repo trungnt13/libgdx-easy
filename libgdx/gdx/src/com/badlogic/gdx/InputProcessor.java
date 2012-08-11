@@ -46,7 +46,6 @@ public interface InputProcessor {
 
 	/** Called when the screen was touched or a mouse button was pressed. The button parameter will be {@link Buttons#LEFT} on
 	 * Android.
-	 * 
 	 * @param screenX The x coordinate, origin is in the upper left corner
 	 * @param screenY The y coordinate, origin is in the upper left corner
 	 * @param pointer the pointer for the event.
@@ -56,26 +55,17 @@ public interface InputProcessor {
 
 	/** Called when a finger was lifted or a mouse button was released. The button parameter will be {@link Buttons#LEFT} on
 	 * Android.
-	 * 
-	 * @param screenX The x coordinate
-	 * @param screenY The y coordinate
 	 * @param pointer the pointer for the event.
 	 * @param button the button
 	 * @return whether the input was processed */
 	public boolean touchUp (int screenX, int screenY, int pointer, int button);
 
 	/** Called when a finger or the mouse was dragged.
-	 * 
-	 * @param screenX The x coordinate
-	 * @param screenY The y coordinate
 	 * @param pointer the pointer for the event.
 	 * @return whether the input was processed */
 	public boolean touchDragged (int screenX, int screenY, int pointer);
 
 	/** Called when the mouse was moved without any buttons being pressed. Will not be called on Android.
-	 * 
-	 * @param screenX The x coordinate
-	 * @param screenY The y coordinate
 	 * @return whether the input was processed */
 	public boolean mouseMoved (int screenX, int screenY);
 

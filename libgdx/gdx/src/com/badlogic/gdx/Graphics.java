@@ -23,7 +23,6 @@ import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.GLU;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -152,8 +151,8 @@ public interface Graphics {
 	public float getDeltaTime ();
 
 	/** @return the time span between the current frame and the last frame in seconds, without smoothing **/
-	public float getRawDeltaTime();
-	
+	public float getRawDeltaTime ();
+
 	/** @return the average number of frames per second */
 	public int getFramesPerSecond ();
 
@@ -211,11 +210,6 @@ public interface Graphics {
 	 * @param title the title. */
 	public void setTitle (String title);
 
-	/** Sets one or more icons for the Desktop. This only works for Lwjgl. On Windows you should supply at least one 16x16 icon and
-	 * one 32x32. Linux (and similar platforms) expect one 32x32 icon. Mac OS X should be supplied one 128x128 icon
-	 * @param pixmaps 1 or more Pixmaps using {@link Format#RGBA8888} */
-	public void setIcon (Pixmap[] pixmaps);
-
 	/** Enable/Disable vsynching. This is a best-effort attempt which might not work on all platforms.
 	 * 
 	 * @param vsync vsync enabled or not. */
@@ -227,10 +221,9 @@ public interface Graphics {
 	/** @param extension the extension name
 	 * @return whether the extension is supported */
 	public boolean supportsExtension (String extension);
-	
-	/**
-	 * Sets whether to render continuously. In case rendering is performed non-continuously, the
-	 * following events will trigger a redraw:
+
+	/** Sets whether to render continuously. In case rendering is performed non-continuously, the following events will trigger a
+	 * redraw:
 	 * 
 	 * <ul>
 	 * <li>A call to {@link #requestRendering()}</li>
@@ -238,29 +231,21 @@ public interface Graphics {
 	 * <li>A {@link Runnable} is posted to the rendering thread via {@link Application#postRunnable(Runnable)}</li>
 	 * </ul>
 	 * 
-	 * Life-cycle events will also be reported as usual, see {@link ApplicationListener}. 
-	 * This method can be called from any thread.
+	 * Life-cycle events will also be reported as usual, see {@link ApplicationListener}. This method can be called from any
+	 * thread.
 	 * 
-	 * @param isContinuous whether the rendering should be continuous or not.
-	 */
-	public void setContinuousRendering(boolean isContinuous);
-	
-	/**
-	 * @return wheter rendering is continuous.
-	 */
-	public boolean isContinuousRendering();
-	
-	/**
-	 * Requests a new frame to be rendered if the rendering mode is non-continuous. This method
-	 * can be called from any thread.
-	 */
-	public void requestRendering();
-	
-	/**
-	 * Whether the app is fullscreen or not 
-	 */
-	public boolean isFullscreen();
-	
+	 * @param isContinuous whether the rendering should be continuous or not. */
+	public void setContinuousRendering (boolean isContinuous);
+
+	/** @return wheter rendering is continuous. */
+	public boolean isContinuousRendering ();
+
+	/** Requests a new frame to be rendered if the rendering mode is non-continuous. This method can be called from any thread. */
+	public void requestRendering ();
+
+	/** Whether the app is fullscreen or not */
+	public boolean isFullscreen ();
+
 	// /**
 	// * Opens the first back facing video camera. Only one camera
 	// * can be opened at any given time.
