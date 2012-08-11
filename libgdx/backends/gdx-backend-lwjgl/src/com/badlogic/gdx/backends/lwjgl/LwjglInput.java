@@ -43,7 +43,6 @@ import org.lwjgl.input.Mouse;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.utils.Pool;
 
 /** An implementation of the {@link Input} interface hooking a Jogl panel for input.
@@ -468,9 +467,9 @@ final class LwjglInput implements Input {
 		case Keyboard.KEY_RCONTROL:
 			return Input.Keys.CONTROL_RIGHT;
 		case Keyboard.KEY_NEXT:
-		    return Input.Keys.PAGE_DOWN;
+			return Input.Keys.PAGE_DOWN;
 		case Keyboard.KEY_PRIOR:
-		    return Input.Keys.PAGE_UP;
+			return Input.Keys.PAGE_UP;
 		case Keyboard.KEY_ESCAPE:
 			return Input.Keys.ESCAPE;
 		case Keyboard.KEY_END:

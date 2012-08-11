@@ -348,8 +348,8 @@ final class JoglGL20 implements GL20 {
 
 	@Override
 	public void glGetBooleanv (int pname, Buffer params) {
-		if(!(params instanceof ByteBuffer)) throw new GdxRuntimeException("params must be a direct ByteBuffer");
-	    gl.glGetBooleanv(pname, (ByteBuffer)params);	
+		if (!(params instanceof ByteBuffer)) throw new GdxRuntimeException("params must be a direct ByteBuffer");
+		gl.glGetBooleanv(pname, (ByteBuffer)params);
 	}
 
 	@Override

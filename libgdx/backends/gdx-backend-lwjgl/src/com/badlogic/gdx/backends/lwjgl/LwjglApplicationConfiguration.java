@@ -18,18 +18,13 @@ package com.badlogic.gdx.backends.lwjgl;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Graphics.DisplayMode;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.GdxNativesLoader;
 
 public class LwjglApplicationConfiguration {
 	/** whether to use OpenGL ES 2.0 or not. default: false **/
@@ -66,7 +61,7 @@ public class LwjglApplicationConfiguration {
 	Array<FileType> iconFileTypes = new Array();
 
 	/** Adds a window icon. Icons are tried in the order added, the first one that works is used. Typically three icons should be
-	 * provided: 128x128 (for Mac), 32x32 (for Windows and Linux), and 16x16 (for Windows). */	
+	 * provided: 128x128 (for Mac), 32x32 (for Windows and Linux), and 16x16 (for Windows). */
 	public void addIcon (String path, FileType fileType) {
 		iconPaths.add(path);
 		iconFileTypes.add(fileType);
