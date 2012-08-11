@@ -27,13 +27,9 @@
 
 package com.esotericsoftware.tablelayout;
 
-import static com.esotericsoftware.tablelayout.BaseTableLayout.BOTTOM;
-import static com.esotericsoftware.tablelayout.BaseTableLayout.CENTER;
-import static com.esotericsoftware.tablelayout.BaseTableLayout.LEFT;
-import static com.esotericsoftware.tablelayout.BaseTableLayout.RIGHT;
-import static com.esotericsoftware.tablelayout.BaseTableLayout.TOP;
-
 import com.esotericsoftware.tablelayout.Value.FixedValue;
+
+import static com.esotericsoftware.tablelayout.BaseTableLayout.*;
 
 /** A cell in a table.
  * @author Nathan Sweet */
