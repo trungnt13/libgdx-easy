@@ -6,7 +6,7 @@
 	<property name="env.NDK_HOME" value="/home/mzechner/android-ndk-r5"/>
 	
 	<!-- library version -->
-	<property name="version" value="0.9.3"/>
+	<property name="version" value="0.9.8"/>
 	
 	<!-- define distribution/output directory -->
 	<property name="distDir" value="${basedir}/dist"/>
