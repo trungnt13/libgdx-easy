@@ -24,8 +24,7 @@ import com.badlogic.gdx.utils.Array;
  * region of an Animation is called a key frame, multiple key frames make up the animation.
  * </p>
  * 
- * @author mzechner 
- * @author Ngo Trong Trung*/
+ * @author mzechner */
 public class Animation {
 	public static final int NORMAL = 0;
 	public static final int REVERSED = 1;
@@ -39,8 +38,7 @@ public class Animation {
 	public final float animationDuration;
 
 	private int playMode = NORMAL;
-	
-	
+
 	/** Constructor, storing the frame duration and key frames.
 	 * 
 	 * @param frameDuration the time between frames in seconds.
@@ -83,7 +81,6 @@ public class Animation {
 		this.keyFrames = keyFrames;
 		this.playMode = NORMAL;
 	}
-
 
 	/** Returns a {@link TextureRegion} based on the so called state time. This is the amount of seconds an object has spent in the
 	 * state this Animation instance represents, e.g. running, jumping and so on. The mode specifies whether the animation is
