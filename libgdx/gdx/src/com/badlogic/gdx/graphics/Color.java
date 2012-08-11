@@ -40,8 +40,8 @@ public class Color {
 
 	/** the red, green, blue and alpha components **/
 	public float r, g, b, a;
-	
-	public static final Color tmp = new Color();
+
+	public static Color tmp = new Color();
 
 	/** Constructs a new Color with all components set to 0. */
 	public Color () {
@@ -321,14 +321,14 @@ public class Color {
 		color.b = ((value & 0x0000ff00) >>> 8) / 255f;
 		color.a = ((value & 0x000000ff)) / 255f;
 	}
-	
+
 	/** Returns a temporary copy of this color. This is not thread safe, do not save a reference to this instance.
 	 * 
 	 * @return a temporary copy of this color */
 	public Color tmp () {
 		return tmp.set(this);
 	}
-	
+
 	/** @return a copy of this color */
 	public Color cpy () {
 		return new Color(this);
