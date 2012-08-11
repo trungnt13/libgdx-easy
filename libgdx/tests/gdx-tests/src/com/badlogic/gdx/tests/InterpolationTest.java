@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.tests;
 
 import com.badlogic.gdx.Gdx;
@@ -67,9 +68,9 @@ public class InterpolationTest extends GdxTest {
 
 		list = new List(interpolators, skin);
 		ScrollPane scrollPane = new ScrollPane(list, skin);
-	    scrollPane.setOverscroll(false);
-	    scrollPane.setFadeScrollBars(false);
-	    root.add(scrollPane).expandY().fillY().prefWidth(110);
+		scrollPane.setOverscroll(false);
+		scrollPane.setFadeScrollBars(false);
+		root.add(scrollPane).expandY().fillY().prefWidth(110);
 	}
 
 	public void resize (int width, int height) {

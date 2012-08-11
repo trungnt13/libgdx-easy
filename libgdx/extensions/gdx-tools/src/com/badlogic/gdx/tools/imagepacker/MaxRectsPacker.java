@@ -1,3 +1,4 @@
+
 package com.badlogic.gdx.tools.imagepacker;
 
 import java.util.Comparator;

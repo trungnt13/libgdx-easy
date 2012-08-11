@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.tests;
 
 import com.badlogic.gdx.Gdx;
@@ -23,14 +24,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.tests.utils.GdxTest;
 
 /** A simple example of how to use a y-down coordinate system.
@@ -122,10 +119,6 @@ public class YDownTest extends GdxTest {
 		public MyActor (TextureRegion region) {
 			this.region = region;
 			setWidth(region.getRegionWidth());
-			// note that the height of the region will be negative since
-			// we flipped it, hence the minus sign. This is the only
-			// portion of the code of MyActor that is dependend on
-			// whether y points up or down!
 			setHeight(region.getRegionHeight());
 
 			addListener(new InputListener() {
@@ -146,7 +139,6 @@ public class YDownTest extends GdxTest {
 
 					// adjust the actor's position by (current mouse position - last mouse position)
 					// in the actor's coordinate system.
-
 					translate(x - lastX, y - lastY);
 
 					// save the current mouse position as the basis for the next drag event.

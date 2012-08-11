@@ -30,7 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.tests.utils.GdxTest;
 
@@ -47,17 +46,14 @@ public class SoundTest extends GdxTest {
 
 		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 		ui = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-		
 		TextButton play = new TextButton("Play", skin);
 		TextButton stop = new TextButton("Stop", skin);
-		
 		final Slider pitch = new Slider(0.1f, 4, 0.1f, false, skin);
 		pitch.setValue(1);
 		final Label pitchValue = new Label("1.0", skin);
 		final Slider volume = new Slider(0.1f, 1, 0.1f, false, skin);
 		volume.setValue(1);
 		final Label volumeValue = new Label("1.0", skin);
-	
 		Table table = new Table();
 		final Slider pan = new Slider(-1f, 1f, 0.1f, false, skin);
 		pan.setValue(0);

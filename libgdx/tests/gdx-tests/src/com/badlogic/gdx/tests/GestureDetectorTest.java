@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.tests;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -45,7 +46,7 @@ public class GestureDetectorTest extends GdxTest implements ApplicationListener 
 		}
 
 		@Override
-		public boolean tap (float x, float y, int count,int pointer,int button) {
+		public boolean tap (float x, float y, int count, int pointer, int button) {
 			Gdx.app.log("GestureDetectorTest", "tap at " + x + ", " + y + ", count: " + count);
 			return false;
 		}
@@ -61,14 +62,12 @@ public class GestureDetectorTest extends GdxTest implements ApplicationListener 
 			flinging = true;
 			velX = camera.zoom * velocityX * 0.5f;
 			velY = camera.zoom * velocityY * 0.5f;
-			Gdx.app.log("fling", "" + velocityX + " " + velocityY);
 			return false;
 		}
 
 		@Override
 		public boolean pan (float x, float y, float deltaX, float deltaY) {
 			camera.position.add(-deltaX * camera.zoom, deltaY * camera.zoom, 0);
-			Gdx.app.log("pan", "" + x + " " + y + "  " + deltaX + " " + deltaY);
 			return false;
 		}
 
@@ -77,13 +76,11 @@ public class GestureDetectorTest extends GdxTest implements ApplicationListener 
 			float ratio = originalDistance / currentDistance;
 			camera.zoom = initialScale * ratio;
 			System.out.println(camera.zoom);
-			Gdx.app.log("zoom", "" + originalDistance + " " );
 			return false;
 		}
 
 		@Override
 		public boolean pinch (Vector2 initialFirstPointer, Vector2 initialSecondPointer, Vector2 firstPointer, Vector2 secondPointer) {
-			Gdx.app.log("pinch", "" + initialFirstPointer + " " + initialSecondPointer + "  " + firstPointer + " " + secondPointer);
 			return false;
 		}
 
@@ -114,7 +111,6 @@ public class GestureDetectorTest extends GdxTest implements ApplicationListener 
 		controller.update();
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
-		
 		batch.begin();
 		batch.draw(texture, 0, 0, texture.getWidth() * 2, texture.getHeight() * 2);
 		batch.end();

@@ -243,10 +243,10 @@ public class ImageProcessor {
 				raster.getDataElements(0, y, width, 1, pixels);
 				for (int x = 0; x < width; x++) {
 					int rgba = pixels[x];
-				    digest.update((byte)(rgba >> 24));
-				    digest.update((byte)(rgba >> 16));
-				    digest.update((byte)(rgba >> 8));
-				    digest.update((byte)rgba);
+					digest.update((byte)(rgba >> 24));
+					digest.update((byte)(rgba >> 16));
+					digest.update((byte)(rgba >> 8));
+					digest.update((byte)rgba);
 				}
 			}
 			return new BigInteger(1, digest.digest()).toString(16);

@@ -22,7 +22,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -38,9 +37,6 @@ public class BitmapFontAlignmentTest extends GdxTest {
 	private Sprite logoSprite;
 	int renderMode;
 
-	public static void main(String[] argv){
-	}
-	
 	@Override
 	public void create () {
 		Gdx.input.setInputProcessor(new InputAdapter() {
@@ -116,15 +112,7 @@ public class BitmapFontAlignmentTest extends GdxTest {
 		x += width / 2 - bounds.width / 2;
 		y += height / 2 + bounds.height / 2;
 		cache.setPosition(x, y);
-		
-		cache.setText("bull shit", 100, 100);
-		
-		Gdx.app.log("test 1 ", "" + cache.getBounds().width + " " + cache.getBounds().height);
-		
-		cache.setWrappedText("bull shit", 100, 100, 50,HAlignment.CENTER);
-		cache.getFont().setScale(0.5f, 0.5f);
-		Gdx.app.log("test 2 ", "" + cache.getBounds().width + " " + cache.getBounds().height);
-		
+
 		cache.draw(spriteBatch);
 	}
 
