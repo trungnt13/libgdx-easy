@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.utils;
 
 /** Stores a map of {@link ReflectionPool}s by type for convenient static access.
@@ -40,7 +41,7 @@ public class Pools {
 	static public void free (Object object) {
 		if (object == null) throw new IllegalArgumentException("object cannot be null.");
 		ReflectionPool pool = typePools.get(object.getClass());
-		if (pool == null) 
+		if (pool == null)
 			throw new IllegalArgumentException("No objects have been obtained of type: " + object.getClass().getName());
 		pool.free(object);
 	}
@@ -56,7 +57,7 @@ public class Pools {
 			pool.free(object);
 		}
 	}
-	
+
 	private Pools () {
 	}
 }

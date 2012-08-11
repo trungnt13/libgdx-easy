@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.utils;
 
 import java.util.Comparator;
@@ -38,7 +39,7 @@ import java.util.Comparator;
 public class SnapshotArray<T> extends Array<T> {
 	private T[] snapshot, recycled;
 	private int snapshots;
-	
+
 	public SnapshotArray () {
 		super();
 	}

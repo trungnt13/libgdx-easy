@@ -146,12 +146,12 @@ public class LongArray {
 	}
 
 	public int lastIndexOf (char value) {
-	    long[] items = this.items;
-	    for (int i = size - 1; i >= 0; i--)
-	      if (items[i] == value) return i;
-	    return -1;
-	  }
-	
+		long[] items = this.items;
+		for (int i = size - 1; i >= 0; i--)
+			if (items[i] == value) return i;
+		return -1;
+	}
+
 	public boolean removeValue (long value) {
 		long[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
@@ -185,12 +185,12 @@ public class LongArray {
 	public long peek () {
 		return items[size - 1];
 	}
-	
+
 	/** Returns the first item. */
 	public long first () {
 		return items[0];
-  	}
-	 
+	}
+
 	public void clear () {
 		size = 0;
 	}

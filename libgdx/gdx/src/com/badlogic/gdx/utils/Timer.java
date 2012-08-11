@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.utils;
 
 import com.badlogic.gdx.Gdx;
@@ -37,22 +38,22 @@ public class Timer {
 
 	/** Schedules a task to occur once at the start of the next frame. */
 	public void postTask (Task task) {
-		schedule(task, 0, 0, 0);
+		scheduleTask(task, 0, 0, 0);
 	}
 
 	/** Schedules a task to occur every frame until cancelled. */
 	public void scheduleTask (Task task) {
-		schedule(task, 0, 0, FOREVER);
+		scheduleTask(task, 0, 0, FOREVER);
 	}
 
 	/** Schedules a task to occur once after the specified delay. */
 	public void scheduleTask (Task task, float delaySeconds) {
-		schedule(task, delaySeconds, 0, 0);
+		scheduleTask(task, delaySeconds, 0, 0);
 	}
 
 	/** Schedules a task to occur once after the specified delay and then repeatedly at the specified interval until cancelled. */
 	public void scheduleTask (Task task, float delaySeconds, float intervalSeconds) {
-		schedule(task, delaySeconds, intervalSeconds, FOREVER);
+		scheduleTask(task, delaySeconds, intervalSeconds, FOREVER);
 	}
 
 	/** Schedules a task to occur once after the specified delay and then a number of additional times at the specified interval. */

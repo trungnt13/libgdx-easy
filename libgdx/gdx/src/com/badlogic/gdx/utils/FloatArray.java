@@ -144,14 +144,14 @@ public class FloatArray {
 			if (items[i] == value) return i;
 		return -1;
 	}
-	 
+
 	public int lastIndexOf (char value) {
 		float[] items = this.items;
-	    for (int i = size - 1; i >= 0; i--)
-	      if (items[i] == value) return i;
-	    return -1;
+		for (int i = size - 1; i >= 0; i--)
+			if (items[i] == value) return i;
+		return -1;
 	}
-	
+
 	public boolean removeValue (float value) {
 		float[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
@@ -189,8 +189,8 @@ public class FloatArray {
 	/** Returns the first item. */
 	public float first () {
 		return items[0];
-  	}
-	
+	}
+
 	public void clear () {
 		size = 0;
 	}

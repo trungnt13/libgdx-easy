@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.utils;
 
 import java.util.Arrays;
@@ -145,12 +146,12 @@ public class CharArray {
 	}
 
 	public int lastIndexOf (char value) {
-	    char[] items = this.items;
-	    for (int i = size - 1; i >= 0; i--)
-	      if (items[i] == value) return i;
-	    return -1;
-	  }
-	
+		char[] items = this.items;
+		for (int i = size - 1; i >= 0; i--)
+			if (items[i] == value) return i;
+		return -1;
+	}
+
 	public boolean removeValue (char value) {
 		char[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
@@ -187,9 +188,9 @@ public class CharArray {
 
 	/** Returns the first item. */
 	public char first () {
-	  return items[0];
+		return items[0];
 	}
-	
+
 	public void clear () {
 		size = 0;
 	}

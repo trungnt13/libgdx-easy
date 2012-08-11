@@ -146,12 +146,12 @@ public class IntArray {
 	}
 
 	public int lastIndexOf (int value) {
-	    int[] items = this.items;
-	    for (int i = size - 1; i >= 0; i--)
-	      if (items[i] == value) return i;
-	    return -1;
+		int[] items = this.items;
+		for (int i = size - 1; i >= 0; i--)
+			if (items[i] == value) return i;
+		return -1;
 	}
-	
+
 	public boolean removeValue (int value) {
 		int[] items = this.items;
 		for (int i = 0, n = size; i < n; i++) {
@@ -185,12 +185,12 @@ public class IntArray {
 	public int peek () {
 		return items[size - 1];
 	}
-	
+
 	/** Returns the first item. */
 	public int first () {
-		return items[0];	
-    }
-	 
+		return items[0];
+	}
+
 	public void clear () {
 		size = 0;
 	}
