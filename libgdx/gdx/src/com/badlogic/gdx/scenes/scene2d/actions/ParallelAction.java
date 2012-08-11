@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.scenes.scene2d.actions;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
-/** Executes a number of actions at the same time. 
+/** Executes a number of actions at the same time.
  * @author Nathan Sweet */
 public class ParallelAction extends Action {
 	Array<Action> actions = new Array(4);

@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.scenes.scene2d.actions;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-/** Base class for an action that wraps another action. 
+/** Base class for an action that wraps another action.
  * @author Nathan Sweet */
 abstract public class DelegateAction extends Action {
 	protected Action action;
@@ -34,6 +35,11 @@ abstract public class DelegateAction extends Action {
 
 	public void restart () {
 		if (action != null) action.restart();
+	}
+
+	public void reset () {
+		super.reset();
+		action = null;
 	}
 
 	public void setActor (Actor actor) {

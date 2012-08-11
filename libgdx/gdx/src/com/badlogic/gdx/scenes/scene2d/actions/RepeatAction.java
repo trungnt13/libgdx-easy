@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.scenes.scene2d.actions;
 
 /** Repeats an action a number of times or forever.
@@ -22,7 +23,7 @@ public class RepeatAction extends DelegateAction {
 
 	private int repeatCount, executedCount;
 	private boolean finished;
-	
+
 	public boolean act (float delta) {
 		if (executedCount == repeatCount) return true;
 		if (action.act(delta)) {
@@ -33,10 +34,11 @@ public class RepeatAction extends DelegateAction {
 		return false;
 	}
 
-	public void finish (){
+	/** Causes the action to not repeat again. */
+	public void finish () {
 		finished = true;
 	}
-	
+
 	public void restart () {
 		super.restart();
 		executedCount = 0;

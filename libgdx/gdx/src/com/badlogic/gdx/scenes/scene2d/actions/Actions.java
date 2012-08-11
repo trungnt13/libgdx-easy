@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.scenes.scene2d.actions;
 
 import com.badlogic.gdx.graphics.Color;
@@ -32,6 +33,13 @@ public class Actions {
 		T action = pool.obtain();
 		action.setPool(pool);
 		return action;
+	}
+
+	static public AddAction add (Actor targetActor, Action action) {
+		AddAction addAction = action(AddAction.class);
+		addAction.setTargetActor(targetActor);
+		addAction.setAction(action);
+		return addAction;
 	}
 
 	/** Moves the actor instantly. */
@@ -242,7 +250,7 @@ public class Actions {
 		return action;
 	}
 
-	 static public TouchableAction touchable (Touchable touchable) {
+	static public TouchableAction touchable (Touchable touchable) {
 		TouchableAction action = action(TouchableAction.class);
 		action.setTouchable(touchable);
 		return action;
@@ -385,4 +393,15 @@ public class Actions {
 		return action;
 	}
 
+	static public LayoutAction layout (boolean enabled) {
+		LayoutAction action = action(LayoutAction.class);
+		action.setLayoutEnabled(enabled);
+		return action;
+	}
+
+	static public AfterAction after (Action action) {
+		AfterAction afterAction = action(AfterAction.class);
+		afterAction.setAction(action);
+		return afterAction;
+	}
 }

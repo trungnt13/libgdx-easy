@@ -16,33 +16,32 @@
 
 package com.badlogic.gdx.scenes.scene2d.actions;
 
-/** Moves an actor to a relative position.
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.Layout;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+
+/** Sets an actor's {@link Layout#setLayoutEnabled(boolean) layout} to enabled or disabled. The actor must implements
+ * {@link Layout}.
  * @author Nathan Sweet */
-public class MoveByAction extends RelativeTemporalAction {
-	private float amountX, amountY;
+public class LayoutAction extends Action {
+	private boolean enabled;
 
-	protected void updateRelative (float percentDelta) {
-		actor.translate(amountX * percentDelta, amountY * percentDelta);
+	public void setActor (Actor actor) {
+		if (actor != null && !(actor instanceof Layout)) throw new GdxRuntimeException("Actor must implement layout: " + actor);
+		super.setActor(actor);
 	}
 
-	public void setAmount (float x, float y) {
-		amountX = x;
-		amountY = y;
+	public boolean act (float delta) {
+		((Layout)actor).setLayoutEnabled(enabled);
+		return true;
 	}
 
-	public float getAmountX () {
-		return amountX;
+	public boolean isEnabled () {
+		return enabled;
 	}
 
-	public void setAmountX (float x) {
-		amountX = x;
-	}
-
-	public float getAmountY () {
-		return amountY;
-	}
-
-	public void setAmountY (float y) {
-		amountY = y;
+	public void setLayoutEnabled (boolean enabled) {
+		this.enabled = enabled;
 	}
 }

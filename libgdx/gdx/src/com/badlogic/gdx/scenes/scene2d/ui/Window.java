@@ -34,7 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
  * window, it can be convenient to call {@link #pack()} to size the window to the size of the children.
  * @author Nathan Sweet */
 public class Window extends Table {
-	protected WindowStyle style;
+	private WindowStyle style;
 	private String title;
 	private BitmapFontCache titleCache;
 	boolean isMovable = true, isModal;
@@ -139,7 +139,7 @@ public class Window extends Table {
 	public boolean isDragging () {
 		return dragging;
 	}
-	
+
 	/** The style for a window, see {@link Window}.
 	 * @author Nathan Sweet */
 	static public class WindowStyle {

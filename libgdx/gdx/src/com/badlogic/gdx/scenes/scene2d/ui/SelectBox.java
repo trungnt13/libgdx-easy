@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,6 +29,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Pools;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 /** A select box (aka a drop-down list) allows a user to choose one of a number of values from a list. When inactive, the selected
  * value is displayed. When activated, it shows the list of values that may be selected.
@@ -63,9 +66,9 @@ public class SelectBox extends Widget {
 
 		addListener(new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (pointer != 0) return false;
+				if (pointer == 0 && button != 0) return false;
 				if (list != null && list.getParent() != null) {
-					list.remove();
+					hideList();
 					return true;
 				}
 				Stage stage = getStage();
@@ -179,6 +182,11 @@ public class SelectBox extends Widget {
 		return prefHeight;
 	}
 
+	public void hideList () {
+		if (list.getParent() == null) return;
+		list.addAction(sequence(fadeOut(0.15f, Interpolation.fade), removeActor()));
+	}
+
 	class SelectList extends Actor {
 		Vector2 oldScreenCoords = new Vector2();
 		float itemHeight;
@@ -187,7 +195,7 @@ public class SelectBox extends Widget {
 
 		InputListener stageListener = new InputListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (pointer != 0) return false;
+				if (pointer == 0 && button != 0) return false;
 				stageToLocalCoordinates(Vector2.tmp);
 				x = Vector2.tmp.x;
 				y = Vector2.tmp.y;
@@ -206,7 +214,7 @@ public class SelectBox extends Widget {
 			}
 
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				remove();
+				hideList();
 				event.getStage().removeCaptureListener(stageListener);
 			}
 
@@ -234,6 +242,8 @@ public class SelectBox extends Widget {
 			else
 				setY(y - height);
 			stage.addCaptureListener(stageListener);
+			getColor().a = 0;
+			addAction(fadeIn(0.3f, Interpolation.fade));
 		}
 
 		private void layout () {
@@ -284,7 +294,7 @@ public class SelectBox extends Widget {
 				if (listSelectedIndex == i) {
 					listSelection.draw(batch, x, y + posY - itemHeight, width, itemHeight);
 				}
-				font.setColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a * parentAlpha);
+				font.setColor(fontColor.r, fontColor.g, fontColor.b, color.a * fontColor.a * parentAlpha);
 				font.setScale(scaleX, scaleY);
 				font.draw(batch, items[i], x + textOffsetX, y + posY - textOffsetY);
 				font.setScale(1, 1);
@@ -298,7 +308,8 @@ public class SelectBox extends Widget {
 		}
 
 		public void act (float delta) {
-			if (screenCoords.x != oldScreenCoords.x || screenCoords.y != oldScreenCoords.y) remove();
+			super.act(delta);
+			if (screenCoords.x != oldScreenCoords.x || screenCoords.y != oldScreenCoords.y) hideList();
 		}
 	}
 

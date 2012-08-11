@@ -46,7 +46,8 @@ import com.badlogic.gdx.utils.SerializationException;
 
 /** A skin stores resources for UI widgets to use (texture regions, ninepatches, fonts, colors, etc). Resources are named and can
  * be looked up by name and type. Resources can be described in JSON. Skin provides useful conversions, such as allowing access to
- * regions in the atlas as ninepatches, sprites, drawables, etc.
+ * regions in the atlas as ninepatches, sprites, drawables, etc. The get* methods return an instance of the object in the skin.
+ * The new* methods return a copy of an instance in the skin.
  * <p>
  * See the <a href="https://code.google.com/p/libgdx/wiki/Skin">documentation</a> for more.
  * @author Nathan Sweet */
@@ -54,15 +55,8 @@ public class Skin implements Disposable {
 	ObjectMap<Class, ObjectMap<String, Object>> resources = new ObjectMap();
 	TextureAtlas atlas;
 
+	/** Creates an empty skin. */
 	public Skin () {
-	}
-	
-	/** Creates a skin containing the resources in the specified skin JSON file and the texture regions from the specified atlas.
-	 * The atlas is automatically disposed when the skin is disposed. */
-	public Skin (FileHandle skinFile, TextureAtlas atlas) {
-		this.atlas = atlas;
-		addRegions(atlas);
-		load(skinFile);
 	}
 
 	/** Creates a skin containing the resources in the specified skin JSON file. If a file in the same directory with a ".atlas"
@@ -76,6 +70,21 @@ public class Skin implements Disposable {
 		}
 
 		load(skinFile);
+	}
+
+	/** Creates a skin containing the resources in the specified skin JSON file and the texture regions from the specified atlas.
+	 * The atlas is automatically disposed when the skin is disposed. */
+	public Skin (FileHandle skinFile, TextureAtlas atlas) {
+		this.atlas = atlas;
+		addRegions(atlas);
+		load(skinFile);
+	}
+
+	/** Creates a skin containing the texture regions from the specified atlas. The atlas is automatically disposed when the skin is
+	 * disposed. */
+	public Skin (TextureAtlas atlas) {
+		this.atlas = atlas;
+		addRegions(atlas);
 	}
 
 	/** Adds all resources in the specified skin JSON file. */
@@ -158,6 +167,8 @@ public class Skin implements Disposable {
 		return get(name, BitmapFont.class);
 	}
 
+	/** Returns a registered texture region. If no region is found but a texture exists with the name, a region is created from the
+	 * texture and stored in the skin. */
 	public TextureRegion getRegion (String name) {
 		TextureRegion region = optional(name, TextureRegion.class);
 		if (region != null) return region;
@@ -169,12 +180,29 @@ public class Skin implements Disposable {
 		return region;
 	}
 
+	/** Returns a registered tiled drawable. If no tiled drawable is found but a region exists with the name, a tiled drawable is
+	 * created from the region and stored in the skin. */
 	public TiledDrawable getTiledDrawable (String name) {
-		return new TiledDrawable(getRegion(name));
+		TiledDrawable tiled = optional(name, TiledDrawable.class);
+		if (tiled != null) return tiled;
+
+		Drawable drawable = optional(name, Drawable.class);
+		if (tiled != null) {
+			if (!(drawable instanceof TiledDrawable)) {
+				throw new GdxRuntimeException("Drawable found but is not a TiledDrawable: " + name + ", "
+					+ drawable.getClass().getName());
+			}
+			return tiled;
+		}
+
+		tiled = new TiledDrawable(getRegion(name));
+		add(name, tiled, TiledDrawable.class);
+		return tiled;
 	}
-	
-	/** Returns a registered ninepatch. If no ninepatch is found but a region exists with the name, the region is returned as a
-	 * ninepatch. If the region is an {@link AtlasRegion} then the {@link AtlasRegion#splits} are used. */
+
+	/** Returns a registered ninepatch. If no ninepatch is found but a region exists with the name, a ninepatch is created from the
+	 * region and stored in the skin. If the region is an {@link AtlasRegion} then the {@link AtlasRegion#splits} are used,
+	 * otherwise the ninepatch will have the region as the center patch. */
 	public NinePatch getPatch (String name) {
 		NinePatch patch = optional(name, NinePatch.class);
 		if (patch != null) return patch;
@@ -193,6 +221,9 @@ public class Skin implements Disposable {
 		}
 	}
 
+	/** Returns a registered sprite. If no sprite is found but a region exists with the name, a sprite is created from the region
+	 * and stored in the skin. If the region is an {@link AtlasRegion} then an {@link AtlasSprite} is used if the region has been
+	 * whitespace stripped or packed rotated 90 degrees. */
 	public Sprite getSprite (String name) {
 		Sprite sprite = optional(name, Sprite.class);
 		if (sprite != null) return sprite;
@@ -212,8 +243,13 @@ public class Skin implements Disposable {
 		}
 	}
 
+	/** Returns a registered drawable. If no drawable is found but a region, ninepatch, or sprite exists with the name, then the
+	 * appropriate drawable is created and stored in the skin. */
 	public Drawable getDrawable (String name) {
 		Drawable drawable = optional(name, Drawable.class);
+		if (drawable != null) return drawable;
+
+		drawable = optional(name, TiledDrawable.class);
 		if (drawable != null) return drawable;
 
 		// Use texture or texture region. If it has splits, use ninepatch. If it has rotation or whitespace stripping, use sprite.
@@ -230,7 +266,7 @@ public class Skin implements Disposable {
 		} catch (GdxRuntimeException ignored) {
 		}
 
-		// Check for explicit registration of ninepatch or sprite.
+		// Check for explicit registration of ninepatch, sprite, or tiled drawable.
 		if (drawable == null) {
 			NinePatch patch = optional(name, NinePatch.class);
 			if (patch != null)
@@ -258,6 +294,7 @@ public class Skin implements Disposable {
 		return typeResources.findKey(resource, true);
 	}
 
+	/** Returns a copy of a drawable found in the skin via {@link #getDrawable(String)}. */
 	public Drawable newDrawable (String name) {
 		Drawable drawable = getDrawable(name);
 		if (drawable instanceof TextureRegionDrawable) return new TextureRegionDrawable((TextureRegionDrawable)drawable);
@@ -266,6 +303,7 @@ public class Skin implements Disposable {
 		throw new GdxRuntimeException("Unable to copy, unknown drawable type: " + drawable.getClass());
 	}
 
+	/** Returns a tinted copy of a drawable found in the skin via {@link #getDrawable(String)}. */
 	public Drawable newDrawable (String name, Color tint) {
 		Drawable drawable = getDrawable(name);
 		if (drawable instanceof TextureRegionDrawable) {
@@ -335,7 +373,7 @@ public class Skin implements Disposable {
 
 		final Json json = new Json() {
 			public <T> T readValue (Class<T> type, Class elementType, Object jsonData) {
-				 // If the JSON is a string but the type is not, look up the actual value by name.
+				// If the JSON is a string but the type is not, look up the actual value by name.
 				if (jsonData instanceof String && !CharSequence.class.isAssignableFrom(type)) return get((String)jsonData, type);
 				return super.readValue(type, elementType, jsonData);
 			}

@@ -141,7 +141,7 @@ public class Actor {
 		event.setListenerActor(this);
 		event.setCapture(capture);
 		if (event.getStage() == null) event.setStage(stage);
-		
+
 		listeners.begin();
 		for (int i = 0, n = listeners.size; i < n; i++) {
 			EventListener listener = listeners.get(i);
@@ -150,7 +150,8 @@ public class Actor {
 				if (event instanceof InputEvent) {
 					InputEvent inputEvent = (InputEvent)event;
 					if (inputEvent.getType() == Type.touchDown) {
-						event.getStage().addTouchFocus(listener, this, inputEvent.getTarget(), inputEvent.getPointer(),inputEvent.getButton());
+						event.getStage().addTouchFocus(listener, this, inputEvent.getTarget(), inputEvent.getPointer(),
+							inputEvent.getButton());
 					}
 				}
 			}
@@ -333,17 +334,16 @@ public class Actor {
 		this.height = height;
 	}
 
-	
 	/** Returns y plus height. */
 	public float getTop () {
 		return getY() + getHeight();
-  	}
+	}
 
-  	/** Returns x plus width. */
-  	public float getRight () {
-  		return getX() + getWidth();
-  	}
-	
+	/** Returns x plus width. */
+	public float getRight () {
+		return getX() + getWidth();
+	}
+
 	/** Sets the width and height. */
 	public void setSize (float width, float height) {
 		setWidth(width);

@@ -1,3 +1,4 @@
+
 package com.badlogic.gdx.scenes.scene2d;
 
 /** Determines how touch input events are distributed to an actor and any children.
