@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package com.badlogic.gdx.graphics.glutils;
 
 import java.nio.ByteBuffer;
@@ -48,8 +49,8 @@ public class IndexArray implements IndexData {
 	}
 
 	/** <p>
-	 * Sets the indices of this IndexArray, discarding the old indices. The count must equal the number of indices to be
-	 * copied to this IndexArray.
+	 * Sets the indices of this IndexArray, discarding the old indices. The count must equal the number of indices to be copied to
+	 * this IndexArray.
 	 * </p>
 	 * 
 	 * <p>
