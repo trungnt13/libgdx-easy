@@ -16,9 +16,6 @@
 
 package com.badlogic.gdx.graphics.g2d;
 
-import static com.badlogic.gdx.graphics.Texture.TextureWrap.ClampToEdge;
-import static com.badlogic.gdx.graphics.Texture.TextureWrap.Repeat;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,6 +36,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
+
+import static com.badlogic.gdx.graphics.Texture.TextureWrap.*;
 
 /** Loads images from texture atlases created by TexturePacker.<br>
  * <br>
@@ -516,7 +515,7 @@ public class TextureAtlas implements Disposable {
 			setRegion(region);
 			setOrigin(region.originalWidth / 2f, region.originalHeight / 2f);
 			int width = region.getRegionWidth();
-			int height = region.getRegionHeight();			
+			int height = region.getRegionHeight();
 			if (region.rotate) {
 				super.rotate90(true);
 				super.setBounds(region.offsetX, region.offsetY, height, width);

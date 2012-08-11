@@ -16,9 +16,6 @@
 
 package com.badlogic.gdx.graphics.g2d;
 
-import static com.badlogic.gdx.graphics.g2d.Sprite.SPRITE_SIZE;
-import static com.badlogic.gdx.graphics.g2d.Sprite.VERTEX_SIZE;
-
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
@@ -37,6 +34,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.NumberUtils;
+
+import static com.badlogic.gdx.graphics.g2d.Sprite.*;
 
 /** Draws 2D images, optimized for geometry that does not change. Sprites and/or textures are cached and given an ID, which can
  * later be used for drawing. The size, color, and texture region for each cached image cannot be modified. This information is

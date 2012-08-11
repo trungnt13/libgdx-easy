@@ -532,9 +532,9 @@ public class BitmapFont implements Disposable {
 					lineEnd--;
 				}
 				if (lineEnd == start) {
-				    nextStart--;
-				    lineEnd = nextStart; // If no characters to break, show all.
-				} else {					
+					nextStart--;
+					lineEnd = nextStart; // If no characters to break, show all.
+				} else {
 					nextStart = lineEnd;
 					// Eat whitespace at end of line.
 					while (lineEnd > start) {
@@ -675,9 +675,9 @@ public class BitmapFont implements Disposable {
 					lineEnd--;
 				}
 				if (lineEnd == start) {
-				    nextStart--;
-				    lineEnd = nextStart; // If no characters to break, show all.
-				} else {					
+					nextStart--;
+					lineEnd = nextStart; // If no characters to break, show all.
+				} else {
 					nextStart = lineEnd;
 					// Eat whitespace at end of line.
 					while (lineEnd > start) {
