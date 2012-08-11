@@ -67,7 +67,7 @@ public class GestureDetector extends InputAdapter {
 	 * @param longPressDuration time in seconds that must pass for the detector to fire a
 	 *           {@link GestureListener#longPress(float, float)} event.
 	 * @param maxFlingDelay time in seconds the finger must have been dragged for a fling event to be fired, see
-	 *          {@link GestureListener#fling(float, float, int, int)}
+	 *           {@link GestureListener#fling(float, float, int, int)}
 	 * @param listener May be null if the listener will be set later. */
 	public GestureDetector (float halfTapSquareSize, float tapCountInterval, float longPressDuration, float maxFlingDelay,
 		GestureListener listener) {
