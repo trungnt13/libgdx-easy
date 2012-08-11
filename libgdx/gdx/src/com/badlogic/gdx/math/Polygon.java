@@ -122,7 +122,7 @@ public class Polygon {
 	public void dirty () {
 		dirty = true;
 	}
-	
+
 	public float area () {
 		float area = 0;
 

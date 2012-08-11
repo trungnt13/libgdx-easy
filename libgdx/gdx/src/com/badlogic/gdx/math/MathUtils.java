@@ -98,6 +98,7 @@ public class MathUtils {
 			}
 		}
 	}
+
 	/** Returns atan2 in radians from a lookup table. */
 	static public final float atan2 (float y, float x) {
 		float add, mul;

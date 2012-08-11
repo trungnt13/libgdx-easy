@@ -28,7 +28,7 @@ public class Vector2 implements Serializable {
 	/** Static temporary vector. Use with care! Use only when sure other code will not also use this.
 	 * @see #tmp() **/
 	public final static Vector2 tmp = new Vector2(), tmp2 = new Vector2(), tmp3 = new Vector2();
-	
+
 	public final static Vector2 X = new Vector2(1, 0);
 	public final static Vector2 Y = new Vector2(0, 1);
 	public final static Vector2 Zero = new Vector2(0, 0);
@@ -147,11 +147,11 @@ public class Vector2 implements Serializable {
 	/** Multiplies this vector by a scalar
 	 * @return This vector for chaining */
 	public Vector2 mul (float x, float y) {
-	  	this.x *= x;
-    	this.y *= y;
-    	return this;
+		this.x *= x;
+		this.y *= y;
+		return this;
 	}
-	
+
 	/** @param v The other vector
 	 * @return the distance between this and the other vector */
 	public float dst (Vector2 v) {
@@ -244,8 +244,7 @@ public class Vector2 implements Serializable {
 	}
 
 	/** Rotates the Vector2 by the given angle, counter-clockwise.
-	 * @param degrees the angle in degrees
-	 * @return the */
+	 * @param degrees the angle in degrees */
 	public Vector2 rotate (float degrees) {
 		float rad = degrees * MathUtils.degreesToRadians;
 		float cos = (float)Math.cos(rad);
@@ -271,9 +270,9 @@ public class Vector2 implements Serializable {
 		r.add(target.tmp().mul(alpha));
 		return r;
 	}
-	
+
 	@Override
-	public int hashCode() {
+	public int hashCode () {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + NumberUtils.floatToIntBits(x);
@@ -282,32 +281,24 @@ public class Vector2 implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Vector2 other = (Vector2) obj;
-		if (NumberUtils.floatToIntBits(x) != NumberUtils.floatToIntBits(other.x))
-			return false;
-		if (NumberUtils.floatToIntBits(y) != NumberUtils.floatToIntBits(other.y))
-			return false;
+	public boolean equals (Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Vector2 other = (Vector2)obj;
+		if (NumberUtils.floatToIntBits(x) != NumberUtils.floatToIntBits(other.x)) return false;
+		if (NumberUtils.floatToIntBits(y) != NumberUtils.floatToIntBits(other.y)) return false;
 		return true;
 	}
 
-	/**
-	 * Compares this vector with the other vector, using the supplied
-	 * epsilon for fuzzy equality testing.
+	/** Compares this vector with the other vector, using the supplied epsilon for fuzzy equality testing.
 	 * @param obj
 	 * @param epsilon
-	 * @return whether the vectors are the same.
-	 */
-	public boolean epsilonEquals(Vector2 obj, float epsilon) {
-		if(obj == null) return false;
-		if(Math.abs(obj.x - x) > epsilon) return false;
-		if(Math.abs(obj.y - y) > epsilon) return false;
+	 * @return whether the vectors are the same. */
+	public boolean epsilonEquals (Vector2 obj, float epsilon) {
+		if (obj == null) return false;
+		if (Math.abs(obj.x - x) > epsilon) return false;
+		if (Math.abs(obj.y - y) > epsilon) return false;
 		return true;
 	}
 }

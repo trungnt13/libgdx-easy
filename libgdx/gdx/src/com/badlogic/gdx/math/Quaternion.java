@@ -308,9 +308,9 @@ public class Quaternion implements Serializable {
 		// the trace is the sum of the diagonal elements; see
 		// http://mathworld.wolfram.com/MatrixTrace.html
 		final float m00 = xx, m01 = xy, m02 = xz;
-	    final float m10 = yx, m11 = yy, m12 = yz;
-	    final float m20 = zx, m21 = zy, m22 = zz;		
-	    final float t = m00 + m11 + m22;
+		final float m10 = yx, m11 = yy, m12 = yz;
+		final float m20 = zx, m21 = zy, m22 = zz;
+		final float t = m00 + m11 + m22;
 
 		// we protect the division by s by ensuring that s>=1
 		double x, y, z, w;
