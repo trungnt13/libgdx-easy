@@ -1,24 +1,24 @@
 <project name="gdx" default="all" basedir=".">
 	<description>libgdx distribution build file</description>
 	<property environment="env" />
-	
+
 	<!-- ndk directory -->
 	<property name="env.NDK_HOME" value="/home/mzechner/android-ndk-r5"/>
-	
+
 	<!-- library version -->
-	<property name="version" value="0.9.8"/>
-	
+	<property name="version" value="0.9.3"/>
+
 	<!-- define distribution/output directory -->
 	<property name="distDir" value="${basedir}/dist"/>
-	
+
 	<!-- should we build natives? -->
 	<property name="build-natives" value="false"/>
-	
+
 	<!-- clean distribution/output directory -->
 	<target name="clean">
 		<delete dir="${distDir}"/>
 	</target>
-	
+
 	<!-- build the core of the library plus all backends -->
 	<!-- gdx jnigen -->
 	<target name="gdx-jnigen">
@@ -29,13 +29,13 @@
 			<property name="build-natives" value="false"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx setup, custom target -->
 	<target name="gdx-setup-ui">
 		<ant antfile="build.xml" dir="extensions/gdx-setup-ui/"/>
 		<copy tofile="${distDir}/gdx-setup-ui.jar" file="extensions/gdx-setup-ui/libgdx-setup.jar"/>
 	</target>
-	
+
 	<!-- gdx core -->
 	<target name="gdx-core" depends="gdx-jnigen">
 		<path id="classpath">
@@ -50,7 +50,7 @@
 		<copy tofile="${distDir}/armeabi/libandroidgl20.so" file="gdx/dist/armeabi/libandroidgl20.so"/>
 		<copy tofile="${distDir}/armeabi-v7a/libandroidgl20.so" file="gdx/dist/armeabi/libandroidgl20.so"/>
 	</target>
-	
+
 	<!-- gdx openal, for all desktop backends -->
 	<target name="gdx-openal" depends="gdx-core">
 		<path id="classpath">
@@ -61,7 +61,7 @@
 			<reference refid="classpath"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx jogl backend -->
 	<target name="gdx-backend-jogl" depends="gdx-core,gdx-openal">
 		<path id="classpath">
@@ -75,7 +75,7 @@
 			<reference refid="jarfiles"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx lwjgl backend -->
 	<target name="gdx-backend-lwjgl" depends="gdx-core,gdx-openal">
 		<path id="classpath">
@@ -89,7 +89,7 @@
 			<reference refid="jarfiles"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx android backend -->
 	<target name="gdx-backend-android" depends="gdx-core">
 		<path id="classpath">
@@ -100,7 +100,7 @@
 			<reference refid="classpath"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx gwt backend -->
 	<target name="gdx-backend-gwt" depends="gdx-core">
 		<path id="classpath">
@@ -112,7 +112,7 @@
 			<reference refid="jarfiles"/>
 		</ant>
 	</target>
-	
+
 	<!-- build the extensions -->
 	<!-- gdx tools -->
 	<target name="gdx-tools" depends="gdx-core,gdx-backend-lwjgl,gdx-backend-jogl">
@@ -127,7 +127,7 @@
 			<reference refid="classpath"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx tiled processor -->
 	<target name="gdx-tiled-preprocessor" depends="gdx-core">
 		<path id="classpath">
@@ -141,7 +141,7 @@
 			<reference refid="classpath"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx image -->
 	<target name="gdx-image" depends="gdx-core">
 		<path id="classpath">
@@ -154,7 +154,7 @@
 			<reference refid="classpath"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx audio -->
 	<target name="gdx-audio" depends="gdx-core">
 		<path id="classpath">
@@ -167,7 +167,7 @@
 			<reference refid="classpath"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx freetype -->
 	<target name="gdx-freetype" depends="gdx-core">
 		<path id="classpath">
@@ -180,7 +180,7 @@
 			<reference refid="classpath"/>
 		</ant>
 	</target>
-	
+
 	<!-- gdx bullet -->
 	<target name="gdx-bullet" depends="gdx-core">
 		<path id="classpath">
@@ -193,7 +193,22 @@
 			<reference refid="classpath"/>
 		</ant>
 	</target>
-	
+
+   <!-- model loaders -->
+   <target name="gdx-model-loaders" depends="gdx-core,gdx-backend-jogl">
+      <path id="classpath">
+         <pathelement location="${distDir}/gdx.jar"/>
+         <pathelement location="${distDir}/extensions/gdx-jnigen.jar"/>
+         <pathelement location="${distDir}/gdx-backend-jogl.jar"/>
+      </path>
+      <ant antfile="../../../build-template.xml" dir="extensions/model-loaders/model-loaders">
+         <property name="distDir" value="${distDir}/extensions/model-loaders/model-loaders"/>
+         <property name="jar" value="gdx-model-loaders"/>
+         <reference refid="classpath"/>
+      </ant>
+   </target>
+
+
 	<!-- generates the javadoc for the core api and the application implementations -->
 	<target name="docs" depends="clean">
 		<javadoc destdir="${distDir}/docs/api" author="true" version="true" use="true"
@@ -234,7 +249,7 @@
 			<fileset dir="backends" includes="gdx-backend-android/src/com/badlogic/gdx/backends/android/AndroidApplicationConfiguration.java"/>
 		</javadoc>
 	</target>
-	
+
 	<target name="all" depends="clean,gdx-setup-ui,gdx-core,gdx-openal,gdx-backend-jogl,gdx-backend-lwjgl,gdx-backend-android,gdx-backend-gwt,gdx-tools,gdx-tiled-preprocessor,gdx-image,gdx-audio,gdx-freetype,docs">
 		<!-- copy distribution files (licences etc.) -->
 		<copy tofile="${distDir}/README" file="gdx/dist/README"/>
@@ -242,7 +257,7 @@
 		<copy tofile="${distDir}/CC-LICENSE" file="gdx/dist/CC-LICENSE"/>
 		<copy tofile="${distDir}/AUTHORS" file="gdx/dist/AUTHORS"/>
 		<copy tofile="${distDir}/CONTRIBUTORS" file="gdx/dist/CONTRIBUTORS"/>
-		
+
 		<!-- zip dist dir -->
 		<zip destfile="libgdx-${version}.zip" basedir="${distDir}"/>
 	</target>
