@@ -1,11 +1,10 @@
 package org.ege.widget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.ege.utils.Debug;
 import org.ege.utils.E;
-import org.ege.utils.Property;
+import org.ege.utils.Properties;
 import org.ege.utils.Refreshable;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -30,7 +30,7 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
     
 	private int orientation;
 	
-	private final ScrollPane 	mFlickScrollPane ;
+	private final FlickPane 	mFlickScrollPane ;
 	private final FlickTable	mTable;
 	
 	
@@ -49,7 +49,7 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	/**
 	 * Make a child map
 	 */
-	private final ObjectMap<Integer, ArrayList<Actor>> RCChildMap = new ObjectMap<Integer, ArrayList<Actor>>();
+	private final ObjectMap<Integer, Array<Actor>> RCChildMap = new ObjectMap<Integer, Array<Actor>>();
 	
 	//	------------------------------------------------------------
 	//	Auto focus data
@@ -78,7 +78,8 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	
 	private int mCurrentFocusID = 0;
 	private int mLastFocusID = -1;
-	private ArrayList<Actor> tmp;
+	private Array<Actor> tmp;
+	
 	//	-------------------------------------------------------------
 //	// Data for auto gen table property
 	IntArray mUnFocusID = new IntArray(2);
@@ -87,11 +88,8 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	public SwipeView(){
 		super();
 		mTable = new FlickTable();
-		mFlickScrollPane = new ScrollPane(mTable);
+		mFlickScrollPane = new FlickPane(mTable);
 		mFlickScrollPane.setFlickScroll(true);
-		
-		RCChildMap.put(0, new ArrayList<Actor>());
-		
 	}
 
 	
@@ -100,25 +98,27 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 		setBackground(backgroundRegion);
 		
 		mTable = new FlickTable();
-		mFlickScrollPane = new ScrollPane(mTable);
+		mFlickScrollPane = new FlickPane(mTable);
 		mFlickScrollPane.setFlickScroll(true);
-
-		RCChildMap.put(0, new ArrayList<Actor>());
-		
 	}
 	
 	public SwipeView(Skin skin){
 		super();
 		
 		mTable = new FlickTable();
-		mFlickScrollPane = new ScrollPane(mTable,skin);
+		mFlickScrollPane = new FlickPane(mTable,skin);
 		mFlickScrollPane.setFlickScroll(true);
+	}
+	
+	public SwipeView (ScrollPaneStyle style){
+		super();
 		
-		RCChildMap.put(0, new ArrayList<Actor>());
-		
+		mTable = new  FlickTable();
+		mFlickScrollPane = new FlickPane(mTable, style);
+		mFlickScrollPane.setFlickScroll(true);
 	}
 
-	public abstract void initialize(final ScrollPane flickPane,final FlickTable flickTable);
+	public abstract void initialize(final FlickTable flickTable);
 	
 	/****************************************************************
 	 * Container method
@@ -131,14 +131,14 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	}
 	
 	public void show(Stage stage){
-		initialize(mFlickScrollPane, mTable);
+		initialize(mTable);
 		
 		add(mFlickScrollPane).align(Align.center).expand();
 		
 		stage.addActor(this);
 	}
 	
-	public Table parse(Property property){
+	public Table parse(Properties property){
 		property.apply(this);
 		return this;
 	}
@@ -194,13 +194,13 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	 ****************************************************************/
 	
 	
-	public SwipeView putDefaultProperty(Property property){
+	public SwipeView putDefaultProperty(Properties property){
 		property.pad(0);
 		property.apply(mTable.defaults());
 		return this;
 	}
 	
-	public void setSwipeEffect(SwipeEffect effect){
+	public void addSwipeEffect(SwipeEffect effect){
 		mSwipeEffect = effect;
 		
 		if(mCurrentFocusID == 0 && mTable.getCells().size() > 1)
@@ -327,14 +327,14 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 						
 						//run swipe effect
 						tmp = getChildList(mCurrentFocusID);
-						for(int i = 0 ; i < tmp.size(); i++){
+						for(int i = 0 ; i < tmp.size; i++){
 							mSwipeEffect.CurrentFocusChild(tmp.get(i));
 						}
 						if(mLastFocusID > 0 )
 							tmp  = getChildList(mLastFocusID);
 						else 
 							tmp = getChildList(0);
-						for(int i = 0 ; i < tmp.size(); i++){
+						for(int i = 0 ; i < tmp.size; i++){
 							mSwipeEffect.PreviousFocusChild(tmp.get(i));
 						}
 						mLastFocusID = mCurrentFocusID;
@@ -409,11 +409,11 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 		return mTable.getCells().size();
 	}
 	
-	public ObjectMap<Integer, ArrayList<Actor>> getRCChildMap(){
+	public ObjectMap<Integer, Array<Actor>> getRCChildMap(){
 		return RCChildMap;
 	}
 	
-	public ArrayList<Actor> getChildList(int givenRow){
+	public Array<Actor> getChildList(int givenRow){
 		return RCChildMap.get(givenRow);
 	}
 	
@@ -485,10 +485,6 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	 * Flick scroll pane method
 	 ****************************************************************/
 	
-	public ScrollPane flick(){
-		return mFlickScrollPane;
-	}
-	
 	/** Prevents scrolling out of the widget's bounds. Default is true. */
 	public SwipeView setClamp(boolean isClamp){
 		mFlickScrollPane.setClamp(isClamp);
@@ -543,7 +539,40 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 		return this;
 	}
 
+	public SwipeView setFadeScrollBars (boolean fadeScrollBars) {
+		mFlickScrollPane.setFadeScrollBars(fadeScrollBars);
+		return this;
+	}
+
+	public SwipeView setupFadeScrollBars (float fadeAlphaSeconds, float fadeDelaySeconds) {
+		mFlickScrollPane.setupFadeScrollBars(fadeAlphaSeconds, fadeDelaySeconds);
+		return this;
+	}
 	
+	/**
+	 * From 0.0f to 1.0f ( slow to fast)
+	 */
+	public SwipeView setFlingSensitive (float sensitive){
+		mFlickScrollPane.setFlingSensitive(sensitive);
+		return this;
+	}
+	
+	public float getScrollX(){
+		return mFlickScrollPane.getScrollX();
+	}
+
+	public float getScrollY(){
+		return mFlickScrollPane.getScrollY();
+	}
+
+	public float getScrollPercentX(){
+		return mFlickScrollPane.getScrollPercentX();
+	}
+
+	public float getScrollPercentY(){
+		return mFlickScrollPane.getScrollPercentY();
+	}
+
 	/**************************************************************
 	 * 
 	 **************************************************************/
@@ -565,32 +594,59 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	/**************************************************************
 	 * 
 	 **************************************************************/
-	public static class FlickTable extends Table{
-
+	private void addChild(int row,Actor actor){
+		Array<Actor> tmp = RCChildMap.get(row);
+		if(tmp == null){
+			tmp = new Array<Actor>();
+			RCChildMap.put(row, tmp);
+		}
+		tmp.add(actor);
+	}
+	
+	/**
+	 * 
+	 * @author trung
+	 */
+	public class FlickTable extends Table{
+		private int row = 0;
+		
 		@Override
 		public Cell add (String text) {
-			return super.add(text).pad(0);
+			Cell cell =  super.add(text).pad(0);
+			addChild(row,(Actor) cell.getWidget());
+			return cell;
 		}
 
 		@Override
 		public Cell add (String text, String labelStyleName) {
-			return super.add(text, labelStyleName).pad(0);
+			Cell cell =  super.add(text, labelStyleName).pad(0);
+			addChild(row,(Actor) cell.getWidget());
+			return cell;
 		}
 
 		@Override
 		public Cell add () {
-			return super.add().pad(0);
+			Cell cell =  super.add().pad(0);
+			addChild(row,(Actor) cell.getWidget());
+			return cell;
 		}
 
 		@Override
 		public Cell add (Actor actor) {
+			addChild(row,actor);
 			return super.add(actor).pad(0);
+		}
+
+		
+		@Override
+		public Cell row () {
+			row ++;
+			return super.row();
 		}
 
 		@Override
 		public Table pad (Value pad) {
 			return super.pad(0);
-			
 		}
 
 		@Override
@@ -656,16 +712,37 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 		@Override
 		public Table padRight (float padRight) {
 			return super.padRight(0);
-			
 		}
-		
 	}
 	
-	
-	public static interface SwipeEffect{
-		public void PreviousFocusChild(Actor preActor);
+
+	/**
+	 * 
+	 * @author trung
+	 */
+	private static class FlickPane extends ScrollPane{
+		public FlickPane (Actor widget, ScrollPaneStyle style) {
+			super(widget,style);
+		}
 		
-		public void CurrentFocusChild(Actor curActor);
+		public FlickPane (Actor widget){
+			super(widget);
+		}
+		
+		public FlickPane (Actor widget,Skin skin){
+			super(widget,skin);
+		}
+
+		@Override
+		public void setFlickScroll (boolean flickScroll) {
+			super.setFlickScroll(true);
+		}
+	}
+
+	public static interface SwipeEffect{
+		public void PreviousFocusChild(Actor actor);
+		
+		public void CurrentFocusChild(Actor actor);
 	}
 
 }

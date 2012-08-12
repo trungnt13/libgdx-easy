@@ -6,9 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.esotericsoftware.tablelayout.Cell;
 
-public class Property {
+public class Properties {
 	
-	public static final Property instance = new Property()
+	public static final Properties instance = new Properties()
 	.set(Align.center, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, false, false,false,false);
 	
 	public int align;
@@ -25,31 +25,33 @@ public class Property {
 	
 	public boolean uniformX,uniformY;
 
+	public float x,y;
+	
 	/*******************************************************
 	 * 
 	 *******************************************************/
-	public Property padTop(float padding){
+	public Properties padTop(float padding){
 		padt =  padding;
 		return this;
 	}
 
-	public Property padLeft(float padding){
+	public Properties padLeft(float padding){
 		padl =  padding;
 		return this;
 	}
 
-	public Property padRight(float padding){
+	public Properties padRight(float padding){
 		padr =  padding;
 		return this;
 	}
 
-	public Property padBottom(float padding){
+	public Properties padBottom(float padding){
 		padb =  padding;
 		return this;
 	}
 
 	
-	public Property pad(float padding){
+	public Properties pad(float padding){
 		padt =padl = padr = padb = padding;
 		return this;
 	}
@@ -58,48 +60,65 @@ public class Property {
 	 * 
 	 *******************************************************/
 
-	public Property space(float spacing){
+	public Properties space(float spacing){
 		spacet =spacel = spacer = spaceb = spacing;
 		return this;
 	}
 
-	public Property spaceTop(float spacing){
+	public Properties spaceTop(float spacing){
 		spacet  = spacing;
 		return this;
 	}
 
-	public Property spaceBottom(float spacing){
+	public Properties spaceBottom(float spacing){
 		spaceb  = spacing;
 		return this;
 	}
 	
-	public Property spaceRight(float spacing){
+	public Properties spaceRight(float spacing){
 		spacer  = spacing;
 		return this;
 	}
 
-	public Property spaceLeft(float spacing){
+	public Properties spaceLeft(float spacing){
 		spacel  = spacing;
 		return this;
 	}
-
+	
+	/*******************************************************
+	 * 
+	 *******************************************************/
+	
+	public Properties position(float x,float y){
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+	
+	public Properties bound(float x,float y,float width,float height){
+		this.x  = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		return this;
+	}
 
 	/*******************************************************
 	 * 
 	 *******************************************************/
 
-	public Property size(float width,float height){
+	public Properties size(float width,float height){
 		this.width = width;
 		this.height = height;
 		return this;
 	}
 	
-	public Property width(float width){
+	public Properties width(float width){
 		this.width = width;
 		return this;
 	}
 	
-	public Property height(float height){
+	public Properties height(float height){
 		this.height = height;
 		return this;
 	}
@@ -108,34 +127,34 @@ public class Property {
 	 * 
 	 *******************************************************/
 
-	public Property fill(float x,float y){
+	public Properties fill(float x,float y){
 		fillX = x;
 		fillY = y;
 		return this;
 	}
 	
-	public Property fill(){
+	public Properties fill(){
 		fillX = 1;
 		fillY = 1;
 		return this;
 	}
 	
-	public Property fillX(){
+	public Properties fillX(){
 		fillX = 1;
 		return this;
 	}
 
-	public Property fillY(){
+	public Properties fillY(){
 		fillY = 1;
 		return this;
 	}
 
-	public Property fillX(float x){
+	public Properties fillX(float x){
 		fillX = x;
 		return this;
 	}
 
-	public Property fillY(float y){
+	public Properties fillY(float y){
 		fillY = y;
 		return this;
 	}
@@ -145,7 +164,7 @@ public class Property {
 	 *******************************************************/
 
 	
-	public Property align(int align){
+	public Properties align(int align){
 		this.align = align;
 		return this;
 	}
@@ -154,34 +173,34 @@ public class Property {
 	 * 
 	 *******************************************************/
 	
-	public Property expand(boolean x,boolean y){
+	public Properties expand(boolean x,boolean y){
 		expandX = x;
 		expandY = y;
 		return this;
 	}
 	
-	public Property expand(){
+	public Properties expand(){
 		expandX = true;
 		expandY = true;
 		return this;
 	}
 	
-	public Property expandX(){
+	public Properties expandX(){
 		expandX = true;
 		return this;
 	}
 
-	public Property expandY(){
+	public Properties expandY(){
 		expandY = true;
 		return this;
 	}
 
-	public Property expandX(boolean x){
+	public Properties expandX(boolean x){
 		expandX = x;
 		return this;
 	}
 
-	public Property expandY(boolean y){
+	public Properties expandY(boolean y){
 		expandY = y;
 		return this;
 	}
@@ -190,34 +209,34 @@ public class Property {
 	 * 
 	 *******************************************************/
 
-	public Property uniform(boolean x,boolean y){
+	public Properties uniform(boolean x,boolean y){
 		uniformX = x;
 		uniformY = y;
 		return this;
 	}
 	
-	public Property uniform(){
+	public Properties uniform(){
 		uniformX = true;
 		uniformY = true;
 		return this;
 	}
 	
-	public Property uniformX(){
+	public Properties uniformX(){
 		uniformX = true;
 		return this;
 	}
 
-	public Property uniformY(){
+	public Properties uniformY(){
 		uniformY = true;
 		return this;
 	}
 
-	public Property uniformX(boolean x){
+	public Properties uniformX(boolean x){
 		uniformX = x;
 		return this;
 	}
 
-	public Property uniformY(boolean y){
+	public Properties uniformY(boolean y){
 		uniformY = y;
 		return this;
 	}
@@ -226,7 +245,7 @@ public class Property {
 	 * 
 	 *******************************************************/
 	
-	public Property set(int align,float fillX,float fillY,float width,float height,
+	public Properties set(int align,float fillX,float fillY,float width,float height,
 						 float spacet,float spacel,float spacer,float spaceb,
 						 float padt,float padl,float padr,float padb,
 						 boolean expandX,boolean expandY,boolean uniformX,boolean uniformY){
@@ -277,7 +296,7 @@ public class Property {
 	
 	public SwipeView apply(SwipeView swipe){
 		swipe.align(align);
-		swipe.size(width, height);
+		swipe.setBounds(x, y, width, height);
 		swipe.pad(padt, padl, padb, padr);
 		
 		swipe.defaults().size(width, height)
