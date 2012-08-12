@@ -62,10 +62,10 @@ public abstract class GameCore implements ApplicationListener{
 	
 	@Override
 	public void resize(int width, int height) {
-		Layout.$Calculate(width, height);
+		eGraphics.resolve(width, height);
 		Screen.SCREEN_WIDTH = width;
 		Screen.SCREEN_HEIGHT = height;
-		mLayout.setViewport(Layout.UI_WIDTH, Layout.UI_HEIGHT, true);
+		mLayout.setViewport(eAdmin.uiWidth(), eAdmin.uiHeight(), true);
 		if(screen != null)
 			screen.resize(width, height);
 		onGameChanged(width,height);
@@ -96,7 +96,7 @@ public abstract class GameCore implements ApplicationListener{
 	 * Render all stuff here
 	 * @param DeltaTime the time each frame repeat
 	 */
-	protected abstract void onGameRender(float DeltaTime);
+	protected abstract void onGameRender(float delta);
 	
 	/* ---------------------------------------------------------- */
 	
@@ -201,13 +201,4 @@ public abstract class GameCore implements ApplicationListener{
 	/**********************************************
 	 * 
 	 **********************************************/
-	/*
-	 * Get game preference width
-	 */
-	public abstract int gameWidth();
-	
-	/*
-	 * Get game preference height
-	 */
-	public abstract int gameHeight();
 }

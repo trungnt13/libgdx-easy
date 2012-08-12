@@ -23,13 +23,28 @@ public class eAdmin{
 	 **************************************************************************/
 	
 	public static int gameWidth(){
-		return egame.gameWidth();
+		return eGraphics.game.GAME_WIDTH;
 	}
 	
 	public static int gameHeight(){
-		return egame.gameHeight();
+		return eGraphics.game.GAME_HEIGHT;
 	}
 	
+	public static int uiWidth(){
+		return eGraphics.ui.UI_WIDTH;
+	}
+	
+	public static int uiHeight(){
+		return eGraphics.ui.UI_HEIGHT;
+	}
+	
+	public static int orientaion(){
+		return eGraphics.ORIENTATION;
+	}
+
+	public static float toastWidth(){
+		return eGraphics.ui.TOAST_WIDTH;
+	}
 	/***************************************************************************
 	 * eContext Method
 	 **************************************************************************/

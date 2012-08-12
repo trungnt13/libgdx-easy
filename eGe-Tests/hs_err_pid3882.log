@@ -1,9 +1,0 @@
-#
-# A fatal error has been detected by the Java Runtime Environment:
-#
-#  SIGBUS (0x7) at pc=0x00007f0a6f6f91d8, pid=3882, tid=139682742822656
-#
-# JRE version: 7.0_04-b20
-# Java VM: Java HotSpot(TM) 64-Bit Server VM (23.0-b21 mixed mode linux-amd64 compressed oops)
-# Problematic frame:
-# 

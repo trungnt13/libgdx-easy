@@ -24,8 +24,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class eContext {
 	public final AssetManager manager;
 	
-	ObjectMap<String, Context> mContextMap = new ObjectMap<String, Context>();
-	ObjectMap<String, Class<?>> mNoManageData = new ObjectMap<String, Class<?>>();
+	private final ObjectMap<String, Context> mContextMap;
+	private final ObjectMap<String, Class<?>> mNoManageData;
 	
 	static StyleAtlas mCurStyleAtlas = null;
 	
@@ -34,6 +34,11 @@ public class eContext {
 	public eContext(){
 		manager = new AssetManager();
 		manager.setLoader(StyleAtlas.class, new StyleLoader(new InternalFileHandleResolver()));
+		
+		mContextMap = new ObjectMap<String, Context>();
+		mNoManageData = new ObjectMap<String, Class<?>>();
+		
+		mPools = new ObjectMap<Class<?>, Pool<?>>();
 	}
 	
 	/*******************************************************************************
@@ -113,7 +118,10 @@ public class eContext {
 	 *******************************************************/
 	
 	public void unload(String dataPath){
-		manager.unload(dataPath);
+		if(mNoManageData.containsKey(dataPath)){
+			mNoManageData.remove(dataPath);
+			manager.unload(dataPath);
+		}
 	}
 	
 	public boolean update(){
@@ -145,10 +153,12 @@ public class eContext {
 	}
 	
 	public <T> void load(String name,Class<T> type){
+		mNoManageData.put(name, type);
 		manager.load(name, type);
 	}
 
 	public <T> void load(String name,Class<T> type,AssetLoaderParameters<T> param){
+		mNoManageData.put(name, type);
 		manager.load(name, type,param);
 	}
 	
@@ -160,7 +170,7 @@ public class eContext {
 	 * get the Context list which manager is manage
 	 * @return the array list of art
 	 */
-	public Iterator<Context> toArts(){
+	public Iterator<Context> toContexts(){
 		return mContextMap.values();
 	}
 	
@@ -342,8 +352,8 @@ public class eContext {
 	  * Pool Manager 
 	  ********************************************************************************/
 	 
-	 private static final ObjectMap<Class<?>, Pool<?>> mPools = new ObjectMap<Class<?>, Pool<?>>();
-	 private static Pool mCurrentPool;
+	 private final ObjectMap<Class<?>, Pool<?>> mPools ;
+	 private Pool mCurrentPool;
 	 
 	 public Pool poolQuery(Class type){
 		 mCurrentPool = mPools.get(type);

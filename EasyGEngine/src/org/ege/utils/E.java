@@ -23,4 +23,26 @@ public final class E {
 		public static final int LANDSCAPE = 1;
 		public static final int PORTRAIT = 2;
 	}
+	
+	public static final class resolution{
+		/**
+		 * This mode keep extractly the width and height of devide for UI
+		 */
+		public static final byte MULTI_RESOLUTION_MODE = 0;
+		/**
+		 * This mode keep the UI width  = 500 and height = 800 (in portrait) 
+		 * and (800,500) for landscape
+		 */
+		public static final byte FIXED_RESOLUTION_MODE = 1;
+		/**
+		 * This mode keep the UI height = 800 but still keep the screen
+		 * ratio by multi UI height with (witdh/height ratio)
+		 */
+		public static final byte FIXED_MULTI_RESOLUTION_MODE = 2;
+		/**
+		 * Whatever happen the UI width and height wont change only the
+		 * orientaion change
+		 */
+		public static final byte MANUAL_RESOLUTION_MODE = 3;
+	}
 }

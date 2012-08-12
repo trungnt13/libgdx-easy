@@ -126,7 +126,7 @@ public class Toast extends Actor{
 		if(mStyle.time == 0)
 			mStyle.time = 1f;
 		if(mStyle.wrapped == 0)
-			mStyle.wrapped = Layout.TOAST_WIDTH;
+			mStyle.wrapped = eAdmin.toastWidth();
 		
 		float t = mStyle.time/3;
 		setColor(1, 1, 1, 0);
@@ -142,8 +142,8 @@ public class Toast extends Actor{
 			
 		setHeight(mStyle.font.getWrappedBounds(mStyle.text, mStyle.wrapped).height);
 		setWidth(mStyle.wrapped);
-		setX(Layout.UI_WIDTH/2 - mStyle.wrapped/2);
-		setY(Layout.UI_HEIGHT/3+ getHeight()/2);
+		setX(eAdmin.uiWidth()/2 - mStyle.wrapped/2);
+		setY(eAdmin.uiHeight()/3+ getHeight()/2);
 		
 		eAdmin.egame.getLayout().addActor(this);
 	}
