@@ -171,14 +171,14 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 		switch (orientation) {
 			case E.orientation.HORIZONTAL:
 				final Cell sampleCell = mTable.getCells().get(0);
-				cellSize =  sampleCell.getPrefWidth().get(null);
-				spacing = 	sampleCell.getSpaceRight().get(null);
+				cellSize =  sampleCell.getPrefWidth();
+				spacing = 	sampleCell.getSpaceRight();
 //				D.out("flick " +cellSize + " " + spacing + " " );
 				break;
 			case E.orientation.VERTICAL:
 				final Cell sampleCell1 = mTable.getCells().get(0);
-				cellSize = sampleCell1.getPrefHeight().get(null);
-				spacing = sampleCell1.getSpaceBottom().get(null);
+				cellSize = sampleCell1.getPrefHeight();
+				spacing = sampleCell1.getSpaceBottom();
 				break;
 		}
 	}
