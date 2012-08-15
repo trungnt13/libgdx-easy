@@ -68,8 +68,12 @@ public class eGraphics {
 		}
 	}
 	
-	public static final void setUiResolution(byte eResolution){
+	public static final void setUiResolution(byte eResolution,int...resolutions){
 		ui.mCurrentMode = eResolution;
+		if(eResolution == E.resolution.MANUAL_RESOLUTION_MODE){
+			ui.UI_WIDTH = resolutions[0];
+			ui.UI_HEIGHT = resolutions[1];
+		}
 		ui.resolve(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 	
