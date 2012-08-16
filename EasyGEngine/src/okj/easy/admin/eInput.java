@@ -15,8 +15,6 @@ import com.badlogic.gdx.Input.Orientation;
 import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ObjectMap;
 
 
@@ -32,9 +30,9 @@ public class eInput implements InputProcessor{
 	
 	//	==============================================	
 	
-	private static final OrthographicCamera mCamera = new OrthographicCamera();
-	
-	
+	private float viewFrustumWidth;
+	private float viewFrustumHeight;
+
 	OnBackKeyListener mBackKeyListener = null;
 	
 	int tmp;
@@ -46,8 +44,9 @@ public class eInput implements InputProcessor{
 	public eInput () {
 	}
 
-	public OrthographicCamera cam(){
-		return mCamera;
+	public void setInputViewport(float viewWidth,float viewHeight){
+		viewFrustumWidth = viewWidth;
+		viewFrustumHeight = viewHeight;
 	}
 	
 	/**
@@ -374,13 +373,11 @@ public class eInput implements InputProcessor{
 	}
 
 	public float getProjectedX(){
-		mCamera.unproject(Vector3.tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-		return Vector3.tmp.x;
+		return ((float)Gdx.input.getX()/(float)Gdx.graphics.getWidth())*viewFrustumWidth;
 	}
 	
 	public float getProjectedY(){
-		mCamera.unproject(Vector3.tmp.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-		return Vector3.tmp.y;
+		return (1-(float)Gdx.input.getY()/(float)Gdx.graphics.getHeight())*viewFrustumHeight;
 	}
 	
 	public  int getX(int pointer) {

@@ -32,6 +32,11 @@ public final class eMath {
 	/***************************************************************************
 	 * 
 	 ***************************************************************************/
+	/**
+	 * Turn angle back to 0-360 form
+	 * @param degrees
+	 * @return
+	 */
 	public static float claimAngle(float degrees){
 		tmp = degrees + MAX_ANGLE;
 		tmp1 = tmp % 360;
