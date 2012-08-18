@@ -1,6 +1,5 @@
-package org.ege.widget;
 
-import okj.easy.admin.eAdmin;
+package org.ege.widget;
 
 import org.ege.utils.Timer;
 
@@ -40,10 +39,11 @@ public abstract class Dialog extends Window {
 	
 	protected abstract void init(final Dialog d);
 	
-	public void show(){
+	public void show(Layout layout){
 		DIALOG_NUMBER++;
 		init(this);
-		eAdmin.egame.getLayout().addActor(this);
+		setZIndex(Integer.MAX_VALUE);
+		layout.addActor(this);
 		if(mAutoHideTime > 0)
 			Timer.schedule(new Timer.Task() {
 				

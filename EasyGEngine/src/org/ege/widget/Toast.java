@@ -122,7 +122,7 @@ public class Toast extends Actor{
 		return this;
 	}
 	
-	public void show(){
+	public void show(Layout layout){
 		if(mStyle.time == 0)
 			mStyle.time = 1f;
 		if(mStyle.wrapped == 0)
@@ -144,8 +144,9 @@ public class Toast extends Actor{
 		setWidth(mStyle.wrapped);
 		setX(eAdmin.uiWidth()/2 - mStyle.wrapped/2);
 		setY(eAdmin.uiHeight()/3+ getHeight()/2);
-		
-		eAdmin.egame.getLayout().addActor(this);
+
+		setZIndex(Integer.MAX_VALUE);
+		layout.addActor(this);
 	}
 	
 	private void hide(){

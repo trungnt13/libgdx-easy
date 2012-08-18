@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import okj.easy.admin.eInput.MotionCallBack.MotionEvent;
 import okj.easy.input.OnBackKeyListener;
 
-import org.ege.widget.Dialog;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
@@ -30,8 +28,8 @@ public class eInput implements InputProcessor{
 	
 	//	==============================================	
 	
-	private float viewFrustumWidth;
-	private float viewFrustumHeight;
+	private static float viewFrustumWidth;
+	private static float viewFrustumHeight;
 
 	OnBackKeyListener mBackKeyListener = null;
 	
@@ -44,7 +42,7 @@ public class eInput implements InputProcessor{
 	public eInput () {
 	}
 
-	public void setInputViewport(float viewWidth,float viewHeight){
+	public static void setInputViewport(float viewWidth,float viewHeight){
 		viewFrustumWidth = viewWidth;
 		viewFrustumHeight = viewHeight;
 	}
@@ -176,9 +174,6 @@ public class eInput implements InputProcessor{
 	 * @return whether the input was processed */
 	public boolean touchDown (int X, int Y, int pointer, int button) {
 		mLastTouchPointer = pointer;
-		
-		if(Dialog.DIALOG_NUMBER > 0)
-			return eAdmin.egame.getLayout().touchDown(X, Y, pointer, button);
 		
 		int y = Gdx.graphics.getHeight()-Y;
 		

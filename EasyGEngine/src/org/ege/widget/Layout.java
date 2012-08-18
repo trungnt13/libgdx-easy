@@ -114,6 +114,11 @@ public  class Layout extends Stage implements Pauseable{
 		eAdmin.einput.addProcessor(ID, this);
 	}
 
+	public void clear(){
+		super.clear();
+		eAdmin.einput.removeProcessor(ID);
+	}
+	
 	@Override
 	public void dispose () {
 		super.dispose();

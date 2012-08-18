@@ -2,12 +2,8 @@ package okj.easy.core;
 
 import okj.easy.core.utils.Bridge;
 
-import org.ege.widget.Layout;
-
 public abstract class GameScreen extends Screen  {
 	protected static  GameCore mGameCore;
-	
-	protected Layout layout = null;
 	
 	private boolean PAUSE = false;
 	
@@ -24,7 +20,7 @@ public abstract class GameScreen extends Screen  {
 	
 		batch.setProjectionMatrix(projection);
 		
-		layout = onCreateLayout();
+		onCreateLayout();
 		onLoadResource();
 	}
 
@@ -32,7 +28,7 @@ public abstract class GameScreen extends Screen  {
 	 * This method will load the layout for User Interface 
 	 * @return your layout
 	 */	
-	public abstract Layout onCreateLayout();
+	public abstract void onCreateLayout();
 	
 	
 	/**
@@ -44,9 +40,8 @@ public abstract class GameScreen extends Screen  {
 	@Override
 	public void destroy(int destroyMode) {
 		if(destroyMode == RELEASE){
-			if(layout != null){
-				layout.dispose();
-			}
+			if(layout != null)
+				layout.clear();
 			batch.flush();
 			onDestroy();
 		}else if(destroyMode == HIDE){

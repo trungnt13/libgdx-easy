@@ -5,6 +5,7 @@ import okj.easy.admin.Context;
 import okj.easy.admin.eAdmin;
 import okj.easy.core.utils.Bridge;
 
+import org.ege.widget.Layout;
 import org.ege.widget.StyleAtlas;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -19,14 +20,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class Screen{
-	public static final SpriteBatch batch = new SpriteBatch(); 
-	public static final SpriteCache cache = new SpriteCache();
-	
+public abstract class Screen implements ApplicationContext{
+	public static SpriteBatch batch = new SpriteBatch(); 
+	public static SpriteCache cache = new SpriteCache();
+	static Layout layout = null;
+
 	public static final Matrix4 projection = new Matrix4();
 	public static final Matrix4 transform = new Matrix4();
 
-	public static final Matrix4 zero = new Matrix4();
+	public static final Matrix4 tmpMat = new Matrix4();
 	
 	public static final int RELEASE = 1;
 	public static final int HIDE = 2;
@@ -35,6 +37,7 @@ public abstract class Screen{
 	protected static int SCREEN_HEIGHT;
 	
 	Bridge mBridge;
+	
 	
 	/** Called when the screen should render itself.
 	 * @param delta The time in seconds since the last render. */
@@ -60,6 +63,21 @@ public abstract class Screen{
 
 	/** Called when this screen should release all resources. */
 	public abstract void destroy (int destroyMode);
+	
+	/**************************************************************************
+	 * 
+	 **************************************************************************/
+	
+	public Layout getScreenLayout(){
+		if(layout == null)
+			layout = new Layout(true);
+		eAdmin.einput.addProcessor(layout.ID, layout);
+		return layout;
+	}
+	
+	public void drawLayout(){
+		layout.draw();
+	}
 	
 	/***************************************************************************
 	 * eInput Method
@@ -219,4 +237,5 @@ public abstract class Screen{
 	public final void release (Vector2 v) {
 		v = null;
 	}
+	
 }

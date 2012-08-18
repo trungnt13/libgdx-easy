@@ -151,14 +151,14 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 			return;
 		switch (orientation) {
 			case E.orientation.HORIZONTAL:
-				final float containerPadLeft = getPadLeft().get(null);
-				final float containerPadRight =getPadRight().get(null);
+				final float containerPadLeft = getPadLeft();
+				final float containerPadRight =getPadRight();
 				containerSize = (int)(getPrefWidth() - containerPadLeft - containerPadRight);
 //				D.out("container " + containerPadLeft + " " + containerPadRight + "  " + containerSize);
 				break;
 			case E.orientation.VERTICAL:
-				final float containerPadTop = getPadTop().get(null);
-				final float containerPadBottom = getPadBottom().get(null);
+				final float containerPadTop = getPadTop();
+				final float containerPadBottom = getPadBottom();
 				containerSize = (int)(getPrefHeight() - containerPadBottom - containerPadTop);
 				break;
 		}

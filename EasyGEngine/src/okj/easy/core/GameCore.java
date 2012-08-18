@@ -11,7 +11,6 @@ import okj.easy.core.utils.BridgePool;
 import org.ege.utils.EasyNativeLoader;
 import org.ege.utils.Timer;
 import org.ege.widget.Dialog;
-import org.ege.widget.Layout;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -21,7 +20,6 @@ public abstract class GameCore implements ApplicationListener{
 	//	----------------------------------------------------------
 	
 	protected Screen screen;
-	Layout mLayout;
 
 	private final BridgePool bridgePool;
 	
@@ -49,7 +47,6 @@ public abstract class GameCore implements ApplicationListener{
 		Screen.SCREEN_WIDTH = Gdx.graphics.getWidth();
 		Screen.SCREEN_HEIGHT = Gdx.graphics.getHeight();
 		
-		mLayout = new Layout(true);
 		Dialog.DIALOG_NUMBER = 0;
 		onGameConfig();
 	}
@@ -65,7 +62,6 @@ public abstract class GameCore implements ApplicationListener{
 		eGraphics.resolve(width, height);
 		Screen.SCREEN_WIDTH = width;
 		Screen.SCREEN_HEIGHT = height;
-		mLayout.setViewport(eAdmin.uiWidth(), eAdmin.uiHeight(), true);
 		if(screen != null)
 			screen.resize(width, height);
 		onGameChanged(width,height);
@@ -79,16 +75,15 @@ public abstract class GameCore implements ApplicationListener{
 	protected abstract void onGameChanged(int width, int height);
 
 	/* ---------------------------------------------------------- */
-
+	private float delta;
+	
 	@Override
 	public void render() {
-		final float delta = Gdx.graphics.getDeltaTime();
+		delta = Gdx.graphics.getDeltaTime();
 		if(screen != null){
 			screen.render(delta);
 			screen.update(delta);
 		}
-		mLayout.act(delta);
-		mLayout.draw();
 		onGameRender(delta);
 	}
 	
@@ -161,9 +156,6 @@ public abstract class GameCore implements ApplicationListener{
 		return screen;
 	}
 		
-	public Layout getLayout(){
-		return mLayout;
-	}
 	/* ---------------------------------------------------------- */
 
 	protected Bridge newBridge(Class<?> firstClass,Class<?> secondClass){
