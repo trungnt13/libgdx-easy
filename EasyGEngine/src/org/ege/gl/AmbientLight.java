@@ -1,5 +1,6 @@
 package org.ege.gl;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 
@@ -24,5 +25,9 @@ public class AmbientLight {
 	
 	public void enable(GL10 gl){
 		gl.glLightModelfv(GL10.GL_LIGHT_MODEL_AMBIENT, color, 0);
+	}
+	
+	public void enable(){
+		Gdx.gl10.glLightModelfv(GL10.GL_LIGHT_MODEL_AMBIENT, color,0);
 	}
 }

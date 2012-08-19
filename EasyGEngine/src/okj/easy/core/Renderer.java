@@ -14,16 +14,20 @@ public abstract class Renderer {
 	public static final GL20 gl20 = Gdx.gl20;
 	public static final GLU  glu = Gdx.glu;
 	
-	protected final ApplicationContext mContext;
+	protected final ApplicationContext context;
 	
 	public Renderer(ApplicationContext context){
-		this.mContext = context;
+		this.context = context;
 	}
 	
 	public abstract void enable();
 	
 	public abstract void render(float delta);
 	
-	public abstract void disable();
+	
+	public void apply(float delta){
+		enable();
+		render(delta);
+	}
 }
 

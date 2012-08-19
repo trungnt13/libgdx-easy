@@ -13,6 +13,11 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL11;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GLCommon;
+import com.badlogic.gdx.graphics.GLU;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -21,6 +26,13 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Screen implements ApplicationContext{
+	public static final GLCommon gl = Gdx.gl;
+	public static final GL10 gl10 = Gdx.gl10;
+	public static final GL11 gl11 = Gdx.gl11;
+	public static final GL20 gl20 = Gdx.gl20;
+	public static final GLU glu = Gdx.glu;
+	
+	
 	public static SpriteBatch batch = new SpriteBatch(); 
 	public static SpriteCache cache = new SpriteCache();
 	static Layout layout = null;
@@ -228,6 +240,15 @@ public abstract class Screen implements ApplicationContext{
 	
 	public final void glClearColor(float r,float g,float b,float a){
 		Gdx.gl.glClearColor(r, g, b, a);
+	}
+
+	public final void disableBlend(){
+		Gdx.gl.glDisable(GL10.GL_BLEND);
+	}
+	
+	public final void enableBlend(){
+		Gdx.gl.glEnable(GL10.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	/***************************************************************************

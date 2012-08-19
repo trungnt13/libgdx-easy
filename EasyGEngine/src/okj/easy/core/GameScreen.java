@@ -38,6 +38,14 @@ public abstract class GameScreen extends Screen  {
 	
 
 	@Override
+	public void resize(int width, int height) {
+		onResize(width,height);
+	}
+	
+	public abstract void onResize(int width,int height);
+
+	
+	@Override
 	public void destroy(int destroyMode) {
 		if(destroyMode == RELEASE){
 			if(layout != null)
@@ -58,6 +66,9 @@ public abstract class GameScreen extends Screen  {
 		onResume();
 	}
 
+	/**
+	 * Call when the game is Resume from pause
+	 */
 	public abstract void onResume();	
 	
 	@Override
@@ -67,14 +78,12 @@ public abstract class GameScreen extends Screen  {
 		this.PAUSE = true;
 		onPause();
 	}
-	
-	public abstract void onPause();
 
 	/**
-	 * Only be called when you call setScreen(RELEASE mode)
+	 * Call when the game is pause or when setScreen in HIDE mode
 	 */
-	public abstract void onDestroy();
-	
+	public abstract void onPause();
+
 	@Override
 	public void update(float delta) {
 		if(!PAUSE){
@@ -97,7 +106,12 @@ public abstract class GameScreen extends Screen  {
 	 * @param delta Gdx.graphics.getDeltaTime()
 	 */
 	public abstract void onRender(float delta);
-	
+
+	/**
+	 * Only be called when you call setScreen(RELEASE mode)
+	 */
+	public abstract void onDestroy();
+
 
 	/**
 	 * Set screen which lead to the new screen and the destroy mode of old screen
@@ -108,16 +122,6 @@ public abstract class GameScreen extends Screen  {
 		mGameCore.setScreen(screen,destroyMode);
 	}
 	
-
-	@Override
-	public void resize(int width, int height) {
-		onResize(width,height);
-	}
-	
-	public abstract void onResize(int width,int height);
-
-
-
 	/************************************************************
 	 * Bridge method
 	 ************************************************************/
