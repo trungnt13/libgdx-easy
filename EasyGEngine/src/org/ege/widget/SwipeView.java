@@ -507,7 +507,7 @@ public abstract class SwipeView extends Table implements Refreshable,Debug,Dispo
 	/** If true, the widget can be scrolled slightly past its bounds and will animate back to its bounds when scrolling is stopped.
 	 * Default is true. */
 	public SwipeView setOverscroll (boolean overscroll) {
-		mFlickScrollPane.setOverscroll(overscroll);
+		mFlickScrollPane.setOverscroll(overscroll,overscroll);
 		return this;
 	}
 

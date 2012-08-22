@@ -85,6 +85,8 @@ public  class Layout extends Stage implements Pauseable{
 	}
 	
 	public void setBackground(Drawable drawable){
+		if(mBackground.getStage() == null)
+			getRoot().addActorAt(0, mBackground);
 		mBackground.setDrawable(drawable);
 	}
 
