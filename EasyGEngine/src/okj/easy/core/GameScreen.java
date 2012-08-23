@@ -1,5 +1,7 @@
 package okj.easy.core;
 
+import okj.easy.admin.Screen;
+import okj.easy.admin.eAdmin;
 import okj.easy.core.utils.Bridge;
 
 public abstract class GameScreen extends Screen  {
@@ -16,7 +18,7 @@ public abstract class GameScreen extends Screen  {
 		
 		mGameCore = gamecore;
 			
-		projection.setToOrtho(0,SCREEN_WIDTH, 0,SCREEN_HEIGHT , -1, 1);
+		projection.setToOrtho(0,eAdmin.gameWidth(), 0,eAdmin.gameHeight() , -1, 1);
 	
 		batch.setProjectionMatrix(projection);
 		
@@ -48,8 +50,7 @@ public abstract class GameScreen extends Screen  {
 	@Override
 	public void destroy(int destroyMode) {
 		if(destroyMode == RELEASE){
-			if(layout != null)
-				layout.clear();
+			clearLayout();
 			batch.flush();
 			onDestroy();
 		}else if(destroyMode == HIDE){
@@ -59,9 +60,7 @@ public abstract class GameScreen extends Screen  {
 	
 	@Override
 	public void resume() {
-		if(layout != null){
-			layout.Resume();
-		}
+		focusLayout();
 		this.PAUSE = false;
 		onResume();
 	}
@@ -73,8 +72,7 @@ public abstract class GameScreen extends Screen  {
 	
 	@Override
 	public void pause() {
-		if(layout!= null)
-			layout.Pause();
+		unfocusLayout();
 		this.PAUSE = true;
 		onPause();
 	}
@@ -88,8 +86,7 @@ public abstract class GameScreen extends Screen  {
 	public void update(float delta) {
 		if(!PAUSE){
 			onUpdate(delta);
-			if(layout != null)
-				layout.act(delta);
+			updateLayout(delta);
 		}
 	}
 

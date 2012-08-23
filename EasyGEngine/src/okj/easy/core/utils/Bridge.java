@@ -3,7 +3,7 @@ package okj.easy.core.utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import okj.easy.core.Screen;
+import okj.easy.admin.Screen;
 
 import org.ege.utils.OnRecycleListener;
 

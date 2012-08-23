@@ -1,5 +1,6 @@
 package okj.easy.core;
 
+import okj.easy.admin.Screen;
 import okj.easy.admin.eAdmin;
 import okj.easy.core.utils.Bridge;
 
@@ -22,7 +23,7 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	public void show(GameCore gameCore) {
 		this.mGameCore = gameCore;
 		
-		projection.setToOrtho(0,SCREEN_WIDTH, 0,SCREEN_HEIGHT , -1, 1);
+		projection.setToOrtho(0,eAdmin.gameWidth(), 0,eAdmin.gameHeight() , -1, 1);
 		
 		batch.setProjectionMatrix(projection);
 		

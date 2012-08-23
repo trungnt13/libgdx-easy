@@ -10,9 +10,7 @@ public abstract class PopUpScreen extends GameScreen{
 
 	@Override
 	public void destroy(int destroyMode) {
-		if(layout != null){
-			layout.dispose();
-		}
+		clearLayout();
 		batch.flush();
 		onDestroy();
 	}

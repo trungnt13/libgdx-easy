@@ -4,7 +4,6 @@ package okj.easy.admin;
 import java.util.Iterator;
 
 import org.ege.assets.StyleLoader;
-import org.ege.assets.StyleLoader.StyleParameter;
 import org.ege.utils.Factory;
 import org.ege.utils.Pool;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
@@ -45,7 +44,7 @@ public class eContext {
 	 * Style manager 
 	 ********************************************************************************/
 
-	public StyleAtlas styleQuery(String name){
+	StyleAtlas styleQuery(String name){
 		return mCurStyleAtlas = manager.get(name, StyleAtlas.class);
 	}
 	
@@ -55,7 +54,7 @@ public class eContext {
 	 * @param type
 	 * @return
 	 */
-	public <T> T getStyle(String styleName,Class<T> type){
+	<T> T getStyle(String styleName,Class<T> type){
 		if(mCurStyleAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz  use eAdmin.eContext.atlasQuery(...) mode first");
 		return mCurStyleAtlas.get(styleName, type);
@@ -67,25 +66,21 @@ public class eContext {
 	 * @param type
 	 * @return
 	 */
-	public <T> T optional(String resourceName,Class<T> type){
+	<T> T optional(String resourceName,Class<T> type){
 		if(mCurStyleAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz  use eAdmin.eContext.atlasQuery(...) mode first");
 		return mCurStyleAtlas.optional(resourceName, type);
 	}
 	
-	public StyleAtlas getQueryStyle(){
-		return mCurStyleAtlas;
-	}
-
-	public StyleAtlas getStyleAtlas(String name){
+	StyleAtlas getStyleAtlas(String name){
 		return manager.get(name, StyleAtlas.class);
 	}
 	
-	public void stopQuery(){
+	void stopQuery(){
 		mCurStyleAtlas = null;
 	}
 	
-	public void setLoader(Resolution...resolutions){
+	public void setStyleResolution(Resolution...resolutions){
 		if(resolutions.length > 0){
 			ResolutionFileResolver resolver = new ResolutionFileResolver(new InternalFileHandleResolver(), resolutions);
 			manager.setLoader(StyleAtlas.class	, new StyleLoader(resolver));
@@ -94,30 +89,34 @@ public class eContext {
 		}
 	}
 	
-	public void loadStyle(String dataPath){
-		manager.load(dataPath, StyleAtlas.class);
-	}
-	
-	public void loadStyle(String dataPath,boolean isUseSuffixFOrTExture){
-		if(isUseSuffixFOrTExture)
-			loadStyle(dataPath);
-		else{
-			String tmp = dataPath;
-			tmp = tmp.replace(".json", ".png");
-			StyleParameter param = new StyleParameter(tmp);
-			manager.load(dataPath, StyleAtlas.class, param);
-		}
-	}
-	
-	public void loadStyle(String datapath,StyleParameter param){
-		manager.load(datapath, StyleAtlas.class, param);
-	}
+//	void loadStyle(String dataPath){
+//		manager.load(dataPath, StyleAtlas.class);
+//	}
+//	
+//	void loadStyle(String dataPath,boolean isUseSuffixFOrTExture){
+//		if(isUseSuffixFOrTExture)
+//			loadStyle(dataPath);
+//		else{
+//			String tmp = dataPath;
+//			tmp = tmp.replace(".json", ".png");
+//			StyleParameter param = new StyleParameter(tmp);
+//			manager.load(dataPath, StyleAtlas.class, param);
+//		}
+//	}
+//	
+//	void loadStyle(String datapath,StyleParameter param){
+//		manager.load(datapath, StyleAtlas.class, param);
+//	}
 	
 	/*******************************************************
 	 *	AssetManager method 
 	 *******************************************************/
+
+	<T> T get(String name,Class<T> clazz){
+		return manager.get(name, clazz);
+	}
 	
-	public void unload(String dataPath){
+	void unload(String dataPath){
 		if(mNoManageData.containsKey(dataPath)){
 			mNoManageData.remove(dataPath);
 			manager.unload(dataPath);
@@ -152,17 +151,17 @@ public class eContext {
 		return manager.getProgress();
 	}
 	
-	public <T> void load(String name,Class<T> type){
+	<T> void load(String name,Class<T> type){
 		mNoManageData.put(name, type);
 		manager.load(name, type);
 	}
 
-	public <T> void load(String name,Class<T> type,AssetLoaderParameters<T> param){
+	<T> void load(String name,Class<T> type,AssetLoaderParameters<T> param){
 		mNoManageData.put(name, type);
 		manager.load(name, type,param);
 	}
 	
-	public <T, P extends AssetLoaderParameters<T>> void setLoader(Class<T> type, AssetLoader<T, P> loader){
+	<T, P extends AssetLoaderParameters<T>> void setLoader(Class<T> type, AssetLoader<T, P> loader){
 		manager.setLoader(type, loader);
 	}
 	
@@ -200,12 +199,12 @@ public class eContext {
 	 * public Context manager method
 	 ********************************************************************************/
 	
-	public void reloadContext(String contextName){
+	void reloadContext(String contextName){
 		mContextMap.get(contextName).reload();
 	}
 	
 	
-	public void unloadContext(String contextName){
+	void unloadContext(String contextName){
 		mContextMap.get(contextName).unload();
 	}
 	
@@ -213,7 +212,7 @@ public class eContext {
 	 * Remove all data which contain in the context from manager , even if that data hadn't been loaded(not recommended)
 	 * @param context your context
 	 */
-	public void clearContext(String contextName){
+	void clearContext(String contextName){
 		Context context = mContextMap.get(contextName);
 		unloadContext(context);
 		context.mDataMap.clear();
@@ -226,7 +225,7 @@ public class eContext {
 	 * @param context your context
 	 * @return true if success removed, otherwise false
 	 */
-	public void removeContext(String contextName){
+	void removeContext(String contextName){
 		mContextMap.get(contextName).remove();
 	}
 	
@@ -307,7 +306,7 @@ public class eContext {
 	 * @param name art's name
 	 * @return found art(maybe null)
 	 */
-	public Context findContextByName(String name){
+	Context findContextByName(String name){
 		return mContextMap.get(name);
 	}
 	
@@ -317,7 +316,7 @@ public class eContext {
 	 * @param clazz
 	 * @return
 	 */
-	public <T> T findDataByName(String linkName,Class<T> clazz){
+	<T> T findDataByName(String linkName,Class<T> clazz){
 		return manager.get(linkName, clazz);
 	}
 	
@@ -325,24 +324,24 @@ public class eContext {
 	 * Query function
 	 ***************************************************************************/
 	
-	public TextureAtlas atlasQuery(String name){
+	TextureAtlas atlasQuery(String name){
 		mCurAtlas = manager.get(name, TextureAtlas.class);
 		return mCurAtlas;
 	}
 	
-	public TextureRegion findGRegionByName(String regionName){
+	TextureRegion findGRegionByName(String regionName){
 		if(mCurAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz use eAdmin.egraphics.atlasQuery(...) first");
 		return mCurAtlas.findRegion(regionName);
 	}
 
-	public TextureRegion findGRegionByName(String regionName,int index){
+	TextureRegion findGRegionByName(String regionName,int index){
 		if(mCurAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz use eAdmin.egraphics.atlasQuery(...) first");
 		return mCurAtlas.findRegion(regionName,index);
 	}
 
-	public TextureRegion[] findGRegionsByName(String regionName){
+	TextureRegion[] findGRegionsByName(String regionName){
 		if(mCurAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz use eAdmin.egraphics.atlasQuery(...) first");
 		return eGraphics.regionConvert(mCurAtlas.findRegions(regionName));

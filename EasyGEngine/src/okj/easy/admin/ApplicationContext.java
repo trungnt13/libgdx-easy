@@ -1,16 +1,26 @@
-package okj.easy.core;
+package okj.easy.admin;
 
-import okj.easy.admin.Album;
-import okj.easy.admin.Context;
 
 import org.ege.widget.StyleAtlas;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL11;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GLCommon;
+import com.badlogic.gdx.graphics.GLU;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public interface ApplicationContext {
+	public static final GLCommon gl = Gdx.gl;
+	public static final GL10 gl10 = Gdx.gl10;
+	public static final GL11 gl11 = Gdx.gl11;
+	public static final GL20 gl20 = Gdx.gl20;
+	public static final GLU glu = Gdx.glu;
+	
 	/***************************************************************************
 	 * eInput Method
 	 **************************************************************************/
@@ -27,13 +37,11 @@ public interface ApplicationContext {
 
 	public <T> T optional(String resourceName,Class<T> type);
 	
-	public StyleAtlas getQueryStyle();
-	
 	public StyleAtlas getStyleAtlas(String  name);
 	
 	public void stopStyleQuery();
 	
-	/*	---------------------------------------------	*/
+	/*	================================================	*/
 	
 	public Context findContextByName(String name);
 	
@@ -47,7 +55,8 @@ public interface ApplicationContext {
 	
 	public void reloadContext(String artName);
 	
-	/*	--------------------------------------------	*/
+	/*	================================================	*/
+	
 	public TextureAtlas atlasQuery(String name);
 	
 	public TextureRegion findGRegionByName(String name);
@@ -56,11 +65,13 @@ public interface ApplicationContext {
 
 	public TextureRegion[] findGRegionsByName(String name);
 
-	/*	--------------------------------------------------------	*/
+	/*	================================================	*/
 	
 	public <T> void load(String linkName,Class<T> clazz);
 	
 	public <T> void load(String linkName,Class<T> clazz,AssetLoaderParameters<T> param);
+	
+	public <T> T get(String fileName,Class<T> clazz);
 	
 	public boolean isLoaded(String linkName,Class<?> clazz);
 	

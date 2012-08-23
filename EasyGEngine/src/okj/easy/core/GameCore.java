@@ -1,5 +1,6 @@
 package okj.easy.core;
 
+import okj.easy.admin.Screen;
 import okj.easy.admin.eAdmin;
 import okj.easy.admin.eAudio;
 import okj.easy.admin.eContext;
@@ -31,6 +32,7 @@ public abstract class GameCore implements ApplicationListener{
 	}
 	
 	/* ---------------------------------------------------------- */
+	
 	@Override
 	public void create() {
 		eAdmin.egame  = GameCore.this;
@@ -43,9 +45,6 @@ public abstract class GameCore implements ApplicationListener{
 		Timer.instance.reset();
 		
 		Gdx.input.setInputProcessor(eAdmin.einput);
-		
-		Screen.SCREEN_WIDTH = Gdx.graphics.getWidth();
-		Screen.SCREEN_HEIGHT = Gdx.graphics.getHeight();
 		
 		Dialog.DIALOG_NUMBER = 0;
 		onGameConfig();
@@ -60,8 +59,6 @@ public abstract class GameCore implements ApplicationListener{
 	@Override
 	public void resize(int width, int height) {
 		eGraphics.resolve(width, height);
-		Screen.SCREEN_WIDTH = width;
-		Screen.SCREEN_HEIGHT = height;
 		if(screen != null)
 			screen.resize(width, height);
 		onGameChanged(width,height);

@@ -1,8 +1,6 @@
-package okj.easy.core;
+package okj.easy.admin;
 
-import okj.easy.admin.Album;
-import okj.easy.admin.Context;
-import okj.easy.admin.eAdmin;
+import okj.easy.core.GameCore;
 import okj.easy.core.utils.Bridge;
 
 import org.ege.widget.Layout;
@@ -14,27 +12,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL11;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.GLCommon;
-import com.badlogic.gdx.graphics.GLU;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Screen implements ApplicationContext{
-	public static final GLCommon gl = Gdx.gl;
-	public static final GL10 gl10 = Gdx.gl10;
-	public static final GL11 gl11 = Gdx.gl11;
-	public static final GL20 gl20 = Gdx.gl20;
-	public static final GLU glu = Gdx.glu;
-	
 	
 	public static SpriteBatch batch = new SpriteBatch(); 
-	public static SpriteCache cache = new SpriteCache();
 	static Layout layout = null;
 
 	public static final Matrix4 projection = new Matrix4();
@@ -45,11 +31,7 @@ public abstract class Screen implements ApplicationContext{
 	public static final int RELEASE = 1;
 	public static final int HIDE = 2;
 
-	protected static int SCREEN_WIDTH;
-	protected static int SCREEN_HEIGHT;
-	
 	Bridge mBridge;
-	
 	
 	/** Called when the screen should render itself.
 	 * @param delta The time in seconds since the last render. */
@@ -77,7 +59,7 @@ public abstract class Screen implements ApplicationContext{
 	public abstract void destroy (int destroyMode);
 	
 	/**************************************************************************
-	 * 
+	 * Layout manager
 	 **************************************************************************/
 	
 	public Layout getScreenLayout(){
@@ -89,6 +71,26 @@ public abstract class Screen implements ApplicationContext{
 	
 	public void drawLayout(){
 		layout.draw();
+	}
+	
+	public void clearLayout(){
+		if(layout != null)
+			layout.clear();
+	}
+	
+	public void unfocusLayout(){
+		if(layout != null)
+			layout.Pause();
+	}
+	
+	public void focusLayout(){
+		if(layout != null)
+			layout.Resume();
+	}
+	
+	public void updateLayout(float delta){
+		if(layout != null)
+			layout.act(delta);
 	}
 	
 	/***************************************************************************
@@ -115,9 +117,6 @@ public abstract class Screen implements ApplicationContext{
 		return eAdmin.econtext.optional(resourceName, type);
 	}
 	
-	public final StyleAtlas getQueryStyle(){
-		return eAdmin.econtext.getQueryStyle();
-	}
 	
 	public final StyleAtlas getStyleAtlas(String  name){
 		return eAdmin.econtext.getStyleAtlas(name);
@@ -158,6 +157,7 @@ public abstract class Screen implements ApplicationContext{
 	}
 	
 	/*	--------------------------------------------	*/
+
 	public final TextureAtlas atlasQuery(String name){
 		return eAdmin.econtext.atlasQuery(name);
 	}
@@ -182,6 +182,10 @@ public abstract class Screen implements ApplicationContext{
 	
 	public final <T> void load(String linkName,Class<T> clazz,AssetLoaderParameters<T> param){
 		eAdmin.econtext.load(linkName,clazz,param);
+	}
+	
+	public final <T> T get(String fileName,Class<T> clazz){
+		return eAdmin.econtext.get(fileName, clazz);
 	}
 	
 	public boolean isLoaded(String linkName,Class<?> clazz){

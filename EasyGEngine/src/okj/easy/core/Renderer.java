@@ -1,5 +1,7 @@
 package okj.easy.core;
 
+import okj.easy.admin.ApplicationContext;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL11;
