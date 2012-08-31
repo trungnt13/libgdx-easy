@@ -13,8 +13,9 @@ public class EasyNativeLoader {
 			}catch (UnsatisfiedLinkError e) {
 				System.load("/home/trung/EngineResearchTeam/libgdx-easy/EasyGEngine/libs/libenative.so");
 			}
-		}else if(isWindows)
-			throw new UnsupportedOperationException("I haven't support native for window");
+		}else if(isWindows){
+//			throw new UnsupportedOperationException("I haven't support native for window");
+		}
 	}
 
 	// build script in linux 64 bit
