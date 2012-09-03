@@ -26,9 +26,9 @@ public class eContext {
 	private final ObjectMap<String, Context> mContextMap;
 	private final ObjectMap<String, Class<?>> mNoManageData;
 	
-	static StyleAtlas mCurStyleAtlas = null;
+	private StyleAtlas mCurStyleAtlas = null;
 	
-	static TextureAtlas mCurAtlas = null;
+	private TextureAtlas mCurAtlas = null;
 	
 	public eContext(){
 		manager = new AssetManager();
@@ -161,7 +161,7 @@ public class eContext {
 		manager.load(name, type,param);
 	}
 	
-	<T, P extends AssetLoaderParameters<T>> void setLoader(Class<T> type, AssetLoader<T, P> loader){
+	public <T, P extends AssetLoaderParameters<T>> void setLoader(Class<T> type, AssetLoader<T, P> loader){
 		manager.setLoader(type, loader);
 	}
 	

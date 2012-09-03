@@ -274,7 +274,7 @@ public class Slider extends Actor {
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y,
 				int pointer, int button) {
-			if(hit(x, y) != null){
+			if(hit(x, y,true) != null){
 				isFocusing = true;
 				calculatePositionAndValue(x);
 				if(mValueListener != null)
