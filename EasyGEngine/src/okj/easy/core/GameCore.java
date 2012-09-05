@@ -24,14 +24,24 @@ public abstract class GameCore implements ApplicationListener{
 
 	private final BridgePool bridgePool;
 	
+	private final IActivityHandler mActivity;
+	
 	//	----------------------------------------------------------
 
-	public GameCore(){
+	public GameCore(IActivityHandler activity){
+		this.mActivity = activity;
+		
 		bridgePool = new BridgePool(13);
 		Bridge.registerRecyleListener(bridgePool);
 	}
 	
-	/* ---------------------------------------------------------- */
+	public GameCore (){
+		this(new IDesktopHandler());
+	}
+	
+	/**************************************************************
+	 * 
+	 **************************************************************/
 	
 	@Override
 	public void create() {
@@ -58,7 +68,7 @@ public abstract class GameCore implements ApplicationListener{
 	
 	@Override
 	public void resize(int width, int height) {
-		eGraphics.resolve(width, height);
+		eAdmin.egraphics.resolve(width, height);
 		if(screen != null)
 			screen.resize(width, height);
 		onGameChanged(width,height);
@@ -132,7 +142,9 @@ public abstract class GameCore implements ApplicationListener{
 	 */
 	protected abstract void onGameDestroy();
 
-	/* ---------------------------------------------------------- */
+	/**********************************************
+	 * 
+	 **********************************************/
 
 	/**
 	 * Set the current screen to the new screen 
@@ -149,11 +161,13 @@ public abstract class GameCore implements ApplicationListener{
 		}
 	}
 	
-	public Screen getScreen(){
+	public Screen getCurrentScreen(){
 		return screen;
 	}
 		
-	/* ---------------------------------------------------------- */
+	/**************************************************************
+	 * 
+	 **************************************************************/
 
 	protected Bridge newBridge(Class<?> firstClass,Class<?> secondClass){
 		Bridge tmp = getBridge(firstClass, secondClass);
@@ -187,7 +201,15 @@ public abstract class GameCore implements ApplicationListener{
 		return null;
 	}
 
-	/**********************************************
+	/**************************************************************
 	 * 
-	 **********************************************/
+	 **************************************************************/
+	
+	public IActivityHandler getActivity (){
+		return mActivity;
+	}
+	
+	public boolean isBindActivity(){
+		return mActivity == null;
+	}
 }

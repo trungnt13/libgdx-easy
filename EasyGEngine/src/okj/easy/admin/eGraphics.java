@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Array;
 public class eGraphics {
 	public static int ORIENTATION = E.orientation.LANDSCAPE;
 	
+	public eGraphics (){
+	}
 	/***************************************************************
 	 * 
 	 ***************************************************************/
@@ -23,7 +25,10 @@ public class eGraphics {
 		public static float TOAST_WIDTH = 220;
 		private static byte mCurrentMode = E.resolution.FIXED_RESOLUTION_MODE;
 		
-		private static final void resolve(int screenWIdth,int screenHEight){
+		private ui(){
+		}
+
+		static void resolve(int screenWIdth,int screenHEight){
 			switch (mCurrentMode) {
 				case E.resolution.FIXED_RESOLUTION_MODE:
 					if(screenWIdth > screenHEight){
@@ -68,7 +73,7 @@ public class eGraphics {
 		}
 	}
 	
-	public static final void setUiResolution(byte eResolution,int...resolutions){
+	public final void setUiResolution(byte eResolution,int...resolutions){
 		ui.mCurrentMode = eResolution;
 		if(eResolution == E.resolution.MANUAL_RESOLUTION_MODE){
 			ui.UI_WIDTH = resolutions[0];
@@ -109,7 +114,7 @@ public class eGraphics {
 		}
 	}
 
-	public static final void setGameResolution(int...resolutions){
+	public void setGameResolution(int...resolutions){
 		if(resolutions.length == 2){
 			game.GAME_WIDTH  = resolutions[0];
 			game.GAME_HEIGHT = resolutions[1];
@@ -121,7 +126,7 @@ public class eGraphics {
 	}
 	
 	
-	public static void resolve(int screenWidth,int screenHeight){
+	public void resolve(int screenWidth,int screenHeight){
 		ui.resolve(screenWidth, screenHeight);
 		game.resolve(screenWidth, screenHeight);
 	}

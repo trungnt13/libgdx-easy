@@ -28,8 +28,8 @@ public class eInput implements InputProcessor{
 	
 	//	==============================================	
 	
-	private static float viewFrustumWidth;
-	private static float viewFrustumHeight;
+	private float viewFrustumWidth;
+	private float viewFrustumHeight;
 
 	OnBackKeyListener mBackKeyListener = null;
 	
@@ -42,7 +42,7 @@ public class eInput implements InputProcessor{
 	public eInput () {
 	}
 
-	public static void setInputViewport(float viewWidth,float viewHeight){
+	public void setInputViewport(float viewWidth,float viewHeight){
 		viewFrustumWidth = viewWidth;
 		viewFrustumHeight = viewHeight;
 	}
