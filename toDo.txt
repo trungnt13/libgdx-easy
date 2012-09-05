@@ -1,3 +1,0 @@
-_ Color blend collision with direction oriented algorithm
-_ Screen transistion which is integrate into Bridge 
-_ Optimize Code!

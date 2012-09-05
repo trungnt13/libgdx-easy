@@ -18,3 +18,4 @@ gwt-servlet.jar
 *.mdb
 classes/
 gwt-unitCache/
+OpenGLDraft/
