@@ -2,7 +2,7 @@ package okj.easy.graphics.graphics2d;
 
 import java.util.ArrayList;
 
-import okj.easy.admin.eGraphics;
+import okj.easy.core.eGraphics;
 
 import org.ege.utils.CharUtils;
 import org.ege.utils.E;

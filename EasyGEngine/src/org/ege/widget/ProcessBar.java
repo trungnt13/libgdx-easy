@@ -14,8 +14,13 @@ public class ProcessBar extends Actor{
 	
 	OnProcessListener mProcessListener;
 	
+	// the first region width and height of process bar
 	private float mFirstWidth;
 	private float mFirstHeight;
+	
+	// the final width height when draw of process bar
+	private float mDstWidth;
+	private float mDstHeight;
 	
 	private float mCurrentTime;
 	private float mCurrentPercent;
@@ -23,8 +28,6 @@ public class ProcessBar extends Actor{
 	private float mStateTime;
 	private int mKeyFrame;
 	
-	private ProcessMode mMode;
-	private int mOrientation;
 	
 	boolean isAnimation = false;
 	
@@ -36,12 +39,9 @@ public class ProcessBar extends Actor{
 	private void readStyle(ProcessBarStyle style){
 		mStyle = style;
 		
-		mMode = style.mode;
-		mOrientation = style.orientation;
-		
-		mCurrentPercent = (mMode == ProcessMode.COUNT_UP) ? 0 : 1;
-		mCurrentTime = (mMode == ProcessMode.COUNT_UP) ? 0 : mStyle.time;
-		setRotation((mOrientation == E.orientation.LANDSCAPE) ? 0 : 90);
+		mCurrentPercent = (style.mode == ProcessMode.COUNT_UP) ? 0 : 1;
+		mCurrentTime = (style.mode == ProcessMode.COUNT_UP) ? 0 : mStyle.time;
+		setRotation((style.orientation == E.orientation.LANDSCAPE) ? 0 : 90);
 		
 		mFirstWidth = mStyle.process[0].getRegionWidth();
 		mFirstHeight = mStyle.process[0].getRegionHeight();
@@ -63,12 +63,16 @@ public class ProcessBar extends Actor{
 		if(percent < 0 || percent > 1 || mCurrentPercent < 0 || mCurrentPercent > 1)
 			return;
 		
-		mCurrentPercent += mMode.value * percent;
+		mCurrentPercent += mStyle.mode.value * percent;
+		
 		if(mStyle.time > -1)
-			mCurrentTime += mMode.value*percent*mStyle.time;
+			mCurrentTime += mStyle.mode.value*percent*mStyle.time;
 		
 		if(mProcessListener != null)
 			mProcessListener.ProcessValue(this, mCurrentPercent);
+		
+		mDstHeight = getHeight();
+		mDstWidth = mCurrentPercent * getWidth();
 	}
 	
 	public void setProcess(float currentPercent){
@@ -77,12 +81,24 @@ public class ProcessBar extends Actor{
 		mCurrentPercent = currentPercent;
 		if(mStyle.time > -1)
 			mCurrentTime = currentPercent*mStyle.time;
+		
+		mDstHeight = getHeight();
+		mDstWidth = mCurrentPercent * getWidth();
 	}
 	
 	public void setRegion(TextureRegion background,TextureRegion...process){
 		mStyle.background = background;
 		mStyle.process = process;
 	}
+	
+	public float getProcess(){
+		return mCurrentPercent;
+	}
+	
+	public float getTime (){
+		return mCurrentTime;
+	}
+	
 	/************************************************************
 	 * 
 	 ***********************************************************/
@@ -102,7 +118,7 @@ public class ProcessBar extends Actor{
 			tmp = mStyle.process[mKeyFrame];
 			tmp.setRegion((int)tmp.getRegionX(), (int)tmp.getRegionY(), 
 						  (int)(mCurrentPercent*mFirstWidth), (int)mFirstHeight);
-			batch.draw(tmp,getX(),getY(),getWidth(),getHeight());
+			batch.draw(tmp,getX(),getY(),mDstWidth,mDstHeight);
 		}else{
 			batch.draw(mStyle.background,getX(),getY(),getOriginX(),getOriginY(),getWidth(),getHeight(),scaleX,scaleY,90);
 			tmp = mStyle.process[mKeyFrame];
@@ -117,7 +133,7 @@ public class ProcessBar extends Actor{
 		super.act(delta);
 		if(isAnimation){
 			if(mStyle.time > 0 && mCurrentTime >= 0 && mCurrentTime <= mStyle.time){
-				mCurrentTime += mMode.value * delta;
+				mCurrentTime += mStyle.mode.value * delta;
 				mCurrentPercent = mCurrentTime/mStyle.time;
 				if(mProcessListener != null)
 					mProcessListener.ProcessValue(this, mCurrentPercent);
@@ -136,6 +152,10 @@ public class ProcessBar extends Actor{
 	 * 
 	 ***********************************************************/
 	
+	public void startAnimation(){
+		isAnimation = true;
+	}
+	
 	public void startAnimation(float frameDuration){
 		mStyle.frameduration = frameDuration;
 		isAnimation = true;
@@ -153,7 +173,7 @@ public class ProcessBar extends Actor{
 		mStateTime= 0;
 		mKeyFrame = 0;
 		
-		switch (mMode) {
+		switch (mStyle.mode) {
 			case COUNT_DOWN:
 				mCurrentPercent = 1f;
 				mCurrentTime = mStyle.time;
@@ -178,11 +198,13 @@ public class ProcessBar extends Actor{
 	
 	public static class ProcessBarStyle {
 		public TextureRegion background;
+		
 		public TextureRegion process[];
+		public float frameduration;
 		
 		// time = -1 mean dont use time
 		public float time = -1;
-		public float frameduration;
+	
 		
 		public ProcessMode mode = ProcessMode.COUNT_UP;
 		public int orientation = E.orientation.LANDSCAPE;

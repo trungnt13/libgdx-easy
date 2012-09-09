@@ -24,7 +24,7 @@ public final class E {
 		public static final int PORTRAIT = 2;
 	}
 	
-	public static final class resolution{
+	public static final class resolutions{
 		/**
 		 * This mode keep extractly the width and height of devide for UI
 		 */
@@ -44,5 +44,17 @@ public final class E {
 		 * orientaion change
 		 */
 		public static final byte MANUAL_RESOLUTION_MODE = 3;
+	}
+	
+	public static final class screen{
+		/**
+		 * Set new screen and call destroy old screen
+		 */
+		public static final int RELEASE = 1;
+		
+		/**
+		 * Set new screen and call pause old screen
+		 */
+		public static final int HIDE = 2;
 	}
 }

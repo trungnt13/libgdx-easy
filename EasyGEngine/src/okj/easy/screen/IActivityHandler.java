@@ -1,50 +1,50 @@
-package okj.easy.core;
+package okj.easy.screen;
 
 import com.badlogic.gdx.Preferences;
 
 /**
  * A simple class to handle some callback from User Activity
+ * 
  * @author Trung
- *
+ * 
  */
 public interface IActivityHandler {
-	
-	/**************************************************
-	 * 	functional method
-	 **************************************************/
-	
-	public void onShare();
-	
-	public void onDownload();
 
 	/**************************************************
-	 * 	Admob method
+	 * functional method
 	 **************************************************/
 
-	public void onShowAdmob();
-	
-	public void onPaidAdmob();
-	
-	
+	public void onShare ();
+
+	public void onDownload ();
+
 	/**************************************************
-	 * 	functional method
+	 * Admob method
 	 **************************************************/
 
-	public void onRequestPayment();
-	
-	public void setPaymentListener(OnPaymentListener listener);
-	
-	public Preferences onLoadPreferences (String package_dir,String name);
-	
+	public void onShowAdmob ();
+
+	public void onPaidAdmob ();
+
+	/**************************************************
+	 * functional method
+	 **************************************************/
+
+	public void onRequestPayment ();
+
+	public void setPaymentListener (OnPaymentListener listener);
+
+	public Preferences onLoadPreferences (String package_dir, String name);
+
 	/**************************************************
 	 * 
 	 **************************************************/
-	
+
 	public static interface OnPaymentListener {
 		public void onPaymentSuccess (String value);
-		
+
 		public void onPaymentFailure (String value);
-		
+
 		public void onPaymentDeny (String value);
 	}
 }

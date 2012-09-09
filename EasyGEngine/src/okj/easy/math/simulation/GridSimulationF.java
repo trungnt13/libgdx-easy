@@ -2,7 +2,7 @@ package okj.easy.math.simulation;
 
 import java.util.ArrayList;
 
-import okj.easy.admin.eAdmin;
+import okj.easy.core.eAdmin;
 
 import org.ege.utils.E;
 

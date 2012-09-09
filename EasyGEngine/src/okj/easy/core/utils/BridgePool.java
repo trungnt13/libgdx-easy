@@ -3,13 +3,14 @@ package okj.easy.core.utils;
 import org.ege.utils.OnRecycleListener;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 
 public class BridgePool implements OnRecycleListener<Bridge>{
 	public final int max;
 
-	protected final Array<Bridge> freeObjects;
-	private Array<Bridge> usingBridge;
+	private final Array<Bridge> freeObjects;
+	private final ObjectMap<String, Bridge> usingBridge;
 	
 	/** Creates a pool with an initial capacity of 16 and no maximum. */
 	public BridgePool () {
@@ -24,7 +25,7 @@ public class BridgePool implements OnRecycleListener<Bridge>{
 	/** @param max The maximum number of free objects to store in this pool. */
 	public BridgePool (int initialCapacity, int max) {
 		freeObjects = new Array<Bridge>(false, initialCapacity);
-		usingBridge = new Array<Bridge>(false, initialCapacity);
+		usingBridge = new ObjectMap<String, Bridge>();
 		this.max = max;
 	}
 
@@ -43,14 +44,14 @@ public class BridgePool implements OnRecycleListener<Bridge>{
 	public Bridge obtain(Class<?> firstClass,Class<?> secondClass){
 		Bridge tmp =  freeObjects.size == 0 ? newObject(firstClass,secondClass) : 
 											  freeObjects.pop().set(firstClass, secondClass);
-		this.usingBridge.add(tmp);
+		this.usingBridge.put(tmp.getName(), tmp);
 		return tmp;
 	}
 	
 	public Bridge obtain(String name){
 		Bridge tmp = freeObjects.size == 0 ? newObject(name) : 
 											 freeObjects.pop().set(name);
-		this.usingBridge.add(tmp);
+		this.usingBridge.put(tmp.getName(), tmp);
 		return tmp;
 	}
 
@@ -61,7 +62,7 @@ public class BridgePool implements OnRecycleListener<Bridge>{
 	public void free (Bridge object) {
 		if (object == null) throw new IllegalArgumentException("object cannot be null.");
 		if (freeObjects.size < max) freeObjects.add(object);
-		this.usingBridge.removeValue(object, false);
+		this.usingBridge.remove(object.getName());
 	}
 
 	/** Puts the specified objects in the pool.
@@ -70,7 +71,7 @@ public class BridgePool implements OnRecycleListener<Bridge>{
 		for (int i = 0, n = Math.min(objects.size, max - freeObjects.size); i < n; i++)
 			freeObjects.add(objects.get(i));
 		for(int i = 0; i < objects.size;i++){
-			this.usingBridge.removeValue(objects.get(i), false);
+			this.usingBridge.remove(objects.get(i).getName());
 		}
 	}
 	
@@ -84,7 +85,7 @@ public class BridgePool implements OnRecycleListener<Bridge>{
 		this.usingBridge.clear();
 	}
 	
-	public Array<Bridge> getUsingBridges(){
+	public ObjectMap<String, Bridge> getUsingBridges(){
 		return this.usingBridge;
 	}
 
