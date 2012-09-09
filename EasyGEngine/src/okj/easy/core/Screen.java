@@ -102,7 +102,6 @@ public abstract class Screen implements ApplicationContext {
 		if (layout == null)
 			layout = new Layout(false, batch);
 		eAdmin.einput.addProcessor(layout.ID, layout);
-		layout.setToDefault();
 		return layout;
 	}
 

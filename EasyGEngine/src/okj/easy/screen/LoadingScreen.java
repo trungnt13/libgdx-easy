@@ -9,7 +9,7 @@ import org.ege.widget.Panel;
 
 import com.badlogic.gdx.assets.AssetErrorListener;
 
-public abstract class LoadingScreen extends MainScreen implements AssetErrorListener {
+public abstract class LoadingScreen extends Screen implements AssetErrorListener {
 
 	protected float			progress;
 	private boolean			isDone;
@@ -37,7 +37,6 @@ public abstract class LoadingScreen extends MainScreen implements AssetErrorList
 	 **********************************************************/
 	@Override
 	public void show () {
-		super.show();
 		progress = 0;
 		isDone = false;
 
@@ -45,17 +44,15 @@ public abstract class LoadingScreen extends MainScreen implements AssetErrorList
 			onLoadData();
 		else {
 			Layout layout = getScreenLayout();
-			if (mPanel == null)
-				mPanel = layout.createPanel();
-			else {
-				layout.setCurrentPanel(mPanel);
-				layout.setToCurrent();
-			}
+			layout.createSafeModePanel();
 		}
+
+		onCreate();
 	}
 
 	@Override
-	public void onUpdate (float delta) {
+	public void update (float delta) {
+		super.update(delta);
 		isDone = eAdmin.econtext.update() & (eAdmin.econtext.getQueueAssets() == 0);
 		isDone = isDone & eAdmin.eaudio.update() & (eAdmin.eaudio.getQueueAssets() == 0);
 
@@ -63,15 +60,26 @@ public abstract class LoadingScreen extends MainScreen implements AssetErrorList
 
 		if (isDone & autoChangeScreen) {
 			mFirstTimeLoad = false;
-			
 			setScreen(mNewScreen.screenChanged(), E.screen.RELEASE);
 			return;
 		}
 	}
 
+	@Override
+	public void destroy (int destroyMode) {
+		eAdmin.einput.unregisterBackKeyListener();
+		batch.flush();
+		Layout layout = getScreenLayout();
+		layout.restore();
+		onDestroy();
+	}
+
 	/**********************************************************
 	 * 
 	 **********************************************************/
+
+	public abstract void onCreate ();
+
 	/**
 	 * You only should call ResourceContext.load() in this method .This will
 	 * help you ensure that context only load one time event when you come back
@@ -79,13 +87,7 @@ public abstract class LoadingScreen extends MainScreen implements AssetErrorList
 	 */
 	public abstract void onLoadData ();
 
-	@Deprecated
-	public void onResume () {
-	}
-
-	@Deprecated
-	public void onPause () {
-	}
+	public abstract void onDestroy ();
 
 	/**********************************************************
 	 * Loading method
