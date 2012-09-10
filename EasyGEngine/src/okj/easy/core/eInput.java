@@ -2,7 +2,6 @@ package okj.easy.core;
 
 import java.util.ArrayList;
 
-import okj.easy.core.eInput.MotionCallBack.MotionEvent;
 import okj.easy.input.OnBackKeyListener;
 
 import com.badlogic.gdx.Gdx;
@@ -16,7 +15,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class eInput implements InputProcessor {
-	public static MotionEvent							currentMotion;
 
 	private final ArrayList<InputProcessor>				mInputProcessors	= new ArrayList<InputProcessor>();
 	private final ObjectMap<Integer, InputProcessor>	mInputMap			= new ObjectMap<Integer, InputProcessor>();
@@ -46,7 +44,7 @@ public class eInput implements InputProcessor {
 	}
 
 	/**
-	 * Add a new processor at a specified index( the index must in range
+	 * Add a new processor at a specified index( the index must in range`
 	 * [0,size]
 	 * 
 	 * @param index
@@ -250,6 +248,7 @@ public class eInput implements InputProcessor {
 	 */
 	public boolean touchDragged (int X, int Y, int pointer) {
 		int y = Gdx.graphics.getHeight() - Y;
+
 		tmp = mInputProcessors.size();
 		for (int i = 0; i < tmp; i++)
 			mInputProcessors.get(i).touchDragged(X, Y, pointer);
@@ -316,16 +315,13 @@ public class eInput implements InputProcessor {
 	}
 
 	public void addMotionCallback (MotionCallBack callback) {
-		mMotionList.add((MotionCallBack) callback);
+		if (!mMotionList.contains(callback))
+			mMotionList.add(callback);
 	}
 
 	public void addKeyCallback (KeyCallBack callback) {
-		mKeysList.add(callback);
-	}
-
-	public void addCallback (MotionCallBack motionCallback, KeyCallBack keyCallback) {
-		mMotionList.add(motionCallback);
-		mKeysList.add(keyCallback);
+		if (!mKeysList.contains(callback))
+			mKeysList.add(callback);
 	}
 
 	/**
@@ -336,15 +332,16 @@ public class eInput implements InputProcessor {
 	 */
 	public void addCallback (Callback callback) {
 		if (callback instanceof MotionCallBack && callback instanceof KeyCallBack) {
-			mMotionList.add((MotionCallBack) callback);
-			mKeysList.add((KeyCallBack) callback);
-			return;
+			if (!mMotionList.contains(callback))
+				mMotionList.add((MotionCallBack) callback);
+			if (!mKeysList.contains(callback))
+				mKeysList.add((KeyCallBack) callback);
 		} else if (callback instanceof MotionCallBack) {
-			mMotionList.add((MotionCallBack) callback);
-			return;
+			if (!mMotionList.contains(callback))
+				mMotionList.add((MotionCallBack) callback);
 		} else if (callback instanceof KeyCallBack) {
-			this.mKeysList.add((KeyCallBack) callback);
-			return;
+			if (!mKeysList.contains(callback))
+				this.mKeysList.add((KeyCallBack) callback);
 		}
 	}
 
@@ -357,7 +354,7 @@ public class eInput implements InputProcessor {
 	}
 
 	public boolean removeCallback (MotionCallBack motionCallback, KeyCallBack keyCallback) {
-		return mMotionList.remove(motionCallback) && mMotionList.remove(keyCallback);
+		return mMotionList.remove(motionCallback) & mMotionList.remove(keyCallback);
 	}
 
 	/**
@@ -369,7 +366,7 @@ public class eInput implements InputProcessor {
 	 */
 	public boolean removeCallback (Callback callback) {
 		if (callback instanceof MotionCallBack && callback instanceof KeyCallBack) {
-			return mMotionList.remove((MotionCallBack) callback) && mKeysList.remove((KeyCallBack) callback);
+			return mMotionList.remove((MotionCallBack) callback) & mKeysList.remove((KeyCallBack) callback);
 		} else if (callback instanceof MotionCallBack) {
 			return mMotionList.remove((MotionCallBack) callback);
 		} else if (callback instanceof KeyCallBack) {
@@ -551,9 +548,6 @@ public class eInput implements InputProcessor {
 	}
 
 	public interface MotionCallBack extends Callback {
-		public enum MotionEvent {
-			ACTION_UP, ACTION_DOWN, ACTION_DRAG, ACTION_MOVE
-		};
 
 		/**
 		 * Called when the screen was touched or a mouse button was pressed. The
@@ -614,9 +608,6 @@ public class eInput implements InputProcessor {
 	}
 
 	public interface KeyCallBack extends Callback {
-		public enum KeyEvent {
-
-		};
 
 		/**
 		 * Called when a key was pressed

@@ -2,8 +2,8 @@ package okj.easy.core;
 
 import okj.easy.core.utils.Bridge;
 import okj.easy.core.utils.BridgePool;
-import okj.easy.screen.IActivityHandler;
-import okj.easy.screen.IDesktopHandler;
+import okj.easy.core.utils.IActivityHandler;
+import okj.easy.core.utils.IDesktopHandler;
 import okj.easy.screen.LoadingScreen;
 import okj.easy.screen.SafeLoader;
 
@@ -15,6 +15,7 @@ import org.ege.widget.Dialog;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class GameCore implements ApplicationListener {
 
@@ -80,8 +81,11 @@ public abstract class GameCore implements ApplicationListener {
 		eAdmin.egraphics = new eGraphics();
 		eAdmin.eaudio = new eAudio();
 		eAdmin.econtext = new eContext();
+		
 		Screen.setCoreProcessor(this);
-
+		Screen.batch = new SpriteBatch();
+		Screen.layout = null;
+		
 		EasyNativeLoader.load();
 		Timer.instance.reset();
 
@@ -129,7 +133,7 @@ public abstract class GameCore implements ApplicationListener {
 		onGameResume();
 
 		// reload context
-		if (!isStarted ) {
+		if (!isStarted) {
 			setScreen(mStartScreen.setChangedScreenListener(new LoadingScreen.OnChangedScreen() {
 				@Override
 				public Screen screenChanged () {
@@ -151,6 +155,7 @@ public abstract class GameCore implements ApplicationListener {
 		if (screen != null)
 			screen.destroy(E.screen.RELEASE);
 		isStarted = false;
+		
 		onGameDestroy();
 		this.bridgePool.clear();
 	}
@@ -210,9 +215,8 @@ public abstract class GameCore implements ApplicationListener {
 	 *            destroyMode of old Screen
 	 */
 	void setScreen (Screen screen, int destroyMode) {
-		if (!isStarted)
-			if (this.screen != null)
-				this.screen.destroy(destroyMode);
+		if (this.screen != null)
+			this.screen.destroy(destroyMode);
 		this.screen = screen;
 		if (this.screen != null) {
 			screen.show();
@@ -290,7 +294,6 @@ public abstract class GameCore implements ApplicationListener {
 		isStarted = true;
 	}
 
-
 	/**************************************************************
 	 * Bridge Manage method
 	 **************************************************************/
@@ -310,7 +313,7 @@ public abstract class GameCore implements ApplicationListener {
 	}
 
 	private Bridge getBridge (Class<?> firstClass, Class<?> secondClass) {
-		return bridgePool.getUsingBridges().get(firstClass.getName()+secondClass.getName());
+		return bridgePool.getUsingBridges().get(firstClass.getName() + secondClass.getName());
 	}
 
 	private Bridge getBridge (String name) {

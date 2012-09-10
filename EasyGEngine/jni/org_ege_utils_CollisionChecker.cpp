@@ -29,7 +29,11 @@ JNIEXPORT jint JNICALL Java_org_ege_utils_CollisionChecker_project__FF
 JNIEXPORT void JNICALL Java_org_ege_utils_CollisionChecker_unproject___3FII
   (JNIEnv *env, jclass clazz, jfloatArray result, jint col, jint row){
 	float* array = (float*)env->GetPrimitiveArrayCritical(result,0);
-	mGrid.unproject(&tmp,col,row);
+
+	int c = col;
+	int r = row;
+
+	mGrid.unproject(&tmp,c,r);
 	*array = tmp.x;
 	*(array+1)  = tmp.y;
 	env->ReleasePrimitiveArrayCritical(result,array,0);
@@ -38,7 +42,9 @@ JNIEXPORT void JNICALL Java_org_ege_utils_CollisionChecker_unproject___3FII
 JNIEXPORT void JNICALL Java_org_ege_utils_CollisionChecker_unproject___3FI
   (JNIEnv *env, jclass clazz, jfloatArray result, jint id){
 	float* array = (float*)env->GetPrimitiveArrayCritical(result,0);
-	mGrid.unproject(&tmp,id);
+
+	int i = id;
+	mGrid.unproject(&tmp,i);
 	*array = tmp.x;
 	*(array+1)  = tmp.y;
 	env->ReleasePrimitiveArrayCritical(result,array,0);

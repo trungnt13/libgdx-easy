@@ -48,7 +48,7 @@ public class Layout extends Stage implements Pauseable {
 
 	public Layout (boolean strecth, SpriteBatch batch) {
 		super(eAdmin.uiWidth(), eAdmin.uiHeight(), strecth, batch);
-		addPanel(mDefaultPanel);
+		addPanelToRoot(mDefaultPanel);
 		mCurPanel = mDefaultPanel;
 		mDefaultPanel.setBounds(0, 0, eAdmin.uiWidth(), eAdmin.uiHeight());
 
@@ -61,8 +61,6 @@ public class Layout extends Stage implements Pauseable {
 		mBackground.setZIndex(0);
 
 		eAdmin.einput.addProcessor(ID, this);
-
-		addActor(mBackground);
 	}
 
 	/*******************************************************
@@ -70,7 +68,7 @@ public class Layout extends Stage implements Pauseable {
 	 *******************************************************/
 
 	public void setBackground (Drawable drawable) {
-		if (mBackground.getStage() == null)
+		if (mBackground.getParent() == null)
 			mDefaultPanel.addActorAt(0, mBackground);
 		mBackground.setDrawable(drawable);
 	}
@@ -250,6 +248,7 @@ public class Layout extends Stage implements Pauseable {
 	@Override
 	public void dispose () {
 		super.dispose();
+		clear();
 		eAdmin.einput.removeProcessor(ID);
 	}
 

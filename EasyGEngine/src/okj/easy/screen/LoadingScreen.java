@@ -5,7 +5,6 @@ import okj.easy.core.eAdmin;
 
 import org.ege.utils.E;
 import org.ege.widget.Layout;
-import org.ege.widget.Panel;
 
 import com.badlogic.gdx.assets.AssetErrorListener;
 
@@ -19,7 +18,6 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	 * Flag show that this is the first time load,otherwise this is a reload
 	 */
 	boolean					mFirstTimeLoad		= true;
-	private Panel			mPanel				= null;
 
 	private OnChangedScreen	mNewScreen;
 
@@ -43,8 +41,10 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 		if (mFirstTimeLoad)
 			onLoadData();
 		else {
-			Layout layout = getScreenLayout();
-			layout.createSafeModePanel();
+			if (isLayoutCreated()) {
+				Layout layout = getScreenLayout();
+				layout.createSafeModePanel();
+			}
 		}
 
 		onCreate();
@@ -69,8 +69,13 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	public void destroy (int destroyMode) {
 		eAdmin.einput.unregisterBackKeyListener();
 		batch.flush();
-		Layout layout = getScreenLayout();
-		layout.restore();
+		if (isLayoutCreated()) {
+			Layout layout = getScreenLayout();
+			// if in restore mode
+			layout.restore();
+			if (!mFirstTimeLoad)
+				layout.clear();
+		}
 		onDestroy();
 	}
 

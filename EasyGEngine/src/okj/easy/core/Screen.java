@@ -22,8 +22,8 @@ import com.badlogic.gdx.math.Vector2;
 public abstract class Screen implements ApplicationContext {
 	protected static GameCore	mGameCore;
 
-	public final SpriteBatch	batch		= new SpriteBatch();
-	private Layout				layout		= null;
+	public static SpriteBatch	batch		= null;
+	static Layout				layout		= null;
 
 	public final Matrix4		projection	= new Matrix4();
 	public final Matrix4		transform	= new Matrix4();
@@ -107,6 +107,10 @@ public abstract class Screen implements ApplicationContext {
 
 	public void drawLayout () {
 		layout.draw();
+	}
+
+	public boolean isLayoutCreated () {
+		return layout != null;
 	}
 
 	/************************************************************

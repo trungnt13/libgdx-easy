@@ -1,4 +1,4 @@
-package okj.easy.screen;
+package okj.easy.core.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
