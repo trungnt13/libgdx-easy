@@ -4,6 +4,7 @@ import okj.easy.core.Screen;
 import okj.easy.core.eAdmin;
 
 import org.ege.utils.E;
+import org.ege.utils.exception.EasyGEngineRuntimeException;
 import org.ege.widget.Layout;
 
 import com.badlogic.gdx.assets.AssetErrorListener;
@@ -47,7 +48,13 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 			}
 		}
 
+		int size = eAdmin.econtext.getQueueAssets() + eAdmin.eaudio.getQueueAssets();
+		final OnChangedScreen tmp = this.mNewScreen;
 		onCreate();
+		if (mNewScreen != tmp)
+			throw new EasyGEngineRuntimeException("Can't change the next screen at onCreate()");
+		if (size != eAdmin.econtext.getQueueAssets() + eAdmin.eaudio.getQueueAssets())
+			throw new EasyGEngineRuntimeException("Can't load data at onCreate()");
 	}
 
 	@Override
@@ -83,6 +90,10 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	 * 
 	 **********************************************************/
 
+	/**
+	 * The method setChangedScreenListener should be called at onLoadData (not
+	 * at this method)
+	 */
 	public abstract void onCreate ();
 
 	/**

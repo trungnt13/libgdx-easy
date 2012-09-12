@@ -11,10 +11,10 @@ public class EasyNativeLoader {
 			try{
 				System.loadLibrary("enative");
 			}catch (UnsatisfiedLinkError e) {
-				System.load("/home/trung/EngineResearchTeam/libgdx-easy/EasyGEngine/libs/libenative.so");
+				System.load("/home/libs/libenative.so");
 			}
 		}else if(isWindows){
-//			throw new UnsupportedOperationException("I haven't support native for window");
+//			System.loadLibrary("libenative.dll");
 		}
 	}
 
