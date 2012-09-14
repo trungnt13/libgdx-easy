@@ -1,5 +1,6 @@
 package okj.easy.core;
 
+import okj.easy.core.Timer.Task;
 import okj.easy.core.utils.Bridge;
 import okj.easy.core.utils.BridgePool;
 import okj.easy.core.utils.IActivityHandler;
@@ -9,7 +10,6 @@ import okj.easy.screen.SafeLoader;
 
 import org.ege.utils.E;
 import org.ege.utils.EasyNativeLoader;
-import org.ege.utils.Timer;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 import org.ege.widget.Dialog;
 
@@ -48,12 +48,19 @@ public abstract class GameCore implements ApplicationListener {
 	private final IActivityHandler		mActivity;
 
 	// ===============================================
+	// scheduler of code
+
+	private final Timer					mSchedulerTimer;
+	private final ThreadManager			mThreadManager;
 
 	public GameCore (IActivityHandler activity) {
 		this.mActivity = activity;
 
 		bridgePool = new BridgePool(13);
 		Bridge.registerRecyleListener(bridgePool);
+
+		mSchedulerTimer = new Timer();
+		mThreadManager = new ThreadManager();
 	}
 
 	public GameCore () {
@@ -81,13 +88,13 @@ public abstract class GameCore implements ApplicationListener {
 		eAdmin.egraphics = new eGraphics();
 		eAdmin.eaudio = new eAudio();
 		eAdmin.econtext = new eContext();
-		
+
 		Screen.setCoreProcessor(this);
 		Screen.batch = new SpriteBatch();
 		Screen.layout = null;
-		
+
 		EasyNativeLoader.load();
-		Timer.instance.reset();
+		mSchedulerTimer.reset();
 
 		Gdx.input.setInputProcessor(eAdmin.einput);
 
@@ -155,7 +162,7 @@ public abstract class GameCore implements ApplicationListener {
 		if (screen != null)
 			screen.destroy(E.screen.RELEASE);
 		isStarted = false;
-		
+
 		onGameDestroy();
 		this.bridgePool.clear();
 	}
@@ -330,5 +337,77 @@ public abstract class GameCore implements ApplicationListener {
 
 	public boolean isBindActivity () {
 		return mActivity == null;
+	}
+
+	/**************************************************************
+	 * Schedule method for timer
+	 **************************************************************/
+
+	public void postTask (Task task) {
+		mSchedulerTimer.postTask(task);
+	}
+
+	public void schedule (Task task) {
+		mSchedulerTimer.scheduleTask(task);
+	}
+
+	public void schedule (Task task, float delaySeconds) {
+		mSchedulerTimer.scheduleTask(task, delaySeconds);
+	}
+
+	public void schedule (Task task, float delaySeconds, float intervalSeconds) {
+		mSchedulerTimer.scheduleTask(task, delaySeconds, intervalSeconds);
+	}
+
+	public void schedule (Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
+		mSchedulerTimer.scheduleTask(task, delaySeconds, intervalSeconds, repeatCount);
+	}
+
+	public void stopScheduler () {
+		mSchedulerTimer.stop();
+	}
+
+	public void startScheduler () {
+		mSchedulerTimer.start();
+	}
+
+	public void clearScheduler () {
+		mSchedulerTimer.clear();
+	}
+
+	/**************************************************************
+	 * Thread manager
+	 **************************************************************/
+
+	public int newThreadId (Runnable runnable) {
+		return mThreadManager.obtainForID(runnable);
+	}
+
+	public Thread newThread (Runnable runnable) {
+		return mThreadManager.obtainForThread(runnable);
+	}
+
+	public boolean start (int id) {
+		return mThreadManager.startThread(id);
+	}
+
+	public boolean stop (int id) {
+		return mThreadManager.stopThread(id);
+	}
+
+	public boolean pause (int id) {
+		return mThreadManager.pauseThread(id);
+	}
+
+	public boolean resume (int id) {
+		return mThreadManager.resumeThread(id);
+	}
+
+	public int sizeOfThread () {
+		return mThreadManager.size();
+	}
+
+	public int sizeOfRunningThread () {
+		return mThreadManager.sizeOfAlive();
 	}
 }
