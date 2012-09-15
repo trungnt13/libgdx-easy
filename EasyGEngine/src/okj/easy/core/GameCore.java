@@ -16,6 +16,7 @@ import org.ege.widget.Dialog;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.PauseableThread;
 
 public abstract class GameCore implements ApplicationListener {
 
@@ -36,6 +37,14 @@ public abstract class GameCore implements ApplicationListener {
 	 * The main loading screen use to load and reload openGL context
 	 */
 	private LoadingScreen				mStartScreen;
+	/**
+	 * This flag show that the game core is come back from pause and now it is
+	 * resume
+	 * <p>
+	 * 
+	 * @True if is on from running turn to onPause
+	 * @False if is on from onPause back to onResume
+	 */
 	private boolean						isStarted	= false;
 
 	private Class<? extends SafeLoader>	mDefaultLoader;
@@ -141,20 +150,18 @@ public abstract class GameCore implements ApplicationListener {
 
 		// reload context
 		if (!isStarted) {
-			setScreen(mStartScreen.setChangedScreenListener(new LoadingScreen.OnChangedScreen() {
+			screen = mStartScreen;
+			mStartScreen.setChangedScreenListener(new LoadingScreen.OnChangedScreen() {
 				@Override
 				public Screen screenChanged () {
-					mSavedScreen.resume();
 					return mSavedScreen;
 				}
-			}), E.screen.HIDE);
+			});
+			mStartScreen.show();
+			mStartScreen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			isStarted = true;
 			return;
 		}
-
-		// call resume
-		if (screen != null)
-			screen.resume();
 	}
 
 	@Override
@@ -172,7 +179,7 @@ public abstract class GameCore implements ApplicationListener {
 	 **************************************************************/
 
 	/**
-	 * Initialize all game components
+	 * Config all game components
 	 */
 	protected abstract void onGameConfig ();
 
@@ -212,6 +219,15 @@ public abstract class GameCore implements ApplicationListener {
 	/**********************************************
 	 * 
 	 **********************************************/
+	private boolean	isLoading	= false;
+
+	protected void setStartScreen (LoadingScreen loadScreen) {
+		if (isStarted)
+			throw new EasyGEngineRuntimeException("One GameCore cant set start screen twice");
+		this.mStartScreen = loadScreen;
+		setScreen(loadScreen, E.screen.RELEASE);
+		isStarted = true;
+	}
 
 	/**
 	 * Set the current screen to the new screen
@@ -222,11 +238,23 @@ public abstract class GameCore implements ApplicationListener {
 	 *            destroyMode of old Screen
 	 */
 	void setScreen (Screen screen, int destroyMode) {
+		/*
+		 * check if the current screen is the loading screen , if is the loading
+		 * screen the show of next screen method only call for the first time
+		 * load
+		 */
+		isLoading = (this.screen instanceof LoadingScreen);
+		if (isLoading)
+			isLoading = isLoading & !((LoadingScreen) this.screen).isFirstTimeLoad();
+
 		if (this.screen != null)
 			this.screen.destroy(destroyMode);
 		this.screen = screen;
 		if (this.screen != null) {
-			screen.show();
+			if (!isLoading)
+				screen.show();
+			else
+				mSavedScreen.resume();
 			screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
 	}
@@ -291,14 +319,6 @@ public abstract class GameCore implements ApplicationListener {
 
 	public Screen getCurrentScreen () {
 		return screen;
-	}
-
-	protected void setStartScreen (LoadingScreen loadScreen) {
-		if (isStarted)
-			throw new EasyGEngineRuntimeException("One GameCore cant set start screen twice");
-		this.mStartScreen = loadScreen;
-		setScreen(loadScreen, E.screen.RELEASE);
-		isStarted = true;
 	}
 
 	/**************************************************************
@@ -383,7 +403,7 @@ public abstract class GameCore implements ApplicationListener {
 		return mThreadManager.obtainForID(runnable);
 	}
 
-	public Thread newThread (Runnable runnable) {
+	public PauseableThread newThread (Runnable runnable) {
 		return mThreadManager.obtainForThread(runnable);
 	}
 
@@ -395,12 +415,32 @@ public abstract class GameCore implements ApplicationListener {
 		return mThreadManager.stopThread(id);
 	}
 
+	/**
+	 * Pause a given thread which have your id
+	 * 
+	 * @param id
+	 * @return true if successful pause , otherwise false
+	 */
 	public boolean pause (int id) {
 		return mThreadManager.pauseThread(id);
 	}
 
+	/**
+	 * Resume a given thread which have your id
+	 * 
+	 * @param id
+	 * @return true if successful resume , otherwise false
+	 */
 	public boolean resume (int id) {
 		return mThreadManager.resumeThread(id);
+	}
+
+	public boolean contain (int id) {
+		return mThreadManager.containThread(id);
+	}
+
+	public boolean contain (PauseableThread thread) {
+		return mThreadManager.containThread(thread);
 	}
 
 	public int sizeOfThread () {

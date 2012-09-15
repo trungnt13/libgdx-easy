@@ -8,6 +8,7 @@ import org.ege.utils.exception.EasyGEngineRuntimeException;
 import org.ege.widget.Layout;
 
 import com.badlogic.gdx.assets.AssetErrorListener;
+import com.badlogic.gdx.utils.D;
 
 public abstract class LoadingScreen extends Screen implements AssetErrorListener {
 
@@ -45,12 +46,15 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 			if (isLayoutCreated()) {
 				Layout layout = getScreenLayout();
 				layout.createSafeModePanel();
+				D.out(" restore to old layout " + layout.getDefaultPanel().getChildren().size);
 			}
 		}
 
 		int size = eAdmin.econtext.getQueueAssets() + eAdmin.eaudio.getQueueAssets();
 		final OnChangedScreen tmp = this.mNewScreen;
 		onCreate();
+
+		// check for sercurity flag at onCreate();
 		if (mNewScreen != tmp)
 			throw new EasyGEngineRuntimeException("Can't change the next screen at onCreate()");
 		if (size != eAdmin.econtext.getQueueAssets() + eAdmin.eaudio.getQueueAssets())
@@ -66,8 +70,8 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 		progress = (eAdmin.econtext.getProgress() + eAdmin.eaudio.getProgress()) / 2;
 
 		if (isDone & autoChangeScreen) {
-			mFirstTimeLoad = false;
 			setScreen(mNewScreen.screenChanged(), E.screen.RELEASE);
+			mFirstTimeLoad = false;
 			return;
 		}
 	}
@@ -79,9 +83,10 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 		if (isLayoutCreated()) {
 			Layout layout = getScreenLayout();
 			// if in restore mode
-			layout.restore();
-			if (!mFirstTimeLoad)
+			if (mFirstTimeLoad)
 				layout.clear();
+			else
+				layout.restore();
 		}
 		onDestroy();
 	}
@@ -108,6 +113,10 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	/**********************************************************
 	 * Loading method
 	 **********************************************************/
+
+	public boolean isFirstTimeLoad () {
+		return mFirstTimeLoad;
+	}
 
 	@Override
 	public void error (String fileName, Class type, Throwable throwable) {
