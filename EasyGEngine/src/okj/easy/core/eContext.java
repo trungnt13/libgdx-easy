@@ -20,6 +20,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
+/**
+ * 
+ * @FileName: eContext.java
+ * @CreateOn: Sep 15, 2012 - 11:11:52 AM
+ * @Author: TrungNT
+ */
 public class eContext {
 	public final AssetManager					manager;
 
@@ -38,7 +44,7 @@ public class eContext {
 		mNoManageData = new ObjectMap<String, Class<?>>();
 
 		mPools = new ObjectMap<Class<?>, Pool<?>>();
-		
+
 		Texture.setAssetManager(manager);
 	}
 

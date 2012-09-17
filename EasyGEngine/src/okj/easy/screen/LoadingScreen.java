@@ -8,7 +8,6 @@ import org.ege.utils.exception.EasyGEngineRuntimeException;
 import org.ege.widget.Layout;
 
 import com.badlogic.gdx.assets.AssetErrorListener;
-import com.badlogic.gdx.utils.D;
 
 public abstract class LoadingScreen extends Screen implements AssetErrorListener {
 
@@ -46,7 +45,6 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 			if (isLayoutCreated()) {
 				Layout layout = getScreenLayout();
 				layout.createSafeModePanel();
-				D.out(" restore to old layout " + layout.getDefaultPanel().getChildren().size);
 			}
 		}
 

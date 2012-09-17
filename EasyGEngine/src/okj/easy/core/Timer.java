@@ -22,8 +22,10 @@ import com.badlogic.gdx.utils.Disposable;
 /**
  * Executes tasks in the future on the main loop thread.
  * 
- * @author Nathan Sweet
- * @author Ngo Trong Trung
+ * @FileName: Timer.java
+ * @CreateOn: Sep 15, 2012 - 11:10:47 AM
+ * @Author: Nathan Sweet
+ * @Author: TrungNT
  */
 public class Timer {
 

@@ -9,6 +9,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
+/**
+ * 
+ * @FileName: Album.java
+ * @CreateOn: Sep 15, 2012 - 11:05:58 AM
+ * @Author: TrungNT
+ */
 public class Album implements ResourceContext {
 	final String						name;
 
@@ -133,7 +139,7 @@ public class Album implements ResourceContext {
 
 	@Override
 	public boolean isTotallyLoaded () {
-		if(isTotallyUnloaded)
+		if (isTotallyUnloaded)
 			return true;
 		for (Entry<String, AudioType> entries : mDataMap.entries()) {
 			if (!eAdmin.eaudio.isLoaded(entries.key, entries.value))
@@ -182,5 +188,4 @@ public class Album implements ResourceContext {
 		isTotallyUnloaded = false;
 	}
 
-	
 }

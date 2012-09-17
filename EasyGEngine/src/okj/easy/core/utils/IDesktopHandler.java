@@ -1,9 +1,17 @@
 package okj.easy.core.utils;
 
+import okj.easy.core.eAdmin;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.D;
 
+/**
+ * 
+ * @FileName: IDesktopHandler.java
+ * @CreateOn: Sep 15, 2012 - 11:13:23 AM
+ * @Author: TrungNT
+ */
 public class IDesktopHandler implements IActivityHandler {
 
 	@Override
@@ -39,6 +47,16 @@ public class IDesktopHandler implements IActivityHandler {
 	@Override
 	public Preferences onLoadPreferences (String package_dir, String name) {
 		return Gdx.app.getPreferences(package_dir + "." + name);
+	}
+
+	@Override
+	public Preferences onLoadPreferences () {
+		return Gdx.app.getPreferences(eAdmin.egame.getClass().getName());
+	}
+
+	@Override
+	public void onToast (String text, int duration) {
+		D.out(" **** Toast ****  " + text + (duration == 1 ? "LONG_DURATION" : "SHORT_DURATION"));
 	}
 
 }

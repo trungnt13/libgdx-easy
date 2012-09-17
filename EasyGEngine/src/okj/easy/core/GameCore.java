@@ -18,6 +18,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.PauseableThread;
 
+/**
+ * 
+ * @FileName: GameCore.java
+ * @CreateOn: Sep 15, 2012 - 11:05:26 AM
+ * @Author: TrungNT
+ */
 public abstract class GameCore implements ApplicationListener {
 
 	// ===============================================
@@ -54,13 +60,13 @@ public abstract class GameCore implements ApplicationListener {
 
 	private final BridgePool			bridgePool;
 
-	private final IActivityHandler		mActivity;
+	final IActivityHandler				mActivity;
 
 	// ===============================================
 	// scheduler of code
 
-	private final Timer					mSchedulerTimer;
-	private final ThreadManager			mThreadManager;
+	final Timer							mSchedulerTimer;
+	final ThreadManager					mThreadManager;
 
 	public GameCore (IActivityHandler activity) {
 		this.mActivity = activity;
@@ -407,11 +413,11 @@ public abstract class GameCore implements ApplicationListener {
 		return mThreadManager.obtainForThread(runnable);
 	}
 
-	public boolean start (int id) {
+	public boolean startThread (int id) {
 		return mThreadManager.startThread(id);
 	}
 
-	public boolean stop (int id) {
+	public boolean stopThread (int id) {
 		return mThreadManager.stopThread(id);
 	}
 
@@ -421,7 +427,7 @@ public abstract class GameCore implements ApplicationListener {
 	 * @param id
 	 * @return true if successful pause , otherwise false
 	 */
-	public boolean pause (int id) {
+	public boolean pauseThread (int id) {
 		return mThreadManager.pauseThread(id);
 	}
 
@@ -431,15 +437,15 @@ public abstract class GameCore implements ApplicationListener {
 	 * @param id
 	 * @return true if successful resume , otherwise false
 	 */
-	public boolean resume (int id) {
+	public boolean resumeThread (int id) {
 		return mThreadManager.resumeThread(id);
 	}
 
-	public boolean contain (int id) {
+	public boolean containThread (int id) {
 		return mThreadManager.containThread(id);
 	}
 
-	public boolean contain (PauseableThread thread) {
+	public boolean containThread (PauseableThread thread) {
 		return mThreadManager.containThread(thread);
 	}
 

@@ -5,6 +5,12 @@ import org.ege.widget.Layout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 
+/**
+ * 
+ * @FileName: eAdmin.java
+ * @CreateOn: Sep 15, 2012 - 11:06:31 AM
+ * @Author: TrungNT
+ */
 public class eAdmin {
 	public static GameCore	egame;
 	public static eInput	einput;
@@ -25,8 +31,6 @@ public class eAdmin {
 	 * GameCore method
 	 **************************************************************************/
 
-	
-	
 	/***************************************************************************
 	 * GameCore method
 	 **************************************************************************/

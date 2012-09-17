@@ -14,6 +14,12 @@ import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.ObjectMap;
 
+/**
+ * 
+ * @FileName: eInput.java
+ * @CreateOn: Sep 15, 2012 - 11:11:44 AM
+ * @Author: TrungNT
+ */
 public class eInput implements InputProcessor {
 
 	private final ArrayList<InputProcessor>				mInputProcessors	= new ArrayList<InputProcessor>();

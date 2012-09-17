@@ -1,12 +1,11 @@
 package okj.easy.audio;
 
 /**
- * This is audio controller
  * 
- * @author trung
- * 
+ * @FileName: DeeJayBackend.java
+ * @CreateOn: Sep 15, 2012 - 11:05:40 AM
+ * @Author: TrungNT
  */
-
 public interface DeeJayBackend {
 
 	public void playMusic (String audioName);

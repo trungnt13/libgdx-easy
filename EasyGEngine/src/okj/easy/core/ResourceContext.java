@@ -2,7 +2,13 @@ package okj.easy.core;
 
 import com.badlogic.gdx.utils.Disposable;
 
-public interface ResourceContext extends Disposable{
+/**
+ * 
+ * @FileName: ResourceContext.java
+ * @CreateOn: Sep 15, 2012 - 11:11:32 AM
+ * @Author: TrungNT
+ */
+public interface ResourceContext extends Disposable {
 
 	/**
 	 * Reload all resource after isTottlayUnloaded or when unload data size > 0

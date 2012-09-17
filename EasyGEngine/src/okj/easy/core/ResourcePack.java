@@ -2,6 +2,12 @@ package okj.easy.core;
 
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * 
+ * @FileName: ResourcePack.java
+ * @CreateOn: Sep 15, 2012 - 11:11:27 AM
+ * @Author: TrungNT
+ */
 public class ResourcePack implements ResourceContext {
 	public final String						name;
 
@@ -14,11 +20,12 @@ public class ResourcePack implements ResourceContext {
 		mManageContext.addAll(contexts);
 	}
 
-	public ResourcePack (String name){
+	public ResourcePack (String name) {
 		this.name = name;
-		
+
 		mManageContext = new Array<ResourceContext>();
 	}
+
 	/*************************************************
 	 * ResourceContext manage
 	 *************************************************/

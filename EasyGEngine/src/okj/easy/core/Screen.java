@@ -1,6 +1,8 @@
 package okj.easy.core;
 
+import okj.easy.core.Timer.Task;
 import okj.easy.core.utils.Bridge;
+import okj.easy.core.utils.IActivityHandler;
 import okj.easy.screen.SafeLoader;
 
 import org.ege.utils.E;
@@ -18,7 +20,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.PauseableThread;
 
+/**
+ * 
+ * @FileName: Screen.java
+ * @CreateOn: Sep 15, 2012 - 11:11:22 AM
+ * @Author: TrungNT
+ */
 public abstract class Screen implements ApplicationContext {
 	protected static GameCore	mGameCore;
 
@@ -111,18 +120,6 @@ public abstract class Screen implements ApplicationContext {
 
 	public boolean isLayoutCreated () {
 		return layout != null;
-	}
-
-	/************************************************************
-	 * Bridge method
-	 ************************************************************/
-
-	public Bridge newBridge (Class<?> firstClass, Class<?> secondClass) {
-		return mGameCore.newBridge(firstClass, secondClass);
-	}
-
-	public Bridge newBridge (String name) {
-		return mGameCore.newBridge(name);
 	}
 
 	/************************************************************
@@ -342,6 +339,92 @@ public abstract class Screen implements ApplicationContext {
 
 	public final void release (Vector2 v) {
 		v = null;
+	}
+
+	/***************************************************************************
+	 * GameCore method
+	 **************************************************************************/
+
+	public Bridge newBridge (Class<?> firstClass, Class<?> secondClass) {
+		return mGameCore.newBridge(firstClass, secondClass);
+	}
+
+	public Bridge newBridge (String name) {
+		return mGameCore.newBridge(name);
+	}
+
+	@Override
+	public IActivityHandler getActivity () {
+		return mGameCore.mActivity;
+	}
+
+	@Override
+	public void post (Task task) {
+		mGameCore.mSchedulerTimer.postTask(task);
+	}
+
+	@Override
+	public void schedule (Task task) {
+		mGameCore.mSchedulerTimer.scheduleTask(task);
+	}
+
+	@Override
+	public void schedule (Task task, float delaySeconds) {
+		mGameCore.mSchedulerTimer.scheduleTask(task, delaySeconds);
+	}
+
+	public void schedule (int fps, Task task) {
+		mGameCore.mSchedulerTimer.scheduleTask(fps, task);
+	}
+
+	@Override
+	public void schedule (Task task, float delaySeconds, float intervalSeconds) {
+		mGameCore.mSchedulerTimer.scheduleTask(task, delaySeconds, intervalSeconds);
+	}
+
+	@Override
+	public void schedule (Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
+		mGameCore.mSchedulerTimer.scheduleTask(task, delaySeconds, intervalSeconds, repeatCount);
+	}
+
+	@Override
+	public int newThreadId (Runnable runnable) {
+		return mGameCore.mThreadManager.obtainForID(runnable);
+	}
+
+	@Override
+	public PauseableThread newThread (Runnable runnable) {
+		return mGameCore.mThreadManager.obtainForThread(runnable);
+	}
+
+	@Override
+	public boolean startThread (int id) {
+		return mGameCore.mThreadManager.startThread(id);
+	}
+
+	@Override
+	public boolean stopThread (int id) {
+		return mGameCore.mThreadManager.stopThread(id);
+	}
+
+	@Override
+	public boolean pauseThread (int id) {
+		return mGameCore.mThreadManager.pauseThread(id);
+	}
+
+	@Override
+	public boolean resumeThread (int id) {
+		return mGameCore.mThreadManager.pauseThread(id);
+	}
+
+	@Override
+	public boolean containThread (int id) {
+		return mGameCore.mThreadManager.containThread(id);
+	}
+
+	@Override
+	public boolean containThread (PauseableThread thread) {
+		return mGameCore.mThreadManager.containThread(thread);
 	}
 
 }

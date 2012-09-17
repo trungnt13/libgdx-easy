@@ -6,6 +6,12 @@ import com.badlogic.gdx.utils.IntMap.Entry;
 import com.badlogic.gdx.utils.IntMap.Values;
 import com.badlogic.gdx.utils.PauseableThread;
 
+/**
+ * 
+ * @FileName: ThreadManager.java
+ * @CreateOn: Sep 15, 2012 - 11:11:17 AM
+ * @Author: TrungNT
+ */
 public final class ThreadManager {
 	private static int						ID				= 0;
 

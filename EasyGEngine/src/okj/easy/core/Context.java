@@ -6,6 +6,12 @@ import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
+/**
+ * 
+ * @FileName: Context.java
+ * @CreateOn: Sep 15, 2012 - 11:06:15 AM
+ * @Author: TrungNT
+ */
 public class Context implements ResourceContext {
 
 	public final String				name;
@@ -134,7 +140,7 @@ public class Context implements ResourceContext {
 	 * @return true if all assets was loaded, false otherwise
 	 */
 	public boolean isTotallyLoaded () {
-		if(isTotallyUnloaded)
+		if (isTotallyUnloaded)
 			return true;
 		for (Entry<String, Data> entries : mDataMap.entries()) {
 			if (!eAdmin.econtext.isLoaded(entries.key, entries.value.clazz))

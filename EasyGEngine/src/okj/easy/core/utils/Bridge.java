@@ -9,6 +9,12 @@ import org.ege.utils.OnRecycleListener;
 
 import com.badlogic.gdx.utils.ObjectMap;
 
+/**
+ * 
+ * @FileName: Bridge.java
+ * @CreateOn: Sep 15, 2012 - 11:15:15 AM
+ * @Author: TrungNT
+ */
 public class Bridge {
 
 	static OnRecycleListener<Bridge>	listener	= null;

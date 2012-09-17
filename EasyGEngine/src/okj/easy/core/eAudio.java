@@ -12,6 +12,12 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ObjectMap;
 
+/**
+ * 
+ * @FileName: eAudio.java
+ * @CreateOn: Sep 15, 2012 - 11:12:00 AM
+ * @Author: TrungNT
+ */
 public class eAudio implements LoadedCallback, DeeJayBackend {
 	public final AssetManager				manager;
 

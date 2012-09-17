@@ -7,6 +7,12 @@ import org.ege.utils.exception.EasyGEngineRuntimeException;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Base64Coder;
 
+/**
+ * 
+ * @FileName: eUtils.java
+ * @CreateOn: Sep 15, 2012 - 11:11:38 AM
+ * @Author: TrungNT
+ */
 public final class eUtils {
 
 	public static final class base64 {

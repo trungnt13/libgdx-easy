@@ -1,5 +1,8 @@
 package okj.easy.core;
 
+import okj.easy.core.Timer.Task;
+import okj.easy.core.utils.IActivityHandler;
+
 import org.ege.widget.StyleAtlas;
 
 import com.badlogic.gdx.Gdx;
@@ -12,7 +15,14 @@ import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.GLU;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.PauseableThread;
 
+/**
+ * 
+ * @FileName: ApplicationContext.java
+ * @CreateOn: Sep 15, 2012 - 11:06:05 AM
+ * @Author: TrungNT
+ */
 public interface ApplicationContext {
 	public static final GLCommon	gl		= Gdx.gl;
 	public static final GL10		gl10	= Gdx.gl10;
@@ -104,4 +114,37 @@ public interface ApplicationContext {
 
 	public void glClearColor (float r, float g, float b, float a);
 
+	/***************************************************************************
+	 * GameCore method
+	 **************************************************************************/
+
+	public IActivityHandler getActivity ();
+
+	public void post (Task task);
+
+	public void schedule (Task task);
+
+	public void schedule (int fps, Task task);
+
+	public void schedule (Task task, float delaySeconds);
+
+	public void schedule (Task task, float delaySeconds, float intervalSeconds);
+
+	public void schedule (Task task, float delaySeconds, float intervalSeconds, int repeatCount);
+
+	public int newThreadId (Runnable runnable);
+
+	public PauseableThread newThread (Runnable runnable);
+
+	public boolean startThread (int id);
+
+	public boolean stopThread (int id);
+
+	public boolean pauseThread (int id);
+
+	public boolean resumeThread (int id);
+
+	public boolean containThread (int id);
+
+	public boolean containThread (PauseableThread thread);
 }

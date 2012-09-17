@@ -9,6 +9,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * 
+ * @FileName: eGraphics.java
+ * @CreateOn: Sep 15, 2012 - 11:11:48 AM
+ * @Author: TrungNT
+ */
 public class eGraphics {
 	public static int	ORIENTATION	= E.orientation.LANDSCAPE;
 
