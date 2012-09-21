@@ -4,7 +4,6 @@ import okj.easy.core.eAdmin;
 
 import org.ege.utils.Pauseable;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -46,8 +45,8 @@ public class Layout extends Stage implements Pauseable {
 
 	final Image					mBackground;
 
-	public Layout (boolean strecth, SpriteBatch batch) {
-		super(eAdmin.uiWidth(), eAdmin.uiHeight(), strecth, batch);
+	public Layout (boolean strecth) {
+		super(eAdmin.uiWidth(), eAdmin.uiHeight(), strecth);
 		addPanelToRoot(mDefaultPanel);
 		mCurPanel = mDefaultPanel;
 		mDefaultPanel.setBounds(0, 0, eAdmin.uiWidth(), eAdmin.uiHeight());

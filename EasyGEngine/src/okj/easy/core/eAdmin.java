@@ -3,6 +3,7 @@ package okj.easy.core;
 import org.ege.widget.Layout;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.math.Matrix4;
 
 /**
@@ -62,6 +63,12 @@ public class eAdmin {
 	/***************************************************************************
 	 * eGame Method
 	 **************************************************************************/
+
+	public static void apply (SpriteCache cache) {
+		final Matrix4 proj = egame.getCurrentScreen().projection;
+		proj.setToOrtho2D(0, 0, gameWidth(), gameHeight());
+		cache.setProjectionMatrix(proj);
+	}
 
 	public static void apply (SpriteBatch batch) {
 		final Matrix4 proj = egame.getCurrentScreen().projection;

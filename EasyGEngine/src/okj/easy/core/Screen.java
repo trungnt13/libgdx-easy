@@ -16,6 +16,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
@@ -32,6 +33,7 @@ public abstract class Screen implements ApplicationContext {
 	protected static GameCore	mGameCore;
 
 	public static SpriteBatch	batch		= null;
+	private SpriteCache			cache		= null;
 	static Layout				layout		= null;
 
 	public final Matrix4		projection	= new Matrix4();
@@ -51,6 +53,8 @@ public abstract class Screen implements ApplicationContext {
 		eAdmin.apply(batch);
 		if (layout != null)
 			eAdmin.apply(layout);
+		if (cache != null)
+			eAdmin.apply(cache);
 	}
 
 	/**
@@ -97,8 +101,11 @@ public abstract class Screen implements ApplicationContext {
 			return;
 		}
 		eAdmin.einput.unregisterBackKeyListener();
+
 		if (layout != null)
 			layout.clear();
+		if (cache != null)
+			cache.clear();
 
 		batch.flush();
 	}
@@ -109,7 +116,7 @@ public abstract class Screen implements ApplicationContext {
 
 	public Layout getScreenLayout () {
 		if (layout == null)
-			layout = new Layout(false, batch);
+			layout = new Layout(false);
 		eAdmin.einput.addProcessor(layout.ID, layout);
 		return layout;
 	}
@@ -414,7 +421,7 @@ public abstract class Screen implements ApplicationContext {
 
 	@Override
 	public boolean resumeThread (int id) {
-		return mGameCore.mThreadManager.pauseThread(id);
+		return mGameCore.mThreadManager.resumeThread(id);
 	}
 
 	@Override
@@ -427,4 +434,23 @@ public abstract class Screen implements ApplicationContext {
 		return mGameCore.mThreadManager.containThread(thread);
 	}
 
+	/************************************************
+	 * 
+	 ************************************************/
+
+	public SpriteCache getSpriteCache (int size) {
+		if (cache == null) {
+			cache = new SpriteCache(size, true);
+			eAdmin.apply(cache);
+		}
+		return cache;
+	}
+
+	public SpriteCache getSpriteCache () {
+		if (cache == null) {
+			cache = new SpriteCache(100, true);
+			eAdmin.apply(cache);
+		}
+		return cache;
+	}
 }

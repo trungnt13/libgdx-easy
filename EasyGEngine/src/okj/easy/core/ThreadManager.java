@@ -13,24 +13,21 @@ import com.badlogic.gdx.utils.PauseableThread;
  * @Author: TrungNT
  */
 public final class ThreadManager {
-	private static int						ID				= 0;
+	private static int						ID			= 0;
 
-	private final IntMap<PauseableThread>	mThreadPool		= new IntMap<PauseableThread>(13);
-	private final IntMap<Runnable>			mRunnablePool	= new IntMap<Runnable>(13);
+	private final IntMap<PauseableThread>	mThreadPool	= new IntMap<PauseableThread>(13);
 
 	ThreadManager () {
 	}
 
 	int obtainForID (Runnable runnable) {
 		mThreadPool.put(ID, new PauseableThread(runnable));
-		mRunnablePool.put(ID, runnable);
 		return ID++;
 	}
 
 	PauseableThread obtainForThread (Runnable runnable) {
 		PauseableThread thread = new PauseableThread(runnable);
 		mThreadPool.put(ID, thread);
-		mRunnablePool.put(ID++, runnable);
 		return thread;
 	}
 
@@ -52,7 +49,6 @@ public final class ThreadManager {
 			return false;
 		thread.stopThread();
 		mThreadPool.remove(id);
-		mRunnablePool.remove(id);
 		return true;
 	}
 

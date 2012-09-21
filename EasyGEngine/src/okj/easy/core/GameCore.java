@@ -141,6 +141,9 @@ public abstract class GameCore implements ApplicationListener {
 	public void pause () {
 		onGamePause();
 
+		// stop scheduler
+		mSchedulerTimer.stop();
+
 		// save context if you want to reload
 		isStarted = false;
 		mSavedScreen = screen;
@@ -153,6 +156,9 @@ public abstract class GameCore implements ApplicationListener {
 	@Override
 	public void resume () {
 		onGameResume();
+
+		// start schedule
+		mSchedulerTimer.start();
 
 		// reload context
 		if (!isStarted) {
