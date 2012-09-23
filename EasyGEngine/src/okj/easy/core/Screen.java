@@ -453,4 +453,12 @@ public abstract class Screen implements ApplicationContext {
 		}
 		return cache;
 	}
+
+	public Matrix4 getTransformationMatrix () {
+		return transform;
+	}
+
+	public Matrix4 getProjectionMatrix () {
+		return projection;
+	}
 }

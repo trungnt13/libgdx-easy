@@ -23,9 +23,34 @@ public class Album implements ResourceContext {
 
 	boolean								isTotallyUnloaded	= false;
 
+	/**
+	 * When this mode is enable , the load function just push to references not
+	 * load the data until you calll reload
+	 */
+	boolean								isReferencesMode	= false;
+
 	public Album (String name) {
 		this.name = name;
 		eAdmin.eaudio.addAlbum(this);
+	}
+
+	/**
+	 * When this mode enable , the references of data will only be store not
+	 * load
+	 */
+	public Album (String name, boolean isRefStore) {
+		this(name);
+		this.isReferencesMode = isRefStore;
+	}
+
+	/**
+	 * When this mode enable , the references of data will only be store not
+	 * load
+	 * 
+	 * @param isRefStore
+	 */
+	public void setRefStoreMode (boolean isRefStore) {
+		this.isReferencesMode = isRefStore;
 	}
 
 	public Sound getSound (String name) {
@@ -49,8 +74,13 @@ public class Album implements ResourceContext {
 	 *            AudioType
 	 */
 	public void load (String assetName, AudioType audioType) {
-		mDataMap.put(assetName, audioType);
-		eAdmin.eaudio.load(assetName, audioType);
+		if (!isReferencesMode) {
+			mDataMap.put(assetName, audioType);
+			eAdmin.eaudio.load(assetName, audioType);
+		} else {
+			mDataMap.put(assetName, audioType);
+			mUnloadedData.add(assetName);
+		}
 	}
 
 	/**

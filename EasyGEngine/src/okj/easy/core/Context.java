@@ -21,9 +21,34 @@ public class Context implements ResourceContext {
 
 	boolean							isTotallyUnloaded	= false;
 
+	/**
+	 * When this mode is enable , the load function just push to references not
+	 * load the data until you calll reload
+	 */
+	boolean							isReferencesMode	= false;
+
 	public Context (String name) {
 		this.name = name;
 		eAdmin.econtext.addContext(this);
+	}
+
+	/**
+	 * When this mode enable , the references of data will only be store not
+	 * load
+	 */
+	public Context (String name, boolean isRefStore) {
+		this(name);
+		this.isReferencesMode = isRefStore;
+	}
+
+	/**
+	 * When this mode enable , the references of data will only be store not
+	 * load
+	 * 
+	 * @param isRefStore
+	 */
+	public void setRefStoreMode (boolean isRefStore) {
+		this.isReferencesMode = isRefStore;
 	}
 
 	/*************************************************************
@@ -37,8 +62,13 @@ public class Context implements ResourceContext {
 	 *            data's array
 	 */
 	public <T> void load (String linkName, Class<T> clazz) {
-		mDataMap.put(linkName, new Data<T>(clazz, null));
-		eAdmin.econtext.loadContextData(linkName, clazz);
+		if (!isReferencesMode) {
+			mDataMap.put(linkName, new Data<T>(clazz, null));
+			eAdmin.econtext.loadContextData(linkName, clazz);
+		} else {
+			mDataMap.put(linkName, new Data<T>(clazz, null));
+			mUnloadedData.add(linkName);
+		}
 	}
 
 	/**
@@ -48,8 +78,13 @@ public class Context implements ResourceContext {
 	 *            data's array
 	 */
 	public <T> void load (String linkName, Class<T> clazz, AssetLoaderParameters<T> param) {
-		mDataMap.put(linkName, new Data<T>(clazz, param));
-		eAdmin.econtext.loadContextData(linkName, clazz, param);
+		if (!isReferencesMode) {
+			mDataMap.put(linkName, new Data<T>(clazz, param));
+			eAdmin.econtext.loadContextData(linkName, clazz, param);
+		} else {
+			mDataMap.put(linkName, new Data<T>(clazz, null));
+			mUnloadedData.add(linkName);
+		}
 	}
 
 	public void reload () {
