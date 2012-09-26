@@ -65,4 +65,19 @@ public final class E {
 		public static final int	LENGTH_LONG		= 1;
 		public static final int	LENGTH_SHORT	= 0;
 	}
+
+	/**
+	 * 
+	 * @FileName: E.java
+	 * @CreateOn: Sep 26, 2012 - 11:17:32 AM
+	 * @Author: TrungNT
+	 */
+	public static final class animation {
+		public static final int	NORMAL			= 0;
+		public static final int	REVERSED		= 1;
+		public static final int	LOOP			= 2;
+		public static final int	LOOP_REVERSED	= 3;
+		public static final int	LOOP_PINGPONG	= 4;
+		public static final int	LOOP_RANDOM		= 5;
+	}
 }
