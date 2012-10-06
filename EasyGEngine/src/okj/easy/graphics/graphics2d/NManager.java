@@ -9,6 +9,7 @@ public class NManager implements Disposable {
 
 	// =========================================
 	// sprite params
+
 	final Array<NSprite> mSpriteList = new Array<NSprite>(13);
 
 	NManager(long address, NWorld world) {
@@ -20,27 +21,60 @@ public class NManager implements Disposable {
 	 * sprite manager
 	 ******************************************************/
 
-	public NSprite obtain () {
-		return null;
+	public NSprite newSprite () {
+		return world.newSprite(this);
 	}
 
 	public void manage (NSprite sprite) {
+		if (sprite.isPooled || mSpriteList.contains(sprite, true))
+			return;
 
+		mSpriteList.add(sprite);
+
+		if (sprite.manager != null)
+			sprite.manager.mSpriteList.removeValue(sprite, true);
+		sprite.manager = this;
+
+		manage(address, sprite.address);
 	}
 
-	public void reset (NSprite sprite) {
+	/**
+	 * 
+	 * {@link NWorld}
+	 * @param sprite
+	 */
+	public void remove (NSprite sprite) {
+		sprite.manager = null;
+		sprite.reset();
+	}
 
+	public int size () {
+		return mSpriteList.size;
+	}
+
+	public boolean contain (NSprite sprite) {
+		return mSpriteList.contains(sprite, true);
 	}
 
 	/******************************************************
 	 * manager self method
 	 ******************************************************/
-	
-	public void clear(){
-		
+
+	public void clear () {
+		world.poolSprite(this);
+		clear(address);
 	}
 
 	public void dispose () {
-		world.deleteManager(address);
+		world.directDeleteManager(this);
 	}
+
+	/******************************************************
+	 * Native method
+	 ******************************************************/
+
+	private native void manage (long managerAddress, long spriteAddress);
+
+	private native void clear (long managerAddress);
+
 }
