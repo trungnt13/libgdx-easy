@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Updater;
 
@@ -163,4 +165,82 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	abstract void resetWithoutWorldCallback ();
 
 	abstract void disposeWithoutWorldCallback ();
+
+	/******************************************************
+	 * Native method
+	 ******************************************************/
+
+	// ==============================================
+	// setter
+
+	final native void setBounds (long address, float x, float y, float width, float height);
+
+	final native void setSize (long address, float width, float height);
+
+	final native void setPosition (long address, float x, float y);
+
+	final native void setX (long address, float x);
+
+	final native void setY (long address, float y);
+
+	final native void translate (long address, float xAmount, float yAmount);
+
+	final native void translateX (long address, float xAmount);
+
+	final native void translateY (long address, float yAmount);
+
+	final native void setOrigin (long address, float originX, float originY);
+
+	final native void setRotation (long address, float degree);
+
+	final native void rotate (long address, float degree);
+
+	final native void setScale (long address, float scaleXY);
+
+	final native void setScale (long address, float scaleX, float scaleY);
+
+	final native void scale (long address, float amount);
+
+	// =======================================================
+	// getter
+
+	final native void getVertices (long address, float[] vertices);
+
+	final native float getX (long address);
+
+	final native float getCenterX (long address);
+
+	final native float getY (long address);
+
+	final native float getCenterY (long address);
+
+	final native float getWidth (long address);
+
+	final native float getHeight (long address);
+
+	final native float getOriginX (long address);
+
+	final native float getOriginY (long address);
+
+	final native float getRotation (long address);
+
+	final native float getScaleX (long address);
+
+	final native float getScaleY (long address);
+
+	final native Rectangle getBoundingRectangle (long address);
+
+	final native float[] getBoundingFloatRect (long address, float offset);
+
+	final native Circle getBoundingCircle (long address);
+
+	final native boolean isDirty (long address);
+
+	// ===============================================
+	// processor
+
+	final native void reset (long address);
+
+	final native void dispose (long address);
+
 }

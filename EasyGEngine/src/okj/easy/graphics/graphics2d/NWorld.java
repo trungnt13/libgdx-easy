@@ -16,9 +16,13 @@ import com.badlogic.gdx.utils.ObjectMap;
  * Author: Trung
  */
 public class NWorld {
-	private final LongMap<NativeSpriteBackend> mSpriteMap = new LongMap<NativeSpriteBackend>(100);
+	public final long address;
 
+	// ===========================================
+	private final LongMap<NativeSpriteBackend> mSpriteMap = new LongMap<NativeSpriteBackend>(100);
 	private final Pool<NSprite> mNSpritePool;
+
+	private CollideListener collideListener;
 
 	// =============================================
 	// manager management
@@ -34,6 +38,8 @@ public class NWorld {
 	private final ObjectMap<String, NSpriteDef> mSpriteDefMap = new ObjectMap<String, NSpriteDef>(3);
 
 	public NWorld(int poolSizeOfNSprite) {
+		address = CreateWorld();
+
 		mNSpritePool = new Pool<NSprite>(poolSizeOfNSprite, new Factory<NSprite>() {
 			@Override
 			public NSprite newObject () {
@@ -49,6 +55,10 @@ public class NWorld {
 		mMainManager = newManager();
 		mManagerMap.put(mMainManager.address, mMainManager);
 	}
+
+	private final native long CreateWorld ();
+
+	private final native void DisposeWorld ();
 
 	/************************************************************
 	 * Sprite associate method
@@ -262,4 +272,43 @@ public class NWorld {
 	private final native long NSpriteAddNSpriteDef (long spriteAddress, long spriteDefAddress);
 
 	private final native void DisposeSpriteDef (long spriteDefAddress);
+
+	/************************************************************
+	 * Collision Processor
+	 ************************************************************/
+	public void setCollideListener (CollideListener listner) {
+		this.collideListener = listner;
+	}
+
+	public void ProcessCollision (long manager1, long manager2, int mode, CollideListener listener) {
+		this.collideListener = listener;
+		processCollision(manager1, manager2, mode);
+	}
+
+	public void ProcessCollision (long manager1, long manager2, int mode) {
+		if (collideListener == null)
+			return;
+		processCollision(manager1, manager2, mode);
+	}
+
+	public void ProcessCollision (long manager, int mode, CollideListener listener) {
+		this.collideListener = listener;
+		processCollision(manager, mode);
+	}
+
+	public void ProcessCollision (long manager, int mode) {
+		if (collideListener == null)
+			return;
+		processCollision(manager, mode);
+	}
+
+	private final void collide (long address1, long address2) {
+		collideListener.Collided(mSpriteMap.get(address1), mSpriteMap.get(address2));
+	}
+
+	// ==============================================
+	// native method
+	private native void processCollision (long manager1, long manager2, int mode);
+
+	private native void processCollision (long manager, int mode);
 }

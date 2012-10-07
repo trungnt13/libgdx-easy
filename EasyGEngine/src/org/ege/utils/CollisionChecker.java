@@ -29,7 +29,7 @@ public final class CollisionChecker {
 	 * Sprite Manager
 	 *****************************************************/
 	
-	private static final int[] mResultSet = new int[20000];
+	private static final int[] mResultSet = new int[5000];
 	private static int tmp = -1;
 	
 	/**

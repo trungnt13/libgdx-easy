@@ -83,5 +83,11 @@ public final class E {
 
 	public static final class sprite {
 		public static final int VERTICES_SIZE = 20;
+
+		public static final int COLLISION_MODE_DOUBLE = 2;
+		public static final int COLLISION_MODE_TRIPLE = 3;
+		public static final int COLLISION_MODE_FOURTH = 4;
+		public static final int COLLISION_MODE_HIGHEST = 5;
 	}
+
 }

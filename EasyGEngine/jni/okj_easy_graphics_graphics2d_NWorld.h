@@ -9,6 +9,22 @@ extern "C" {
 #endif
 /*
  * Class:     okj_easy_graphics_graphics2d_NWorld
+ * Method:    CreateWorld
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CreateWorld
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     okj_easy_graphics_graphics2d_NWorld
+ * Method:    DisposeWorld
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_DisposeWorld
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     okj_easy_graphics_graphics2d_NWorld
  * Method:    CreateNSprite
  * Signature: ()J
  */
@@ -54,6 +70,22 @@ JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_NSpriteAddNSpri
  */
 JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_DisposeSpriteDef
   (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     okj_easy_graphics_graphics2d_NWorld
+ * Method:    processCollision
+ * Signature: (JJI)V
+ */
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__JJI
+  (JNIEnv *, jobject, jlong, jlong, jint);
+
+/*
+ * Class:     okj_easy_graphics_graphics2d_NWorld
+ * Method:    processCollision
+ * Signature: (JI)V
+ */
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__JI
+  (JNIEnv *, jobject, jlong, jint);
 
 #ifdef __cplusplus
 }
