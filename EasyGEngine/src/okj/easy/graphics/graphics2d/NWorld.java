@@ -209,10 +209,11 @@ public class NWorld {
 	 * NSpriteDef
 	 **************************************************************/
 
-	public void newSpriteDef (String name) {
+	public NSpriteDef newSpriteDef (String name) {
 		final NSpriteDef def = new NSpriteDef(name, CreateSpriteDef(), this);
 		mSpriteDefMap.put(name, def);
 		mSpriteDefCountMap.put(def.address, 0);
+		return def;
 	}
 
 	public void delSpriteDef (String name) {

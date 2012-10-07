@@ -1,4 +1,7 @@
-﻿  x86_64-w64-mingw32-g++ -I"C:/Program Files/Java/jdk1.7.0_07/include" -I"C:/Program Files/Java/jdk1.7.0_07/include/win32" -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine" -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 org_ege_utils_SpriteUtils.cpp
+﻿  x86_64-w64-mingw32-g++ -I"C:/Program Files/Java/jdk1.7.0_07/include" -I"C:/Program Files/Java/jdk1.7.0_07/include/win32" -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine" -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 okj_easy_graphics_graphics2d_NSpriteDef.cpp
+  C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:18:24: warning: ΓÇÿprocess1ΓÇÖ defined but not used
+  C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:19:24: warning: ΓÇÿprocess2ΓÇÖ defined but not used
+  x86_64-w64-mingw32-g++ -I"C:/Program Files/Java/jdk1.7.0_07/include" -I"C:/Program Files/Java/jdk1.7.0_07/include/win32" -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine" -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 org_ege_utils_SpriteUtils.cpp
   x86_64-w64-mingw32-g++ -I"C:/Program Files/Java/jdk1.7.0_07/include" -I"C:/Program Files/Java/jdk1.7.0_07/include/win32" -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine" -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 org_ege_utils_CollisionChecker.cpp
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:18:24: warning: ΓÇÿprocess1ΓÇÖ defined but not used
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:19:24: warning: ΓÇÿprocess2ΓÇÖ defined but not used

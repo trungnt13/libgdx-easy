@@ -47,14 +47,6 @@ JNIEXPORT jint JNICALL Java_okj_easy_graphics_graphics2d_NSpriteDef_size
 JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NSpriteDef_clearBounding
   (JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NSpriteDef
- * Method:    dispose
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NSpriteDef_dispose
-  (JNIEnv *, jobject, jlong);
-
 #ifdef __cplusplus
 }
 #endif

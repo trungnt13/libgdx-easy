@@ -11,8 +11,6 @@
     <File id="84B31428-233C-422B-B32C-45C771C72595/f:test.cpp" caret="467" fromTop="33" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NManager.h" caret="502" fromTop="9" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:Shape.cpp" caret="1212" fromTop="13" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.h" caret="1521" fromTop="51" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.cpp" caret="1183" fromTop="4" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NManager.cpp" caret="865" fromTop="27" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:org_ege_utils_CollisionChecker.h" caret="818" fromTop="21" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:Vector2.h" caret="0" fromTop="0" />
@@ -24,12 +22,14 @@
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:makefile" caret="1443" fromTop="26" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.cpp" caret="4135" fromTop="32" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:eMath.h" caret="719" fromTop="6" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.h" caret="1232" fromTop="13" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.h" caret="2428" fromTop="11" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:eMath.cpp" caret="4488" fromTop="17" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.h" caret="4204" fromTop="25" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.cpp" caret="9477" fromTop="24" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.cpp" caret="1763" fromTop="6" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.cpp" caret="6269" fromTop="53" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.h" caret="2324" fromTop="25" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.cpp" caret="476" fromTop="1" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.h" caret="1073" fromTop="39" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.h" caret="470" fromTop="15" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.cpp" caret="328" fromTop="15" />
   </RecentFiles>
   <RecentEdits>
     <File id="84B31428-233C-422B-B32C-45C771C72595/f:test.cpp" caret="700" fromTop="26" />
@@ -50,7 +50,6 @@
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSprite.h" caret="6547" fromTop="17" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSprite.cpp" caret="8715" fromTop="19" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.cpp" caret="2273" fromTop="2" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.h" caret="1521" fromTop="11" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:org_ege_utils_CollisionChecker.h" caret="96" fromTop="2" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:org_ege_utils_SpriteUtils.cpp" caret="133" fromTop="8" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:org_ege_utils_SpriteUtils.h" caret="106" fromTop="2" />
@@ -60,7 +59,8 @@
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.cpp" caret="3753" fromTop="32" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:eMath.cpp" caret="4671" fromTop="27" />
     <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.h" caret="4204" fromTop="25" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.cpp" caret="9477" fromTop="24" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.cpp" caret="2250" fromTop="25" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.cpp" caret="6400" fromTop="18" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.cpp" caret="124" fromTop="8" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.h" caret="97" fromTop="2" />
   </RecentEdits>
 </RecentFiles>

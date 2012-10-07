@@ -7,12 +7,15 @@ SOLUTIONFLAG = -I"${SOLUTIONDIR}"
 
 all: pol2D rm copy
 
-pol2D: org_ege_utils_SpriteUtils.o org_ege_utils_CollisionChecker.o okj_easy_graphics_graphics2d_NManager.o  okj_easy_graphics_graphics2d_NativeSpriteBackend.o okj_easy_graphics_graphics2d_NWorld.o
+pol2D: okj_easy_graphics_graphics2d_NSpriteDef.o org_ege_utils_SpriteUtils.o org_ege_utils_CollisionChecker.o okj_easy_graphics_graphics2d_NManager.o  okj_easy_graphics_graphics2d_NativeSpriteBackend.o okj_easy_graphics_graphics2d_NWorld.o
 	${CC} ${DLLFLAGS} libenative.dll *.o
 
 okj_easy_graphics_graphics2d_NManager.o : okj_easy_graphics_graphics2d_NManager.cpp
 	${CC} ${JNIFLAGS} ${SOLUTIONFLAG} ${CFLAGS} okj_easy_graphics_graphics2d_NManager.cpp
 
+okj_easy_graphics_graphics2d_NSpriteDef.o : okj_easy_graphics_graphics2d_NSpriteDef.cpp
+	${CC} ${JNIFLAGS} ${SOLUTIONFLAG} ${CFLAGS} okj_easy_graphics_graphics2d_NSpriteDef.cpp
+	
 okj_easy_graphics_graphics2d_NativeSpriteBackend.o : okj_easy_graphics_graphics2d_NativeSpriteBackend.cpp
 	${CC} ${JNIFLAGS} ${SOLUTIONFLAG} ${CFLAGS} okj_easy_graphics_graphics2d_NativeSpriteBackend.cpp
 

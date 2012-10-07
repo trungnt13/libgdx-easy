@@ -17,9 +17,6 @@ import com.badlogic.gdx.utils.Updater;
  * Author: Trung
  */
 public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
-	public static void main(String[] argv){
-		
-	}
 	public final long address;
 
 	final NWorld world;

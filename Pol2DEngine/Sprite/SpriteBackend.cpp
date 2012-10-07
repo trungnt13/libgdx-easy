@@ -259,36 +259,36 @@ void Sprite::getVertices(float *vertices){
 		}
 	}
 
-	float min = vertices[X1];
-	float max = vertices[X1];
+	float minx = vertices[X1];
+	float miny = vertices[Y1];
+	float maxx = vertices[X1];
+	float maxy = vertices[Y1];
 
-	// calculate centerX
-	min = min > vertices[X2] ? vertices[X2] : min;
-	min = min > vertices[X3] ? vertices[X3] : min;
-	min = min > vertices[X4] ? vertices[X4] : min;
+	minx = minx > vertices[X2] ? vertices[X2] : minx;
+	minx = minx > vertices[X3] ? vertices[X3] : minx;
+	minx = minx > vertices[X4] ? vertices[X4] : minx;
 
-	max = max < vertices[X2] ? vertices[X2] : max;
-	max = max < vertices[X3] ? vertices[X3] : max;
-	max = max < vertices[X4] ? vertices[X4] : max;
+	maxx = maxx < vertices[X2] ? vertices[X2] : maxx;
+	maxx = maxx < vertices[X3] ? vertices[X3] : maxx;
+	maxx = maxx < vertices[X4] ? vertices[X4] : maxx;
 
-	centerX = (min+max)/2;
+	miny = miny > vertices[Y2] ? vertices[Y2] : miny;
+	miny = miny > vertices[Y3] ? vertices[Y3] : miny;
+	miny = miny > vertices[Y4] ? vertices[Y4] : miny;
+
+	maxy = maxy < vertices[Y2] ? vertices[Y2] : maxy;
+	maxy = maxy < vertices[Y3] ? vertices[Y3] : maxy;
+	maxy = maxy < vertices[Y4] ? vertices[Y4] : maxy;
+
+
+	centerX = (minx+maxx)/2;
+	centerY = (miny+maxy)/2;
+
 	// save x and width
-	defBounding[0] = min;
-	defBounding[2] = max-min;
-
-	// calculate centerY
-	min = min > vertices[Y2] ? vertices[Y2] : min;
-	min = min > vertices[Y3] ? vertices[Y3] : min;
-	min = min > vertices[Y4] ? vertices[Y4] : min;
-
-	max = max < vertices[Y2] ? vertices[Y2] : max;
-	max = max < vertices[Y3] ? vertices[Y3] : max;
-	max = max < vertices[Y4] ? vertices[Y4] : max;
-
-	centerY = (min+max)/2;
-	// save y and height
-	defBounding[1] = min;
-	defBounding[3]= max-min;
+	defBounding[0] = minx;
+	defBounding[1] = miny;
+	defBounding[2] = maxx-minx;
+	defBounding[3] = maxy-miny;
 }
 
 float Sprite::getX(){
