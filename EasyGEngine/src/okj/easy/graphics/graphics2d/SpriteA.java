@@ -43,6 +43,8 @@ import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y2;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y3;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y4;
 
+import org.ege.utils.SpriteBackend;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -53,7 +55,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.SpriteBackend;
 import com.badlogic.gdx.utils.Updater;
 
 /** Holds the geometry, color, and texture information for drawing 2D sprites using {@link SpriteBatch}. A Sprite has a position

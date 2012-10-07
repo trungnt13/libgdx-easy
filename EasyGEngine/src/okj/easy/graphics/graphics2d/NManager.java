@@ -1,8 +1,16 @@
 package okj.easy.graphics.graphics2d;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * 
+ * NManager.java
+ * 
+ * Created on: Oct 7, 2012
+ * Author: Trung
+ */
 public class NManager implements Disposable {
 	public final long address;
 	private final NWorld world;
@@ -10,11 +18,25 @@ public class NManager implements Disposable {
 	// =========================================
 	// sprite params
 
-	final Array<NSprite> mSpriteList = new Array<NSprite>(13);
+	final Array<NativeSpriteBackend> mSpriteList = new Array<NativeSpriteBackend>(13);
 
 	NManager(long address, NWorld world) {
 		this.address = address;
 		this.world = world;
+	}
+
+	/******************************************************
+	 * manager processor
+	 ******************************************************/
+
+	public void update (float delta) {
+		for (int i = 0; i < mSpriteList.size; i++)
+			mSpriteList.get(i).update(delta);
+	}
+
+	public void draw (SpriteBatch batch) {
+		for (NativeSpriteBackend s : mSpriteList)
+			s.draw(batch);
 	}
 
 	/******************************************************
@@ -25,7 +47,7 @@ public class NManager implements Disposable {
 		return world.newSprite(this);
 	}
 
-	public void manage (NSprite sprite) {
+	public void manage (NativeSpriteBackend sprite) {
 		if (sprite.isPooled || mSpriteList.contains(sprite, true))
 			return;
 
@@ -41,6 +63,7 @@ public class NManager implements Disposable {
 	/**
 	 * 
 	 * {@link NWorld}
+	 * 
 	 * @param sprite
 	 */
 	public void remove (NSprite sprite) {

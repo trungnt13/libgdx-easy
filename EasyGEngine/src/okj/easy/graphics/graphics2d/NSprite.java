@@ -29,22 +29,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.SpriteBackend;
 import com.badlogic.gdx.utils.Updater;
 
-public class NSprite implements SpriteBackend, Disposable {
-	public final long address;
-
-	private final NWorld world;
-	NManager manager = null;
-	NSpriteDef def = null;
-
-	// ========================================
-
+/**
+ * 
+ * NSprite.java
+ * 
+ * Created on: Oct 7, 2012
+ * Author: Trung
+ */
+public class NSprite extends NativeSpriteBackend {
 	private final float vertices[] = new float[E.sprite.VERTICES_SIZE];
-	boolean isPooled = false;
 
 	private Updater mUpdater = Updater.instance;
 	private Color color;
@@ -61,10 +57,11 @@ public class NSprite implements SpriteBackend, Disposable {
 	 ************************************************************/
 
 	NSprite(long address, NWorld world, NManager manager) {
-		this.address = address;
+		super(address, world);
 
-		this.world = world;
 		this.manager = manager;
+
+		setColor(1, 1, 1, 1);
 	}
 
 	public void setSpriteDef (NSpriteDef def) {
@@ -79,6 +76,11 @@ public class NSprite implements SpriteBackend, Disposable {
 		manager.manage(this);
 	}
 
+	@Override
+	public NManager getManager () {
+		return manager;
+	}
+
 	/************************************************************
 	 * Texture manager method
 	 ************************************************************/
@@ -91,6 +93,7 @@ public class NSprite implements SpriteBackend, Disposable {
 		this.texture = texture;
 		final int width = texture.getWidth();
 		final int height = texture.getHeight();
+
 		setRegion(0, 0, width, height);
 		setSize(width, height);
 		setOrigin(width >> 1, height >> 1);
@@ -607,12 +610,15 @@ public class NSprite implements SpriteBackend, Disposable {
 
 	@Override
 	public void update (float delta) {
+		if (isPooled)
+			return;
+
+		getVertices(address, vertices);
 		mUpdater.update(this, delta);
 	}
 
 	@Override
 	public void draw (SpriteBatch batch) {
-		getVertices(address, vertices);
 		batch.draw(texture, vertices, 0, E.sprite.VERTICES_SIZE);
 	}
 
@@ -642,10 +648,7 @@ public class NSprite implements SpriteBackend, Disposable {
 		vertices[Y3] = 0;
 		vertices[Y4] = 0;
 
-		vertices[C1] = 0;
-		vertices[C2] = 0;
-		vertices[C3] = 0;
-		vertices[C4] = 0;
+		setColor(1, 1, 1, 1);
 
 		world.poolSprite(this);
 		reset(address);
@@ -654,8 +657,13 @@ public class NSprite implements SpriteBackend, Disposable {
 	}
 
 	public void dispose () {
+		if (isDisposed)
+			return;
+
 		world.deleteSprite(this);
 		dispose(address);
+
+		isDisposed = true;
 		isPooled = true;
 	}
 
@@ -726,7 +734,7 @@ public class NSprite implements SpriteBackend, Disposable {
 	// =======================================================
 	// getter
 
-	private final native float[] getVertices (long address, float[] vertices);
+	private final native void getVertices (long address, float[] vertices);
 
 	private final native float getX (long address);
 

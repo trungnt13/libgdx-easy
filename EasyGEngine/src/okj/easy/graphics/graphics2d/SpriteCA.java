@@ -23,6 +23,7 @@ import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y4;
 
 import java.util.ArrayList;
 
+import org.ege.utils.SpriteBackend;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.Color;
@@ -35,7 +36,6 @@ import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.SpriteBackend;
 import com.badlogic.gdx.utils.Updater;
 
 /**

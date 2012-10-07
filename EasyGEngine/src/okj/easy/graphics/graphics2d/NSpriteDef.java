@@ -86,8 +86,7 @@ public class NSpriteDef implements Disposable {
 	}
 
 	public void dispose () {
-		if (world.deleteSpriteDef(this))
-			dispose(address);
+		world.deleteSpriteDef(this);
 	}
 
 	// =====================================
@@ -104,5 +103,4 @@ public class NSpriteDef implements Disposable {
 
 	private final native void clearBounding (long address);
 
-	private final native void dispose (long address);
 }

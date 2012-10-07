@@ -1,5 +1,6 @@
 package okj.easy.graphics.graphics2d;
 
+import org.ege.utils.SpriteBackend;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.Color;
@@ -9,7 +10,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.FloatArray;
-import com.badlogic.gdx.utils.SpriteBackend;
 import com.badlogic.gdx.utils.Updater;
 
 /**
