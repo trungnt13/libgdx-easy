@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Updater;
 
@@ -19,6 +17,9 @@ import com.badlogic.gdx.utils.Updater;
  * Author: Trung
  */
 public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
+	public static void main(String[] argv){
+		
+	}
 	public final long address;
 
 	final NWorld world;
@@ -227,12 +228,6 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	final native float getScaleX (long address);
 
 	final native float getScaleY (long address);
-
-	final native Rectangle getBoundingRectangle (long address);
-
-	final native float[] getBoundingFloatRect (long address, float offset);
-
-	final native Circle getBoundingCircle (long address);
 
 	final native boolean isDirty (long address);
 

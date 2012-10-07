@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{23151B49-96C6-45EA-8A6F-40D8F8793BC0}</ProjectGuid>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeOutput>Pol2D.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(SolutionDir);C:\Program Files\Java\jdk1.7.0_07\include\win32;C:\Program Files\Java\jdk1.7.0_07\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeOutput>Pol2D.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="makefile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="okj_easy_graphics_graphics2d_NativeSpriteBackend.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="okj_easy_graphics_graphics2d_NManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="okj_easy_graphics_graphics2d_NSprite.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="okj_easy_graphics_graphics2d_NSpriteDef.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="okj_easy_graphics_graphics2d_NWorld.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="org_ege_utils_CollisionChecker.cpp" />
+    <ClCompile Include="org_ege_utils_SpriteUtils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="okj_easy_graphics_graphics2d_NativeSpriteBackend.h" />
+    <ClInclude Include="okj_easy_graphics_graphics2d_NManager.h" />
+    <ClInclude Include="okj_easy_graphics_graphics2d_NSprite.h" />
+    <ClInclude Include="okj_easy_graphics_graphics2d_NSpriteDef.h" />
+    <ClInclude Include="okj_easy_graphics_graphics2d_NWorld.h" />
+    <ClInclude Include="org_ege_utils_CollisionChecker.h" />
+    <ClInclude Include="org_ege_utils_SpriteUtils.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

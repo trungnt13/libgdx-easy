@@ -1,0 +1,1 @@
+﻿  g++ -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine"  -o Test test.cpp

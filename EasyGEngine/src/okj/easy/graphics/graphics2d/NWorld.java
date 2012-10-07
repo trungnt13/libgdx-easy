@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.ObjectMap;
  * Author: Trung
  */
 public class NWorld {
-	public final long address;
+	private long address;
 
 	// ===========================================
 	private final LongMap<NativeSpriteBackend> mSpriteMap = new LongMap<NativeSpriteBackend>(100);
@@ -39,7 +39,7 @@ public class NWorld {
 
 	public NWorld(int poolSizeOfNSprite) {
 		address = CreateWorld();
-
+		
 		mNSpritePool = new Pool<NSprite>(poolSizeOfNSprite, new Factory<NSprite>() {
 			@Override
 			public NSprite newObject () {
@@ -302,7 +302,7 @@ public class NWorld {
 		processCollision(manager, mode);
 	}
 
-	private final void collide (long address1, long address2) {
+	private void collide (long address1, long address2) {
 		collideListener.Collided(mSpriteMap.get(address1), mSpriteMap.get(address2));
 	}
 
