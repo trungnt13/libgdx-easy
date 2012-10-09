@@ -44,7 +44,7 @@ public class NSpriteDef implements Disposable {
 	 * add new polygon to sprite def, this polygon won't added to list if it
 	 * local vertices are the same with existed polygon in list
 	 */
-	public void addPolygon (float... vertices) {
+	public void addPolygon (float[] vertices) {
 		if (vertices.length < 6 || vertices.length % 2 != 0)
 			throw new EasyGEngineRuntimeException("Vertices of your polygon have wrong length");
 
@@ -55,7 +55,7 @@ public class NSpriteDef implements Disposable {
 	 * add new polygon to sprite def, this polygon won't added to list if it
 	 * local vertices are the same with existed polygon in list
 	 */
-	public void addPolygon (int noIndex[], float... vertices) {
+	public void addPolygon (int noIndex[], float[] vertices) {
 		if (vertices.length < 6 || vertices.length % 2 != 0)
 			throw new EasyGEngineRuntimeException("Vertices of your polygon have wrong length");
 

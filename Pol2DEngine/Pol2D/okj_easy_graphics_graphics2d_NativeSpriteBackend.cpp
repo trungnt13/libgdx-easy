@@ -17,6 +17,18 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_set
 		Sprite *s = (Sprite*)sprite;
 		s->setBounds(x,y,width,height);
 }
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+* Method:    setOriginSize
+* Signature: (JFF)V
+*/
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setOriginSize
+	(JNIEnv *env, jobject obj, jlong sprite, jfloat width, jfloat height){
+		Sprite *s = (Sprite*)sprite;
+		s->setOriginSize(width,height);
+}
+
 /*
 * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
 * Method:    setSize
@@ -289,17 +301,6 @@ JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_g
 	(JNIEnv *env, jobject obj, jlong sprite){
 		Sprite *s = (Sprite*)sprite;
 		return s->getScaleY();
-}
-
-/*
-* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
-* Method:    isDirty
-* Signature: (J)Z
-*/
-JNIEXPORT jboolean JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_isDirty
-	(JNIEnv *env, jobject obj, jlong address){
-		Sprite *sprite = (Sprite*)address;
-		return sprite->isDirty();
 }
 
 /*

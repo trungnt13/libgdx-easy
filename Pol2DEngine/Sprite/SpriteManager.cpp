@@ -8,12 +8,18 @@
 #include "SpriteManager.h"
 
 using namespace Entity2D;
+using namespace Math2D;
 
 /************************************************************************/
 /* WorldManagerClass                                                    */
 /************************************************************************/
 WorldManager::WorldManager(){
 	mainList = new Manager();
+
+	mGrid = new GridAdvance();
+	mGrid->setStartPosition(0,0);
+	mGrid->setGridSize(10000,10000);
+
 	mManagerList.insert(mainList);
 }
 
@@ -26,6 +32,8 @@ WorldManager::~WorldManager(){
 	for(unsigned long i =0;i < mSpriteDefList.size();i++){
 		delete mSpriteDefList[i];
 	}
+
+	delete mGrid;
 
 	mainList = NULL;
 	mManagerList.clear();
@@ -78,8 +86,11 @@ void WorldManager::DeleteSpriteDef(SpriteDef* def){
 
 //	========================================================
 //	processor
-
-void WorldManager::ProcessCollision(Manager *m1,Manager *m2,int mode,CollideListener *listener){
+void WorldManager::CollisionConfig(int worldX,int worldY,int worldWidth,int worldHeight,int numberOfCols,int numberOfRows){
+	mGrid->setStartPosition(worldX,worldY);
+	mGrid->setGridSize(worldWidth,worldHeight,numberOfCols,numberOfRows);
+}
+void WorldManager::ProcessCollision(Manager *m1,Manager *m2,CollideListener *listener){
 	float bound1[100];
 	float bound2[100];
 
@@ -94,6 +105,12 @@ void WorldManager::ProcessCollision(Manager *m1,Manager *m2,int mode,CollideList
 		//traverse sprite list of manager 2
 		for(int j = 0;j < m2->size();j++){
 			Sprite *s2 = m2->get(j);
+
+			// check grid
+			if(!mGrid->fastCheck(
+				s1->getCenterX(),s1->getCenterY(),
+				s2->getCenterX(),s2->getCenterY()) )
+				goto outer;
 
 			// get number of polygon in each sprite
 			nof1 = s1->getNumberOfBounding();
@@ -117,6 +134,7 @@ void WorldManager::ProcessCollision(Manager *m1,Manager *m2,int mode,CollideList
 					for(int n = 0; n < nof2;n++){
 						// get bound of sprite 2 at given index
 						size2 = s2->getBoundingVertices(n,bound2);
+						// check overlap convex polygons
 						if(overlapConvexPolygons(
 							bound1,size1,s1->getBoundingNoIndex(m),s1->getBoundingNoIndexSize(m),
 							bound2,size2,s2->getBoundingNoIndex(n),s2->getBoundingNoIndexSize(n),NULL)){
@@ -125,14 +143,14 @@ void WorldManager::ProcessCollision(Manager *m1,Manager *m2,int mode,CollideList
 						}
 					}
 				}
+			}// end of collision checking between two sprite
 outer:
-				nof1 = 0;
-				nof2 = 0;
-			}
+			nof1 = 0;
+			nof2 = 0;
 		}// turn to next s2
 	}// turn to next s1
 }
 
-void WorldManager::ProcessCollision(Manager* m,int mode,CollideListener *listener){
+void WorldManager::ProcessCollision(Manager* m,CollideListener *listener){
 
 }

@@ -69,6 +69,7 @@ namespace Entity2D {
 		float centerX,centerY;
 		float width,height;
 		float originX,originY;
+		float originWidth,originHeight;
 		float rotation;
 		float scaleX,scaleY;
 
@@ -105,12 +106,13 @@ namespace Entity2D {
 		void translateX(float) ;
 		void translateY(float) ;
 		void setOrigin(float,float) ;
+		void setOriginSize(float,float);
 		void setRotation(float) ;
 		void rotate(float);
 		void setScale(float) ;
 		void setScale(float,float)  ;
 		void scale(float) ;
-
+		
 		//	======================================
 		//	getter
 
@@ -137,7 +139,6 @@ namespace Entity2D {
 		float getRotation() ;
 		float getScaleX()  ;
 		float getScaleY()  ;
-		bool isDirty();
 		//	========================================
 		// bounding control
 
@@ -182,7 +183,6 @@ namespace Entity2D {
 
 		Math2D::Polygon* get(int);
 	};
-
 	/************************************************************************/
 	/*                                                                      */
 	/************************************************************************/

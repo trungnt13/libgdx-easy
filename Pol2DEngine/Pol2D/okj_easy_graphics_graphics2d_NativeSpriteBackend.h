@@ -8,238 +8,237 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setBounds
- * Signature: (JFFFF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setBounds
-  (JNIEnv *, jobject, jlong, jfloat, jfloat, jfloat, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setOriginSize
+	* Signature: (JFF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setOriginSize
+		(JNIEnv *, jobject, jlong, jfloat, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setSize
- * Signature: (JFF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setSize
-  (JNIEnv *, jobject, jlong, jfloat, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setBounds
+	* Signature: (JFFFF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setBounds
+		(JNIEnv *, jobject, jlong, jfloat, jfloat, jfloat, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setPosition
- * Signature: (JFF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setPosition
-  (JNIEnv *, jobject, jlong, jfloat, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setSize
+	* Signature: (JFF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setSize
+		(JNIEnv *, jobject, jlong, jfloat, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setX
- * Signature: (JF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setX
-  (JNIEnv *, jobject, jlong, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setPosition
+	* Signature: (JFF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setPosition
+		(JNIEnv *, jobject, jlong, jfloat, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setY
- * Signature: (JF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setY
-  (JNIEnv *, jobject, jlong, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setX
+	* Signature: (JF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setX
+		(JNIEnv *, jobject, jlong, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    translate
- * Signature: (JFF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_translate
-  (JNIEnv *, jobject, jlong, jfloat, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setY
+	* Signature: (JF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setY
+		(JNIEnv *, jobject, jlong, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    translateX
- * Signature: (JF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_translateX
-  (JNIEnv *, jobject, jlong, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    translate
+	* Signature: (JFF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_translate
+		(JNIEnv *, jobject, jlong, jfloat, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    translateY
- * Signature: (JF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_translateY
-  (JNIEnv *, jobject, jlong, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    translateX
+	* Signature: (JF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_translateX
+		(JNIEnv *, jobject, jlong, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setOrigin
- * Signature: (JFF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setOrigin
-  (JNIEnv *, jobject, jlong, jfloat, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    translateY
+	* Signature: (JF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_translateY
+		(JNIEnv *, jobject, jlong, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setRotation
- * Signature: (JF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setRotation
-  (JNIEnv *, jobject, jlong, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setOrigin
+	* Signature: (JFF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setOrigin
+		(JNIEnv *, jobject, jlong, jfloat, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    rotate
- * Signature: (JF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_rotate
-  (JNIEnv *, jobject, jlong, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setRotation
+	* Signature: (JF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setRotation
+		(JNIEnv *, jobject, jlong, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setScale
- * Signature: (JF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setScale__JF
-  (JNIEnv *, jobject, jlong, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    rotate
+	* Signature: (JF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_rotate
+		(JNIEnv *, jobject, jlong, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    setScale
- * Signature: (JFF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setScale__JFF
-  (JNIEnv *, jobject, jlong, jfloat, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setScale
+	* Signature: (JF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setScale__JF
+		(JNIEnv *, jobject, jlong, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    scale
- * Signature: (JF)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_scale
-  (JNIEnv *, jobject, jlong, jfloat);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setScale
+	* Signature: (JFF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setScale__JFF
+		(JNIEnv *, jobject, jlong, jfloat, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getVertices
- * Signature: (J[F)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getVertices
-  (JNIEnv *, jobject, jlong, jfloatArray);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    scale
+	* Signature: (JF)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_scale
+		(JNIEnv *, jobject, jlong, jfloat);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getX
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getX
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getVertices
+	* Signature: (J[F)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getVertices
+		(JNIEnv *, jobject, jlong, jfloatArray);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getCenterX
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getCenterX
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getX
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getX
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getY
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getY
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getCenterX
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getCenterX
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getCenterY
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getCenterY
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getY
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getY
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getWidth
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getWidth
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getCenterY
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getCenterY
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getHeight
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getHeight
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getWidth
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getWidth
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getOriginX
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getOriginX
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getHeight
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getHeight
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getOriginY
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getOriginY
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getOriginX
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getOriginX
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getRotation
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getRotation
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getOriginY
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getOriginY
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getScaleX
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getScaleX
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getRotation
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getRotation
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    getScaleY
- * Signature: (J)F
- */
-JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getScaleY
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getScaleX
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getScaleX
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    isDirty
- * Signature: (J)Z
- */
-JNIEXPORT jboolean JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_isDirty
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getScaleY
+	* Signature: (J)F
+	*/
+	JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getScaleY
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    reset
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_reset
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    reset
+	* Signature: (J)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_reset
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    dispose
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_dispose
-  (JNIEnv *, jobject, jlong);
-
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    dispose
+	* Signature: (J)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_dispose
+		(JNIEnv *, jobject, jlong);
 #ifdef __cplusplus
 }
 #endif

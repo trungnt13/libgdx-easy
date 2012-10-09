@@ -97,6 +97,7 @@ public class NSprite extends NativeSpriteBackend {
 		setRegion(0, 0, width, height);
 		setSize(width, height);
 		setOrigin(width >> 1, height >> 1);
+		setOriginSize(address, width, height);
 	}
 
 	// ===========================================
@@ -114,6 +115,7 @@ public class NSprite extends NativeSpriteBackend {
 				* invTexHeight);
 		regionWidth = Math.abs(width);
 		regionHeight = Math.abs(height);
+		setOriginSize(address, regionWidth, regionHeight);
 	}
 
 	/**
@@ -123,6 +125,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void setRegion (TextureRegion region, int x, int y, int width, int height) {
 		texture = region.getTexture();
 		setRegion(region.getRegionX() + x, region.getRegionY() + y, width, height);
+		setOriginSize(address, width, height);
 	}
 
 	public void setRegion (float u, float v, float u2, float v2) {
@@ -132,6 +135,7 @@ public class NSprite extends NativeSpriteBackend {
 		this.v2 = v2;
 		regionWidth = Math.round(Math.abs(u2 - u) * texture.getWidth());
 		regionHeight = Math.round(Math.abs(v2 - v) * texture.getHeight());
+		setOriginSize(address, regionWidth, regionHeight);
 
 		float[] vertices = this.vertices;
 		vertices[U1] = u;
@@ -151,11 +155,13 @@ public class NSprite extends NativeSpriteBackend {
 	public void setRegion (TextureRegion region) {
 		texture = region.getTexture();
 		setRegion(region.getU(), region.getV(), region.getU2(), region.getV2());
+		setOriginSize(address, regionWidth, regionHeight);
 	}
 
 	public void setU (float u) {
 		this.u = u;
 		regionWidth = Math.round(Math.abs(u2 - u) * texture.getWidth());
+		setOriginSize(address, regionWidth, regionHeight);
 
 		vertices[U1] = u;
 		vertices[U2] = u;
@@ -164,6 +170,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void setV (float v) {
 		this.v = v;
 		regionHeight = Math.round(Math.abs(v2 - v) * texture.getHeight());
+		setOriginSize(address, regionWidth, regionHeight);
 
 		vertices[V2] = v;
 		vertices[V3] = v;
@@ -172,6 +179,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void setU2 (float u2) {
 		this.u2 = u2;
 		regionWidth = Math.round(Math.abs(u2 - u) * texture.getWidth());
+		setOriginSize(address, regionWidth, regionHeight);
 
 		vertices[U3] = u2;
 		vertices[U4] = u2;
@@ -180,62 +188,10 @@ public class NSprite extends NativeSpriteBackend {
 	public void setV2 (float v2) {
 		this.v2 = v2;
 		regionHeight = Math.round(Math.abs(v2 - v) * texture.getHeight());
+		setOriginSize(address, regionWidth, regionHeight);
 
 		vertices[V1] = v2;
 		vertices[V4] = v2;
-	}
-
-	public void flip (boolean x, boolean y) {
-		float[] vertices = this.vertices;
-
-		if (x) {
-			float temp = u;
-			u = u2;
-			u2 = temp;
-
-			temp = vertices[U1];
-			vertices[U1] = vertices[U3];
-			vertices[U3] = temp;
-			temp = vertices[U2];
-			vertices[U2] = vertices[U4];
-			vertices[U4] = temp;
-		}
-		if (y) {
-			float temp = v;
-			v = v2;
-			v2 = temp;
-
-			vertices[V1] = vertices[V3];
-			vertices[V3] = temp;
-			temp = vertices[V2];
-			vertices[V2] = vertices[V4];
-			vertices[V4] = temp;
-		}
-
-	}
-
-	public void scroll (float xAmount, float yAmount) {
-		final float[] vertices = this.vertices;
-		if (xAmount != 0) {
-			float u = (vertices[U1] + xAmount) % 1;
-			float u2 = u + getWidth() / texture.getWidth();
-			this.u = u;
-			this.u2 = u2;
-			vertices[U1] = u;
-			vertices[U2] = u;
-			vertices[U3] = u2;
-			vertices[U4] = u2;
-		}
-		if (yAmount != 0) {
-			float v = (vertices[V2] + yAmount) % 1;
-			float v2 = v + getHeight() / texture.getHeight();
-			this.v = v;
-			this.v2 = v2;
-			vertices[V1] = v2;
-			vertices[V2] = v;
-			vertices[V3] = v;
-			vertices[V4] = v2;
-		}
 	}
 
 	// ============================================
@@ -294,7 +250,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void setBounds (float x, float y, float width, float height) {
 		setBounds(address, x, y, width, height);
 
-		if (isDirty(address))
+		if (dirty)
 			return;
 
 		float x2 = x + width;
@@ -317,7 +273,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void setSize (float width, float height) {
 		setSize(address, width, height);
 
-		if (isDirty(address))
+		if (dirty)
 			return;
 
 		float x = getX();
@@ -343,7 +299,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void setPosition (float x, float y) {
 		setPosition(address, x, y);
 
-		if (isDirty(address))
+		if (dirty)
 			return;
 
 		float x2 = getWidth() + x;
@@ -367,7 +323,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void setX (float x) {
 		setX(address, x);
 
-		if (isDirty(address))
+		if (dirty)
 			return;
 
 		float x2 = getWidth() + x;
@@ -383,7 +339,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void setY (float y) {
 		setY(address, y);
 
-		if (isDirty(address))
+		if (dirty)
 			return;
 
 		float y2 = getWidth() + y;
@@ -399,7 +355,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void translate (float xAmount, float yAmount) {
 		translate(address, xAmount, yAmount);
 
-		if (isDirty(address))
+		if (dirty)
 			return;
 
 		final float[] vertices = this.vertices;
@@ -420,7 +376,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void translateX (float xAmount) {
 		translateX(address, xAmount);
 
-		if (isDirty(address))
+		if (dirty)
 			return;
 
 		final float[] vertices = this.vertices;
@@ -434,7 +390,7 @@ public class NSprite extends NativeSpriteBackend {
 	public void translateY (float yAmount) {
 		translateY(address, yAmount);
 
-		if (isDirty(address))
+		if (dirty)
 			return;
 
 		final float[] vertices = this.vertices;
@@ -447,31 +403,37 @@ public class NSprite extends NativeSpriteBackend {
 	@Override
 	public void setOrigin (float originX, float originY) {
 		setOrigin(address, originX, originY);
+		dirty = true;
 	}
 
 	@Override
 	public void setRotation (float degree) {
 		setRotation(address, degree);
+		dirty = true;
 	}
 
 	@Override
 	public void rotate (float degree) {
 		rotate(address, degree);
+		dirty = true;
 	}
 
 	@Override
 	public void setScale (float scaleXY) {
 		setScale(address, scaleXY);
+		dirty = true;
 	}
 
 	@Override
 	public void setScale (float scaleX, float scaleY) {
 		setScale(address, scaleX, scaleY);
+		dirty = true;
 	}
 
 	@Override
 	public void scale (float amount) {
 		scale(address, amount);
+		dirty = true;
 	}
 
 	@Override
@@ -614,6 +576,7 @@ public class NSprite extends NativeSpriteBackend {
 			return;
 
 		getVertices(address, vertices);
+		dirty = false;
 		mUpdater.update(this, delta);
 	}
 

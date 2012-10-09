@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+ * Method:    setOriginSize
+ * Signature: (JFF)V
+ */
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setOriginSize
+  (JNIEnv *, jobject, jlong, jfloat, jfloat);
+
+/*
+ * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
  * Method:    setBounds
  * Signature: (JFFFF)V
  */
@@ -213,14 +221,6 @@ JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_g
  * Signature: (J)F
  */
 JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getScaleY
-  (JNIEnv *, jobject, jlong);
-
-/*
- * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
- * Method:    isDirty
- * Signature: (J)Z
- */
-JNIEXPORT jboolean JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_isDirty
   (JNIEnv *, jobject, jlong);
 
 /*

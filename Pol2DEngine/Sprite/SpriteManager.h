@@ -44,22 +44,35 @@ namespace Entity2D{
 	private:
 		BasicDataStructures::List<Manager*> mManagerList;
 		BasicDataStructures::List<SpriteDef*> mSpriteDefList;
+		Math2D::GridAdvance *mGrid;
+
 	public:
 		Manager *mainList;
 
 		WorldManager();
 		~WorldManager();
 
+		/**
+		Manager
+		*/
 		Manager* CreateManager();
 		bool ContainManager(Manager*);
 		void DeleteManager(Manager*);
 
+		/**
+		SpriteDef
+		*/
 		SpriteDef* CreateSpriteDef();
 		bool ContainSpriteDef(SpriteDef*);
 		void DeleteSpriteDef(SpriteDef*);
 
-		void ProcessCollision(Manager*,Manager*,int,CollideListener*);
-		void ProcessCollision(Manager*,int,CollideListener*);
+		/**
+		Collision
+		*/
+		void CollisionConfig(int,int,int,int,int,int);
+		void ProcessCollision(Manager*,Manager*,CollideListener*);
+		void ProcessCollision(Manager*,CollideListener*);
+
 	};
 } // end of namespace
 

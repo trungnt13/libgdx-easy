@@ -1,15 +1,88 @@
 /*
- * GridSimulation.cpp
- *
- *  Created on: Jul 12, 2012
- *      Author: trung
- */
+* GridSimulation.cpp
+*
+*  Created on: Jul 12, 2012
+*      Author: trung
+*/
 
 #include "GridSimulation.h"
 
 using namespace Math2D;
 
-// Constructor
+/************************************************************************/
+/* GridAdvanceClass                                                     */
+/************************************************************************/
+
+void GridAdvance::setStartPosition(int startX,int startY){
+	this->startX = startX;
+	this->startY = startY;
+}
+
+void GridAdvance::setGridSize(int gridWidth,int gridHegiht){
+	this->gridWidth = gridWidth;
+	this->gridHeight = gridHegiht;
+}
+
+void GridAdvance::setGridSize(int boundWidth,int boundHeight,int cols,int row){
+	this->gridWidth = boundWidth/cols;
+	this->gridHeight = boundHeight/row;
+}
+// calculator
+
+Vector2 GridAdvance::project(Vector2* result,float x,float y){
+	return result->set(
+		(float)( (x-startX)/gridWidth),
+		(float)( (y-startY)/gridHeight) );
+}
+
+int GridAdvance::project(float x,float y){
+	return (( 
+		(int)( (x-startX)/gridWidth)<<16) | 
+		(int)( (y-startY)/gridHeight) );
+}
+
+Vector2 GridAdvance::unproject(Vector2* result,int col,int row){
+	return result->set(
+		(int)(gridWidth*col)+startX,
+		(int)(gridHeight*row)+startY);
+}
+
+Vector2 GridAdvance::unproject(Vector2* result,float Col,float Row){
+	int col = (int)(Col);
+	int row = (int)(Row);
+	return result->set(
+		(int)(gridWidth*col)+startX,
+		(int)(gridHeight*row)+startY);
+}
+
+Vector2 GridAdvance::unproject(Vector2* result,int id){
+	return result->set(
+		(int)(gridWidth*(id>>16))				 + startX, 
+		(int)(gridHeight*(id&FIRST_16_ZERO_BIT)) + startY);
+}
+
+Vector2 GridAdvance::unproject(Vector2* result,float ID){
+	int id = (int)(ID);
+	return result->set(
+		(int)(gridWidth*(id>>16))				+ startX, 
+		(int)(gridHeight*(id&FIRST_16_ZERO_BIT))+ startY);
+}
+
+Vector2 GridAdvance::toGridPos(Vector2 *result,int id){
+	return result->set(id>>16, id & FIRST_16_ZERO_BIT);
+}
+
+int GridAdvance::toMappingId(int column,int row){
+	return (column<<16 | row);
+}
+
+bool GridAdvance::fastCheck(float x,float y,float x1,float y1){
+	return ( this->project(x,y) == this->project(x1,y1) );
+}
+/************************************************************************/
+/* GridClass                                                            */
+/************************************************************************/
+
 Grid::Grid(int boundWIdth,int boundHeight){
 	mBoundWidth = boundWIdth;
 	mBoundHeight = boundHeight;
@@ -64,7 +137,7 @@ int Grid::getGridWidth(){
 
 Vector2 Grid::project(Vector2* result,float x,float y){
 	return result->set((float)(x/mGridWidth),
-					   (float)(y/mGridHeight));
+		(float)(y/mGridHeight));
 }
 
 int Grid::project(float x,float y){
@@ -99,9 +172,9 @@ int Grid::toMappingId(int column,int row){
 }
 
 
-/*********************************************************
- * Grid data storage
- *********************************************************/
+/************************************************************************/
+/* GridDataStorageClass                                                 */
+/************************************************************************/
 
 GridDataStorage::GridDataStorage(){
 	length  = 0;

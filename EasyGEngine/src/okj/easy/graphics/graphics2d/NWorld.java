@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.ObjectMap;
  * Created on: Oct 7, 2012
  * Author: Trung
  */
-public class NWorld {
+public final class NWorld {
 	private long address;
 
 	// ===========================================
@@ -39,7 +39,7 @@ public class NWorld {
 
 	public NWorld(int poolSizeOfNSprite) {
 		address = CreateWorld();
-		
+
 		mNSpritePool = new Pool<NSprite>(poolSizeOfNSprite, new Factory<NSprite>() {
 			@Override
 			public NSprite newObject () {
@@ -59,6 +59,10 @@ public class NWorld {
 	private final native long CreateWorld ();
 
 	private final native void DisposeWorld ();
+
+	public NManager getMainList () {
+		return mMainManager;
+	}
 
 	/************************************************************
 	 * Sprite associate method
@@ -242,8 +246,10 @@ public class NWorld {
 	 */
 	void spriteAddSpriteDef (NSprite sprite, String spriteDefName) {
 		final long spriteAddress = sprite.address;
+
 		final NSpriteDef def = mSpriteDefMap.get(spriteDefName);
 		final long spriteDefAddress = def.address;
+
 		NSpriteAddNSpriteDef(spriteAddress, spriteDefAddress);
 
 		if (sprite.def != null)
@@ -270,7 +276,7 @@ public class NWorld {
 
 	private final native long CreateSpriteDef ();
 
-	private final native long NSpriteAddNSpriteDef (long spriteAddress, long spriteDefAddress);
+	private final native void NSpriteAddNSpriteDef (long spriteAddress, long spriteDefAddress);
 
 	private final native void DisposeSpriteDef (long spriteDefAddress);
 
@@ -281,26 +287,26 @@ public class NWorld {
 		this.collideListener = listner;
 	}
 
-	public void ProcessCollision (long manager1, long manager2, int mode, CollideListener listener) {
+	public void ProcessCollision (long manager1, long manager2, CollideListener listener) {
 		this.collideListener = listener;
-		processCollision(manager1, manager2, mode);
+		processCollision(manager1, manager2);
 	}
 
-	public void ProcessCollision (long manager1, long manager2, int mode) {
+	public void ProcessCollision (long manager1, long manager2) {
 		if (collideListener == null)
 			return;
-		processCollision(manager1, manager2, mode);
+		processCollision(manager1, manager2);
 	}
 
-	public void ProcessCollision (long manager, int mode, CollideListener listener) {
+	public void ProcessCollision (long manager, CollideListener listener) {
 		this.collideListener = listener;
-		processCollision(manager, mode);
+		processCollision(manager);
 	}
 
-	public void ProcessCollision (long manager, int mode) {
+	public void ProcessCollision (long manager) {
 		if (collideListener == null)
 			return;
-		processCollision(manager, mode);
+		processCollision(manager);
 	}
 
 	private void collide (long address1, long address2) {
@@ -309,7 +315,12 @@ public class NWorld {
 
 	// ==============================================
 	// native method
-	private native void processCollision (long manager1, long manager2, int mode);
 
-	private native void processCollision (long manager, int mode);
+	public final native void CollisionConfig (int worldX, int worldY, int worldWidth,
+			int worldHeight,
+			int cols, int row);
+
+	private final native void processCollision (long manager1, long manager2);
+
+	private final native void processCollision (long manager);
 }

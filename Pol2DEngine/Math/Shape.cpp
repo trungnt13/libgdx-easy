@@ -6,6 +6,7 @@
 */
 
 #include "Shape.h"
+#include <string.h>
 
 using namespace Math2D;
 
@@ -14,8 +15,11 @@ using namespace Math2D;
 /************************************************************************/
 
 Polygon::Polygon(float *vertices,int sizeOfVertices){
-	this->localVertices = vertices;
+	this->localVertices = new float[sizeOfVertices];
+	memcpy(localVertices,vertices,sizeOfVertices*sizeof(float));
 	this->verticesSize = sizeOfVertices;
+
+	
 
 	noIndex = NULL;
 	noIndexSize = 0;
@@ -39,7 +43,8 @@ void Polygon::setNoIndex(int *noIndex,int noIndexSize){
 	if(this->noIndex != NULL)
 		delete[] noIndex;
 
-	this->noIndex = noIndex;
+	this->noIndex = new int[noIndexSize];
+	memcpy(this->noIndex,noIndex,noIndexSize*sizeof(int));
 	this->noIndexSize = noIndexSize;
 }
 

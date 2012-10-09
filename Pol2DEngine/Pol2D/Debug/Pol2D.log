@@ -6,17 +6,15 @@
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:18:24: warning: ΓÇÿprocess1ΓÇÖ defined but not used
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:19:24: warning: ΓÇÿprocess2ΓÇÖ defined but not used
   x86_64-w64-mingw32-g++ -I"C:/Program Files/Java/jdk1.7.0_07/include" -I"C:/Program Files/Java/jdk1.7.0_07/include/win32" -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine" -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 okj_easy_graphics_graphics2d_NManager.cpp
+  okj_easy_graphics_graphics2d_NManager.cpp: In function ΓÇÿvoid Java_okj_easy_graphics_graphics2d_NManager_unmanage(JNIEnv*, _jobject*, jlong, jlong)ΓÇÖ:
+  okj_easy_graphics_graphics2d_NManager.cpp:30:24: warning: ΓÇÿsΓÇÖ is used uninitialized in this function
+  C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h: At global scope:
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:18:24: warning: ΓÇÿprocess1ΓÇÖ defined but not used
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:19:24: warning: ΓÇÿprocess2ΓÇÖ defined but not used
   x86_64-w64-mingw32-g++ -I"C:/Program Files/Java/jdk1.7.0_07/include" -I"C:/Program Files/Java/jdk1.7.0_07/include/win32" -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine" -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 okj_easy_graphics_graphics2d_NativeSpriteBackend.cpp
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:18:24: warning: ΓÇÿprocess1ΓÇÖ defined but not used
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:19:24: warning: ΓÇÿprocess2ΓÇÖ defined but not used
   x86_64-w64-mingw32-g++ -I"C:/Program Files/Java/jdk1.7.0_07/include" -I"C:/Program Files/Java/jdk1.7.0_07/include/win32" -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine" -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 okj_easy_graphics_graphics2d_NWorld.cpp
-  okj_easy_graphics_graphics2d_NWorld.cpp: In function ΓÇÿjlong Java_okj_easy_graphics_graphics2d_NWorld_CreateWorld(JNIEnv*, _jobject*)ΓÇÖ:
-  okj_easy_graphics_graphics2d_NWorld.cpp:49:1: warning: no return statement in function returning non-void
-  okj_easy_graphics_graphics2d_NWorld.cpp: In function ΓÇÿjlong Java_okj_easy_graphics_graphics2d_NWorld_NSpriteAddNSpriteDef(JNIEnv*, _jobject*, jlong, jlong)ΓÇÖ:
-  okj_easy_graphics_graphics2d_NWorld.cpp:112:1: warning: no return statement in function returning non-void
-  C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h: At global scope:
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:18:24: warning: ΓÇÿprocess1ΓÇÖ defined but not used
   C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Sprite/CollisionProcessor.h:19:24: warning: ΓÇÿprocess2ΓÇÖ defined but not used
   x86_64-w64-mingw32-g++ -Wl,--kill-at -shared -static-libgcc -static-libstdc++ -m64 -o libenative.dll *.o

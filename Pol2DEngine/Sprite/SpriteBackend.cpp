@@ -36,6 +36,9 @@ Sprite::Sprite(Manager *parent){
 	originX = 0;
 	originY =0;
 
+	originWidth = 0;
+	originHeight = 0;
+
 	rotation = 0;
 
 	scaleX = 1;
@@ -67,6 +70,11 @@ void Sprite::setOrigin(float originX,float originY){
 	this->originX = originX;
 	this->originY = originY;
 	dirty = true;
+}
+
+void Sprite::setOriginSize(float originWidth,float originHeight){
+	this->originWidth = originWidth;
+	this->originHeight = originHeight;
 }
 
 void Sprite::setPosition(float x,float y){
@@ -151,34 +159,66 @@ int Sprite::getBoundingVertices(int index,float *vertices){
 
 	// process index polygon
 	Polygon *polygon = bounding->get(index);
-
 	size = polygon->getSize();
 	localVertices = polygon->getVertices();
 
-	int scale = scaleX != 1 || scaleY != 1;
-
-	float cos =	cosf(toRadian(rotation));
+	bool scale = scaleX != 1 || scaleY != 1;
+	float rotation = this->rotation;
+	float cos = cosf(toRadian(rotation));
 	float sin = sinf(toRadian(rotation));
 
-	for (int j = 0, n = size; j < n; j += 2) {
-		float x = localVertices[j] - originX;
-		float y = localVertices[j + 1] - originY;
-
-		// scale if needed
-		if (scale) {
+	// scale for the first time
+	if(width != originWidth || height != originHeight){
+		for (int i = 0, n = size; i < n; i += 2) {
+			// resize the polygon
+			float scaleX = this->width/originWidth;
+			float scaleY = this->height/originHeight;
+			float x = localVertices[i] ;
+			float y = localVertices[i + 1] ;
 			x *= scaleX;
 			y *= scaleY;
-		}
+			vertices[i] =  x;
+			vertices[i + 1] = y;
 
-		// rotate if needed
-		if (rotation != 0) {
-			float oldX = x;
-			x = cos * x - sin * y;
-			y = sin * oldX + cos * y;
-		}
+			// calculate transform polygon
+			x = vertices[i] - originX;
+			y = vertices[i + 1] - originY;
 
-		vertices[j] = this->x + x + originX;
-		vertices[j + 1] = this->y + y + originY;
+			// scale if needed
+			if (scale) {
+				x *= scaleX;
+				y *= scaleY;
+			}
+			// rotate if needed
+			if (rotation != 0) {
+				float oldX = x;
+				x = cos * x - sin * y;
+				y = sin * oldX + cos * y;
+			}
+			vertices[i] = this->x + x + originX;
+			vertices[i + 1] = this->y + y + originY;
+		}
+	}else{
+		for (int i = 0, n = size; i < n; i += 2) {
+			float x = localVertices[i] - originX;
+			float y = localVertices[i + 1] - originY;
+
+			// scale if needed
+			if (scale) {
+				x *= scaleX;
+				y *= scaleY;
+			}
+
+			// rotate if needed
+			if (rotation != 0) {
+				float oldX = x;
+				x = cos * x - sin * y;
+				y = sin * oldX + cos * y;
+			}
+
+			vertices[i] = this->x + x + originX;
+			vertices[i + 1] = this->y + y + originY;
+		}
 	}
 	return size;
 }
@@ -337,10 +377,6 @@ float Sprite::getScaleY() {
 	return scaleY;
 }
 
-bool Sprite::isDirty(){
-	return dirty;
-}
-
 void Sprite::setSpriteDef(SpriteDef* bounding){
 	this->bounding = bounding;
 }
@@ -460,8 +496,10 @@ void Manager::manage(Sprite* sprite){
 
 void Manager::unmanage(Sprite* sprite){
 	unsigned long index = mSpriteList.getIndexOf(sprite);
-	mSpriteList.del(index);
-	sprite->parent = NULL;
+	if(index !=NaN){
+		mSpriteList.del(index);
+		sprite->parent = NULL;
+	}
 }
 
 int Manager::size(){

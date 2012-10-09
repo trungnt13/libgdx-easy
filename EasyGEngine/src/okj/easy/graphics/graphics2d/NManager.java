@@ -1,5 +1,7 @@
 package okj.easy.graphics.graphics2d;
 
+import org.ege.utils.exception.EasyGEngineRuntimeException;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -51,12 +53,13 @@ public class NManager implements Disposable {
 		if (sprite.isPooled || mSpriteList.contains(sprite, true))
 			return;
 
-		mSpriteList.add(sprite);
-
-		if (sprite.manager != null)
+		if (sprite.manager != null) {
+			unmanage(sprite.manager.address, sprite.address);
 			sprite.manager.mSpriteList.removeValue(sprite, true);
-		sprite.manager = this;
+		}
 
+		sprite.manager = this;
+		mSpriteList.add(sprite);
 		manage(address, sprite.address);
 	}
 
@@ -72,7 +75,10 @@ public class NManager implements Disposable {
 	}
 
 	public int size () {
-		return mSpriteList.size;
+		final int size = size(address);
+		if (mSpriteList.size != size)
+			throw new EasyGEngineRuntimeException("Size sync between native and java is wrong");
+		return size;
 	}
 
 	public boolean contain (NSprite sprite) {
@@ -95,6 +101,10 @@ public class NManager implements Disposable {
 	/******************************************************
 	 * Native method
 	 ******************************************************/
+
+	private native int size (long address);
+
+	private native void unmanage (long managerAddress, long spriteAddress);
 
 	private native void manage (long managerAddress, long spriteAddress);
 

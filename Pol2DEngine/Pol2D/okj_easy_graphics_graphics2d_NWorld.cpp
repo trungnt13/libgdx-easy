@@ -46,6 +46,7 @@ JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CreateWorld
 			delete world;
 			world = new WorldManager();
 		}
+		return (jlong)world;
 }
 
 /*
@@ -104,7 +105,7 @@ JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CreateSpriteDef
 * Method:    NSpriteAddNSpriteDef
 * Signature: (JJ)J
 */
-JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_NSpriteAddNSpriteDef
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_NSpriteAddNSpriteDef
 	(JNIEnv *env, jobject obj, jlong spriteAddress, jlong spriteDefAddress){
 		Sprite *sprite  = (Sprite*)spriteAddress;
 		SpriteDef *def = (SpriteDef*)spriteDefAddress;
@@ -124,25 +125,36 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_DisposeSpriteDef
 
 /*
 * Class:     okj_easy_graphics_graphics2d_NWorld
-* Method:    processCollision
-* Signature: (JJI)V
+* Method:    CollisionConfig
+* Signature: (IIIIII)V
 */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__JJI
-	(JNIEnv *env, jobject obj, jlong manager1, jlong manager2, jint mode){
-	Manager *m1 = (Manager*)manager1;
-	Manager *m2 = (Manager*)manager2;
-	JniCollide listener(env,obj);
-	world->ProcessCollision(m1,m2,mode,&listener);
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CollisionConfig
+	(JNIEnv *env, jobject obj, jint x , jint y, jint width, jint heigh, jint col, jint row){
+		world->CollisionConfig(x,y,width,heigh,col,row);
 }
+
 /*
 * Class:     okj_easy_graphics_graphics2d_NWorld
 * Method:    processCollision
-* Signature: (JI)V
+* Signature: (JJ)V
 */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__JI
-	(JNIEnv *env, jobject obj, jlong manager, jint mode){
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__JJ
+	(JNIEnv *env, jobject obj, jlong manager1, jlong manager2){
+		Manager *m1 = (Manager*)manager1;
+		Manager *m2 = (Manager*)manager2;
+		JniCollide listener(env,obj);
+		world->ProcessCollision(m1,m2,&listener);
+}
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NWorld
+* Method:    processCollision
+* Signature: (J)V
+*/
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__J
+	(JNIEnv *env, jobject obj, jlong manager){
 		Manager *m1 = (Manager*)manager;
 		JniCollide listener(env,obj);
-		world->ProcessCollision(m1,mode,&listener);
+		world->ProcessCollision(m1,&listener);
 }
 

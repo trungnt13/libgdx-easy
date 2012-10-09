@@ -6,7 +6,7 @@
 */
 
 #include "okj_easy_graphics_graphics2d_NSpriteDef.h"
-
+#include <stdio.h>
 using namespace Entity2D;
 using namespace Math2D;
 
@@ -32,14 +32,17 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NSpriteDef_addBounding
 	(JNIEnv *env, jobject obj, jlong spriteDef, jfloatArray vertices, jint verticesSize, jintArray noIndex, jint noIndexSize){
 		SpriteDef *def = (SpriteDef*)spriteDef;
 		float *verts = (float*)env->GetPrimitiveArrayCritical(vertices,0);
-		int *index = (int*)env->GetPrimitiveArrayCritical(noIndex,0);
-
+		
 		Polygon *pol = new Polygon(verts,verticesSize);
-		pol->setNoIndex(index,noIndexSize);
+		// if index = null no index is skipped
+		if(noIndex != NULL){
+			int *index = (int*)env->GetPrimitiveArrayCritical(noIndex,0);
+			pol->setNoIndex(index,noIndexSize);
+			env->ReleasePrimitiveArrayCritical(noIndex,index,0);
+		}
 		def->addBounding(pol);
 
 		env->ReleasePrimitiveArrayCritical(vertices,verts,0);
-		env->ReleasePrimitiveArrayCritical(noIndex,index,0);
 }
 
 /*

@@ -58,9 +58,9 @@ JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CreateSpriteDef
 /*
  * Class:     okj_easy_graphics_graphics2d_NWorld
  * Method:    NSpriteAddNSpriteDef
- * Signature: (JJ)J
+ * Signature: (JJ)V
  */
-JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_NSpriteAddNSpriteDef
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_NSpriteAddNSpriteDef
   (JNIEnv *, jobject, jlong, jlong);
 
 /*
@@ -73,19 +73,27 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_DisposeSpriteDef
 
 /*
  * Class:     okj_easy_graphics_graphics2d_NWorld
- * Method:    processCollision
- * Signature: (JJI)V
+ * Method:    CollisionConfig
+ * Signature: (IIIIII)V
  */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__JJI
-  (JNIEnv *, jobject, jlong, jlong, jint);
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CollisionConfig
+  (JNIEnv *, jobject, jint, jint, jint, jint, jint, jint);
 
 /*
  * Class:     okj_easy_graphics_graphics2d_NWorld
  * Method:    processCollision
- * Signature: (JI)V
+ * Signature: (JJ)V
  */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__JI
-  (JNIEnv *, jobject, jlong, jint);
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__JJ
+  (JNIEnv *, jobject, jlong, jlong);
+
+/*
+ * Class:     okj_easy_graphics_graphics2d_NWorld
+ * Method:    processCollision
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__J
+  (JNIEnv *, jobject, jlong);
 
 #ifdef __cplusplus
 }

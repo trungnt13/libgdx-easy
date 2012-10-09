@@ -8,22 +8,37 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     okj_easy_graphics_graphics2d_NManager
- * Method:    manage
- * Signature: (JJ)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NManager_manage
-  (JNIEnv *, jobject, jlong, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NManager
+	* Method:    size
+	* Signature: (J)I
+	*/
+	JNIEXPORT jint JNICALL Java_okj_easy_graphics_graphics2d_NManager_size
+		(JNIEnv *, jobject, jlong);
 
-/*
- * Class:     okj_easy_graphics_graphics2d_NManager
- * Method:    clear
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NManager_clear
-  (JNIEnv *, jobject, jlong);
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NManager
+	* Method:    unmanage
+	* Signature: (JJ)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NManager_unmanage
+		(JNIEnv *, jobject, jlong, jlong);
 
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NManager
+	* Method:    manage
+	* Signature: (JJ)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NManager_manage
+		(JNIEnv *, jobject, jlong, jlong);
+
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NManager
+	* Method:    clear
+	* Signature: (J)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NManager_clear
+		(JNIEnv *, jobject, jlong);
 #ifdef __cplusplus
 }
 #endif

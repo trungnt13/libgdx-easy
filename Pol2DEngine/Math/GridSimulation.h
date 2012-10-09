@@ -11,10 +11,39 @@
 #include "Vector2.h"
 
 namespace Math2D{
+	static const int FIRST_16_ZERO_BIT = 0x0000ffff;
+
+	class GridAdvance{
+	private:
+		int startX;
+		int startY;
+
+		int gridWidth;
+		int gridHeight;
+	public:
+
+		void setStartPosition(int,int);
+
+		void setGridSize(int ,int );
+		void setGridSize(int,int,int,int);
+
+		Math2D::Vector2 project(Math2D::Vector2*,float,float);
+		int project (float,float);
+
+		Math2D::Vector2 unproject (Math2D::Vector2*,int,int);
+		Math2D::Vector2 unproject (Math2D::Vector2*,float,float);
+		Math2D::Vector2 unproject (Math2D::Vector2*,int);
+		Math2D::Vector2 unproject (Math2D::Vector2*,float);
+
+		Math2D::Vector2 toGridPos(Math2D::Vector2*,int);
+		int toMappingId(int,int);
+
+		// return true mean two point in the same grid
+		bool fastCheck(float,float,float,float);
+	};
 
 	class Grid {
 	private:
-		static const int FIRST_16_ZERO_BIT = 0x0000ffff;
 		int mBoundWidth;
 		int mBoundHeight;
 
