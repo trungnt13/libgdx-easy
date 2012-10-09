@@ -32,7 +32,7 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NSpriteDef_addBounding
 	(JNIEnv *env, jobject obj, jlong spriteDef, jfloatArray vertices, jint verticesSize, jintArray noIndex, jint noIndexSize){
 		SpriteDef *def = (SpriteDef*)spriteDef;
 		float *verts = (float*)env->GetPrimitiveArrayCritical(vertices,0);
-		
+
 		Polygon *pol = new Polygon(verts,verticesSize);
 		// if index = null no index is skipped
 		if(noIndex != NULL){

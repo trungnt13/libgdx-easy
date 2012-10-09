@@ -226,6 +226,14 @@ extern "C" {
 
 	/*
 	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    getTransformedBounding
+	* Signature: (JI)[F
+	*/
+	JNIEXPORT jfloatArray JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getTransformedBounding
+		(JNIEnv *, jobject, jlong, jint);
+
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
 	* Method:    reset
 	* Signature: (J)V
 	*/
@@ -238,6 +246,30 @@ extern "C" {
 	* Signature: (J)V
 	*/
 	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_dispose
+		(JNIEnv *, jobject, jlong);
+
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    unmanage
+	* Signature: (J)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_unmanage
+		(JNIEnv *, jobject, jlong);
+
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setSpriteDef
+	* Signature: (JJ)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setSpriteDef
+		(JNIEnv *, jobject, jlong, jlong);
+
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    noSpriteDef
+	* Signature: (J)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_noSpriteDef
 		(JNIEnv *, jobject, jlong);
 #ifdef __cplusplus
 }

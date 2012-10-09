@@ -305,6 +305,27 @@ JNIEXPORT jfloat JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_g
 
 /*
 * Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+* Method:    getTransformedBounding
+* Signature: (JI)[F
+*/
+JNIEXPORT jfloatArray JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_getTransformedBounding
+	(JNIEnv *env, jobject obj, jlong sprite, jint index){
+		Sprite *s = (Sprite*)sprite;
+		if(s->getNumberOfBounding() < index)
+			return NULL;
+
+		float bound[50];
+		int size = s->getBoundingVertices(index,bound);
+
+		jfloatArray result = env->NewFloatArray(size);
+		if(result == NULL)
+			return NULL;
+		env->SetFloatArrayRegion(result,0,size,bound);
+		return result;
+}
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
 * Method:    reset
 * Signature: (J)V
 */
@@ -323,4 +344,39 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_dis
 	(JNIEnv *env, jobject obj, jlong sprite){
 		Sprite *s = (Sprite*)sprite;
 		delete s;
+}
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+* Method:    unmanage
+* Signature: (J)V
+*/
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_unmanage
+	(JNIEnv *env, jobject obj, jlong address){
+		Sprite *s = (Sprite*)address;
+		if(s->parent !=NULL)
+			s->parent->unmanage(s);
+}
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+* Method:    setSpriteDef
+* Signature: (JJ)V
+*/
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setSpriteDef
+	(JNIEnv *env, jobject obj, jlong sprite, jlong def){
+		Sprite *s = (Sprite*)sprite;
+		SpriteDef *d = (SpriteDef*)def;
+		s->setSpriteDef(d);
+}
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+* Method:    noSpriteDef
+* Signature: (J)V
+*/
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_noSpriteDef
+	(JNIEnv *env, jobject obj, jlong sprite){
+		Sprite *s = (Sprite*)sprite;
+		s->setSpriteDef(NULL);
 }

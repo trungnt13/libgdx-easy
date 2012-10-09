@@ -57,14 +57,6 @@ JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CreateSpriteDef
 
 /*
  * Class:     okj_easy_graphics_graphics2d_NWorld
- * Method:    NSpriteAddNSpriteDef
- * Signature: (JJ)V
- */
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_NSpriteAddNSpriteDef
-  (JNIEnv *, jobject, jlong, jlong);
-
-/*
- * Class:     okj_easy_graphics_graphics2d_NWorld
  * Method:    DisposeSpriteDef
  * Signature: (J)V
  */

@@ -21,18 +21,6 @@ JNIEXPORT jint JNICALL Java_okj_easy_graphics_graphics2d_NManager_size
 
 /*
 * Class:     okj_easy_graphics_graphics2d_NManager
-* Method:    unmanage
-* Signature: (JJ)V
-*/
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NManager_unmanage
-	(JNIEnv *env, jobject obj, jlong manager, jlong sprite){
-		Manager *m = (Manager*)manager;
-		Sprite *s = (Sprite*)s;
-		m->unmanage(s);
-}
-
-/*
-* Class:     okj_easy_graphics_graphics2d_NManager
 * Method:    manage
 * Signature: (JJ)V
 */

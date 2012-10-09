@@ -183,11 +183,10 @@ int Sprite::getBoundingVertices(int index,float *vertices){
 			// calculate transform polygon
 			x = vertices[i] - originX;
 			y = vertices[i + 1] - originY;
-
 			// scale if needed
 			if (scale) {
-				x *= scaleX;
-				y *= scaleY;
+				x *= this->scaleX;
+				y *= this->scaleY;
 			}
 			// rotate if needed
 			if (rotation != 0) {
@@ -382,8 +381,8 @@ void Sprite::setSpriteDef(SpriteDef* bounding){
 }
 
 void Sprite::reset(){
-	if(parent != NULL)
-		parent->unmanage(this);
+	parent = NULL;
+	bounding = NULL;
 
 	x = 0;
 	y = 0;

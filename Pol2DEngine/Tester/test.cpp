@@ -42,17 +42,21 @@ public:
 	}
 };
 
+class Test{
+public :
+	int value;
+	Test(int v){
+		this->value = v;
+	}
+};
 List<long> list;
 int main(){
-	for(int i = 0 ;i < 10;i++){
-		object *o = new object();
-	}
+	
 
-	object *o = NULL;
-	o->print();
-
-	printf("shit \n");
-
+	Test *t1 = new Test(10);
+	Test *t2 = t1;
+	t2 = NULL;
+	printf("Shit : %d",t1->value);
 	return 1;
 }
 

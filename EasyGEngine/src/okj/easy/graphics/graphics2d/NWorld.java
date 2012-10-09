@@ -3,7 +3,6 @@ package okj.easy.graphics.graphics2d;
 import org.ege.utils.Factory;
 import org.ege.utils.Pool;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.LongMap;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -34,7 +33,6 @@ public final class NWorld {
 	// sprite def manager
 
 	// count the current number of sprite owning that sprite def
-	private final LongMap<Integer> mSpriteDefCountMap = new LongMap<Integer>(3);
 	private final ObjectMap<String, NSpriteDef> mSpriteDefMap = new ObjectMap<String, NSpriteDef>(3);
 
 	public NWorld(int poolSizeOfNSprite) {
@@ -64,6 +62,14 @@ public final class NWorld {
 		return mMainManager;
 	}
 
+	public int getSpriteSize () {
+		return mSpriteMap.size;
+	}
+
+	public int getSpriteDefSize () {
+		return mSpriteDefMap.size;
+	}
+
 	/************************************************************
 	 * Sprite associate method
 	 ************************************************************/
@@ -73,7 +79,8 @@ public final class NWorld {
 	public NSprite newSprite () {
 		NSprite sprite = mNSpritePool.obtain();
 		sprite.isPooled = false;
-		mMainManager.manage(sprite);
+		if (sprite.manager == null)
+			mMainManager.manage(sprite);
 		mSpriteMap.put(sprite.address, sprite);
 		return sprite;
 	}
@@ -99,8 +106,9 @@ public final class NWorld {
 	}
 
 	private final NSprite createNSprite () {
-		final NSprite sprite = new NSprite(CreateNSprite(), this, mMainManager);
+		final NSprite sprite = new NSprite(CreateNSprite(), this);
 		sprite.isPooled = false;
+		mMainManager.manage(sprite);
 		return sprite;
 	}
 
@@ -114,17 +122,15 @@ public final class NWorld {
 			mNSpritePool.freeNoReset((NSprite) sprite);
 
 		mSpriteMap.remove(sprite.address);
-		sprite.manager.mSpriteList.removeValue(sprite, true);
 	}
 
 	/**
 	 * delete given sprite from sprite map, and sprite pool
 	 */
 	void deleteSprite (NativeSpriteBackend sprite) {
-		if (!sprite.isPooled()) {
+		if (!sprite.isPooled())
 			mSpriteMap.remove(sprite.address);
-			sprite.manager.mSpriteList.removeValue(sprite, true);
-		} else {
+		else {
 			if (sprite instanceof NSprite)
 				mNSpritePool.delete((NSprite) sprite);
 		}
@@ -172,14 +178,11 @@ public final class NWorld {
 		final Array<NativeSpriteBackend> list = manager.mSpriteList;
 
 		for (NativeSpriteBackend sprite : list) {
+			poolSprite(sprite);
 			sprite.resetWithoutWorldCallback();
-			if (sprite instanceof NSprite)
-				mNSpritePool.freeNoReset((NSprite) sprite);
-			mSpriteMap.remove(sprite.address);
 		}
 
 		list.clear();
-		mManagerMap.remove(manager.address);
 	}
 
 	/**
@@ -194,11 +197,11 @@ public final class NWorld {
 
 		for (NativeSpriteBackend sprite : list) {
 			sprite.disposeWithoutWorldCallback();
-			mSpriteMap.remove(sprite.address);
+			deleteSprite(sprite);
 		}
 
 		list.clear();
-
+		mManagerMap.remove(manager.address);
 		DisposeManager(manager.address);
 	}
 
@@ -216,67 +219,29 @@ public final class NWorld {
 	public NSpriteDef newSpriteDef (String name) {
 		final NSpriteDef def = new NSpriteDef(name, CreateSpriteDef(), this);
 		mSpriteDefMap.put(name, def);
-		mSpriteDefCountMap.put(def.address, 0);
 		return def;
+	}
+
+	public NSpriteDef getSpriteDef (String name) {
+		return mSpriteDefMap.get(name);
 	}
 
 	public void delSpriteDef (String name) {
 		mSpriteDefMap.get(name).dispose();
 	}
 
-	public NSpriteDef get (String name) {
-		return mSpriteDefMap.get(name);
+	public void delSpriteDef (NSpriteDef def) {
+		def.dispose();
 	}
 
-	/**
-	 * Return the number of NSprite is using this NSpriteDef for calculate
-	 * bonding
-	 */
-	public int getSpriteOfSpriteDef (String name) {
-		return mSpriteDefCountMap.get(mSpriteDefMap.get(name).address);
-	}
-
-	// ===================================================
-
-	/**
-	 * {@link NSprite}
-	 * 
-	 * @param sprite
-	 * @param spriteDefName
-	 */
-	void spriteAddSpriteDef (NSprite sprite, String spriteDefName) {
-		final long spriteAddress = sprite.address;
-
-		final NSpriteDef def = mSpriteDefMap.get(spriteDefName);
-		final long spriteDefAddress = def.address;
-
-		NSpriteAddNSpriteDef(spriteAddress, spriteDefAddress);
-
-		if (sprite.def != null)
-			mSpriteDefCountMap.put(sprite.def.address,
-					mSpriteDefCountMap.get(sprite.def.address) - 1);
-		mSpriteDefCountMap.put(spriteDefAddress, mSpriteDefCountMap.get(spriteDefAddress + 1));
-		sprite.def = def;
-	}
-
-	boolean deleteSpriteDef (NSpriteDef def) {
-		if (mSpriteDefCountMap.get(def.address) == 0) {
-			mSpriteDefCountMap.remove(def.address);
-			mSpriteDefMap.remove(def.name);
-			DisposeSpriteDef(def.address);
-			return true;
-		}
-		Gdx.app.log("EasyGameEngine  ", "You can't delete NSpriteDef with name : " + def.name
-				+ "  because still have NSprite associate with it");
-		return false;
+	void deleteSpriteDef (String name) {
+		DisposeSpriteDef(mSpriteDefMap.remove(name).address);
 	}
 
 	// =================================================
 	// native
 
 	private final native long CreateSpriteDef ();
-
-	private final native void NSpriteAddNSpriteDef (long spriteAddress, long spriteDefAddress);
 
 	private final native void DisposeSpriteDef (long spriteDefAddress);
 

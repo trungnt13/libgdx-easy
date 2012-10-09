@@ -100,17 +100,6 @@ JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CreateSpriteDef
 		return (jlong)world->CreateSpriteDef();
 }
 
-/*
-* Class:     okj_easy_graphics_graphics2d_NWorld
-* Method:    NSpriteAddNSpriteDef
-* Signature: (JJ)J
-*/
-JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_NSpriteAddNSpriteDef
-	(JNIEnv *env, jobject obj, jlong spriteAddress, jlong spriteDefAddress){
-		Sprite *sprite  = (Sprite*)spriteAddress;
-		SpriteDef *def = (SpriteDef*)spriteDefAddress;
-		sprite->setSpriteDef(def);
-}
 
 /*
 * Class:     okj_easy_graphics_graphics2d_NWorld

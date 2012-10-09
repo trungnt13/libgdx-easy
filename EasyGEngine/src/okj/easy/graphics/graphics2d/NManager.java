@@ -53,10 +53,8 @@ public class NManager implements Disposable {
 		if (sprite.isPooled || mSpriteList.contains(sprite, true))
 			return;
 
-		if (sprite.manager != null) {
-			unmanage(sprite.manager.address, sprite.address);
-			sprite.manager.mSpriteList.removeValue(sprite, true);
-		}
+		if (sprite.manager != null)
+			sprite.manager.unmanage(sprite);
 
 		sprite.manager = this;
 		mSpriteList.add(sprite);
@@ -70,19 +68,24 @@ public class NManager implements Disposable {
 	 * @param sprite
 	 */
 	public void remove (NSprite sprite) {
-		sprite.manager = null;
 		sprite.reset();
 	}
 
 	public int size () {
 		final int size = size(address);
 		if (mSpriteList.size != size)
-			throw new EasyGEngineRuntimeException("Size sync between native and java is wrong");
+			throw new EasyGEngineRuntimeException("Size sync between native : " + size
+					+ " and java : " + mSpriteList.size + " is wrong");
 		return size;
 	}
 
 	public boolean contain (NSprite sprite) {
 		return mSpriteList.contains(sprite, true);
+	}
+
+	void unmanage (NativeSpriteBackend sprite) {
+		mSpriteList.removeValue(sprite, true);
+		sprite.unmanage();
 	}
 
 	/******************************************************
@@ -104,10 +107,7 @@ public class NManager implements Disposable {
 
 	private native int size (long address);
 
-	private native void unmanage (long managerAddress, long spriteAddress);
-
 	private native void manage (long managerAddress, long spriteAddress);
 
 	private native void clear (long managerAddress);
-
 }

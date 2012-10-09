@@ -38,17 +38,56 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 		this.world = world;
 	}
 
+	public void noSpriteDef () {
+		if (this.def != null)
+			this.def.mSpriteCount--;
+
+		noSpriteDef(address);
+		this.def = null;
+	}
+
+	public void setSpriteDef (NSpriteDef def) {
+		if (this.def != null)
+			this.def.mSpriteCount--;
+
+		def.mSpriteCount++;
+		setSpriteDef(address, def.address);
+
+		this.def = def;
+	}
+
+	public void setSpriteDef (String spriteDefName) {
+		if (this.def != null)
+			this.def.mSpriteCount--;
+
+		NSpriteDef def = world.getSpriteDef(spriteDefName);
+		def.mSpriteCount++;
+		setSpriteDef(address, def.address);
+
+		this.def = def;
+	}
+
+	public NSpriteDef getSpriteDef () {
+		return def;
+	}
+
+	public void setManager (NManager manager) {
+		manager.manage(this);
+	}
+
+	public NManager getManager () {
+		return manager;
+	}
+
+	/** this is not safe method just for testing */
+	public float[] getTransformedBounding (int index) {
+		return getTransformedBounding(address, index);
+	}
+
 	// =========================================
 	// native manager
-	public abstract void setSpriteDef (NSpriteDef def);
-
-	public abstract void setSpriteDef (String spriteDefName);
-
-	public abstract void setManager (NManager manager);
 
 	public abstract boolean isPooled ();
-
-	public abstract NManager getManager ();
 
 	// ==========================================
 	// texture manager
@@ -165,6 +204,10 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 
 	abstract void disposeWithoutWorldCallback ();
 
+	void unmanage () {
+		unmanage(address);
+	}
+
 	/******************************************************
 	 * Native method
 	 ******************************************************/
@@ -229,6 +272,8 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 
 	protected final native float getScaleY (long address);
 
+	private final native float[] getTransformedBounding (long address, int index);
+
 	// ===============================================
 	// processor
 
@@ -236,4 +281,9 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 
 	protected final native void dispose (long address);
 
+	private final native void unmanage (long address);
+
+	private final native void setSpriteDef (long address, long spritedef);
+
+	private final native void noSpriteDef (long address);
 }

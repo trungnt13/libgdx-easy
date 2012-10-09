@@ -2,6 +2,7 @@ package okj.easy.graphics.graphics2d;
 
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -16,6 +17,9 @@ public class NSpriteDef implements Disposable {
 	public final String name;
 	final long address;
 
+	int mSpriteCount = 0;
+
+	private boolean isDisposed = false;
 	private final NWorld world;
 
 	// ========================================
@@ -24,6 +28,10 @@ public class NSpriteDef implements Disposable {
 		this.name = name;
 		this.address = address;
 		this.world = world;
+	}
+
+	public int getSpriteCount () {
+		return mSpriteCount;
 	}
 
 	/******************************************************
@@ -35,6 +43,8 @@ public class NSpriteDef implements Disposable {
 	 * local vertices are the same with existed polygon in list
 	 */
 	public void addPolygon (Polygon polygon) {
+		if (isDisposed)
+			return;
 		final float[] vertices = polygon.getVertices();
 		final int[] noIndex = polygon.getNoIndex();
 		addBounding(address, vertices, vertices.length, noIndex, noIndex.length);
@@ -45,6 +55,9 @@ public class NSpriteDef implements Disposable {
 	 * local vertices are the same with existed polygon in list
 	 */
 	public void addPolygon (float[] vertices) {
+		if (isDisposed)
+			return;
+
 		if (vertices.length < 6 || vertices.length % 2 != 0)
 			throw new EasyGEngineRuntimeException("Vertices of your polygon have wrong length");
 
@@ -55,7 +68,7 @@ public class NSpriteDef implements Disposable {
 	 * add new polygon to sprite def, this polygon won't added to list if it
 	 * local vertices are the same with existed polygon in list
 	 */
-	public void addPolygon (int noIndex[], float[] vertices) {
+	public void addPolygon (float[] vertices, int noIndex[]) {
 		if (vertices.length < 6 || vertices.length % 2 != 0)
 			throw new EasyGEngineRuntimeException("Vertices of your polygon have wrong length");
 
@@ -86,7 +99,12 @@ public class NSpriteDef implements Disposable {
 	}
 
 	public void dispose () {
-		world.deleteSpriteDef(this);
+		if (mSpriteCount == 0) {
+			world.deleteSpriteDef(name);
+			isDisposed = true;
+		} else
+			Gdx.app.log("EasyGameEngine  ", "You can't delete NSpriteDef with name : " + name
+					+ "  because still have NSprite associate with it");
 	}
 
 	// =====================================

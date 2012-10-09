@@ -56,30 +56,12 @@ public class NSprite extends NativeSpriteBackend {
 	 * Constructor
 	 ************************************************************/
 
-	NSprite(long address, NWorld world, NManager manager) {
+	NSprite(long address, NWorld world) {
 		super(address, world);
-
-		this.manager = manager;
 
 		setColor(1, 1, 1, 1);
 	}
 
-	public void setSpriteDef (NSpriteDef def) {
-		world.spriteAddSpriteDef(this, def.name);
-	}
-
-	public void setSpriteDef (String spriteDefName) {
-		world.spriteAddSpriteDef(this, def.name);
-	}
-
-	public void setManager (NManager manager) {
-		manager.manage(this);
-	}
-
-	@Override
-	public NManager getManager () {
-		return manager;
-	}
 
 	/************************************************************
 	 * Texture manager method
@@ -613,8 +595,12 @@ public class NSprite extends NativeSpriteBackend {
 
 		setColor(1, 1, 1, 1);
 
+		manager.unmanage(this);
 		world.poolSprite(this);
 		reset(address);
+
+		manager = null;
+		def = null;
 
 		isPooled = true;
 	}
@@ -623,8 +609,12 @@ public class NSprite extends NativeSpriteBackend {
 		if (isDisposed)
 			return;
 
+		manager.unmanage(this);
 		world.deleteSprite(this);
 		dispose(address);
+
+		manager = null;
+		def = null;
 
 		isDisposed = true;
 		isPooled = true;
@@ -651,11 +641,19 @@ public class NSprite extends NativeSpriteBackend {
 
 		reset(address);
 
+		manager = null;
+		def = null;
+
 		isPooled = true;
 	}
 
 	void disposeWithoutWorldCallback () {
 		dispose(address);
+
+		manager = null;
+		def = null;
+
 		isPooled = true;
+		isDisposed = true;
 	}
 }
