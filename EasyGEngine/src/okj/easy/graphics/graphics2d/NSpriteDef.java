@@ -45,6 +45,7 @@ public class NSpriteDef implements Disposable {
 	public void addPolygon (Polygon polygon) {
 		if (isDisposed)
 			return;
+
 		final float[] vertices = polygon.getVertices();
 		final int[] noIndex = polygon.getNoIndex();
 		addBounding(address, vertices, vertices.length, noIndex, noIndex.length);

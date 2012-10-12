@@ -3,9 +3,7 @@ package okj.easy.graphics.graphics2d;
 import org.ege.utils.SpriteBackend;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Updater;
 
@@ -27,7 +25,6 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 
 	boolean isPooled = false;
 	boolean isDisposed = false;
-	boolean dirty = false;
 
 	/*****************************************************
 	 * Constructor
@@ -88,31 +85,6 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	// native manager
 
 	public abstract boolean isPooled ();
-
-	// ==========================================
-	// texture manager
-
-	public abstract Texture getTexture ();
-
-	public abstract void setTexture (Texture texture);
-
-	/**
-	 * @param width The width of the texture region. May be negative to flip the sprite when drawn.
-	 * @param height The height of the texture region. May be negative to flip the sprite when
-	 *            drawn.
-	 */
-	public abstract void setRegion (int x, int y, int width, int height);
-
-	/**
-	 * Sets the texture to that of the specified region and sets the coordinates relative to the
-	 * specified region.
-	 */
-	public abstract void setRegion (TextureRegion region, int x, int y, int width, int height);
-
-	public abstract void setRegion (float u, float v, float u2, float v2);
-
-	/** Sets the texture and coordinates to the specified region. */
-	public abstract void setRegion (TextureRegion region);
 
 	/*****************************************************
 	 * SpriteBackend
@@ -196,13 +168,52 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	// ==============================================
 	// dispose
 
-	public abstract void dispose ();
+	/**
+	 * 1. unmanage from manager
+	 * 2. world remove sprite
+	 * 3. dispose
+	 * 4. isPooled and isDispose = true
+	 */
+	public void dispose () {
+		if (isDisposed)
+			return;
 
-	public abstract void reset ();
+		manager.unmanage(this);
+		manager = null;
 
-	abstract void resetWithoutWorldCallback ();
+		world.deleteSprite(this);
+		dispose(address);
 
-	abstract void disposeWithoutWorldCallback ();
+		def = null;
+		noSpriteDef();
+
+		isDisposed = true;
+		isPooled = true;
+	}
+
+	/**
+	 * 1. reset all vertices to zero.
+	 * 2. reset color to white, scale to 1
+	 * 3. remove from manager
+	 * 4. world pool this sprite
+	 * 5. manager = null, def = null
+	 * 6. isPooled = true
+	 */
+	public void reset () {
+		if (isPooled)
+			return;
+
+		manager.unmanage(this);
+		manager = null;
+
+		world.poolSprite(this);
+		reset(address);
+
+		def = null;
+		noSpriteDef();
+
+		isPooled = true;
+	}
 
 	void unmanage () {
 		unmanage(address);
@@ -273,6 +284,8 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	protected final native float getScaleY (long address);
 
 	private final native float[] getTransformedBounding (long address, int index);
+
+	final native boolean isDirty (long address);
 
 	// ===============================================
 	// processor

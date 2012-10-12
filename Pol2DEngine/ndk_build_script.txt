@@ -1,0 +1,2 @@
+
+/cygdrive/c/MyCode/android-ndk-r8b-windows/android-ndk-r8b/ndk-build

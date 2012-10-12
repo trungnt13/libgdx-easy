@@ -64,6 +64,9 @@ void Sprite::setBounds(float x,float y,float width,float height){
 	this->y = y;
 	this->width = width;
 	this->height = height;
+
+	if (rotation != 0 || scaleX != 1 || scaleY != 1)
+		dirty = true;
 }
 
 void Sprite::setOrigin(float originX,float originY){
@@ -108,6 +111,9 @@ void Sprite::setScale(float x,float y){
 void Sprite::setSize(float width,float height){
 	this->width = width;
 	this->height = height;
+
+	if (rotation != 0 || scaleX != 1 || scaleY != 1)
+		dirty = true;
 }
 
 void Sprite::scale(float xy){
@@ -147,7 +153,7 @@ int Sprite::getNumberOfBounding(){
 }
 
 int Sprite::getBoundingVertices(int index,float *vertices){
-	if(bounding  == NULL){
+	if(bounding  == NULL || bounding->size() == 0){
 		memcpy(vertices,defBounding,4*sizeof(float));
 		return 4;
 	}

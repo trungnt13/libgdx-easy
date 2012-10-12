@@ -76,10 +76,10 @@ namespace Entity2D {
 		//	[0,1,2,3] = [x,y,width,height]
 		float *defBounding;
 
-		int dirty;
 	public:
 		//	====================================
 		//	params
+		int dirty;
 
 		Manager *parent;
 		SpriteDef *bounding;

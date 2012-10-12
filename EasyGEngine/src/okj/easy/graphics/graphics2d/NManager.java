@@ -45,10 +45,16 @@ public class NManager implements Disposable {
 	 * sprite manager
 	 ******************************************************/
 
+	/** Create new sprite which is manage by this manager */
 	public NSprite newSprite () {
 		return world.newSprite(this);
 	}
 
+	/**
+	 * 1. Check sprite is pooled ,or alread contained
+	 * 2. unmanage sprite from its manager
+	 * 3. manage it
+	 */
 	public void manage (NativeSpriteBackend sprite) {
 		if (sprite.isPooled || mSpriteList.contains(sprite, true))
 			return;
@@ -83,6 +89,7 @@ public class NManager implements Disposable {
 		return mSpriteList.contains(sprite, true);
 	}
 
+	/** remove from java list and native list */
 	void unmanage (NativeSpriteBackend sprite) {
 		mSpriteList.removeValue(sprite, true);
 		sprite.unmanage();
@@ -93,12 +100,20 @@ public class NManager implements Disposable {
 	 ******************************************************/
 
 	public void clear () {
-		world.poolSprite(this);
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.reset();
+		mSpriteList.clear();
 		clear(address);
 	}
 
 	public void dispose () {
-		world.directDeleteManager(this);
+
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.dispose();
+
+		mSpriteList.clear();
+		world.mManagerMap.remove(address);
+		world.DisposeManager(address);
 	}
 
 	/******************************************************

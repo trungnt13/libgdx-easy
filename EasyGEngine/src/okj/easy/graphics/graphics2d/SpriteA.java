@@ -57,37 +57,46 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.Updater;
 
-/** Holds the geometry, color, and texture information for drawing 2D sprites using {@link SpriteBatch}. A Sprite has a position
- * and a size given as width and height. The position is relative to the origin of the coordinate system specified via
- * {@link SpriteBatch#begin()} and the respective matrices. A Sprite is always rectangular and its position (x, y) are located in
- * the bottom left corner of that rectangle. A Sprite also has an origin around which rotations and scaling are performed (that
- * is, the origin is not modified by rotation and scaling). The origin is given relative to the bottom left corner of the Sprite,
+/**
+ * Holds the geometry, color, and texture information for drawing 2D sprites using
+ * {@link SpriteBatch}. A Sprite has a position
+ * and a size given as width and height. The position is relative to the origin of the coordinate
+ * system specified via {@link SpriteBatch#begin()} and the respective matrices. A Sprite is always
+ * rectangular and its position (x, y) are located in
+ * the bottom left corner of that rectangle. A Sprite also has an origin around which rotations and
+ * scaling are performed (that
+ * is, the origin is not modified by rotation and scaling). The origin is given relative to the
+ * bottom left corner of the Sprite,
  * its position.
+ * 
  * @author mzechner
- * @author Nathan Sweet 
- * @author Ngo Trong Trung*/
-public class SpriteA  implements Animator,SpriteBackend{
+ * @author Nathan Sweet
+ * @author Ngo Trong Trung
+ */
+public class SpriteA implements Animator, SpriteBackend {
 	TextureRegion[] keyFrames;
 
 	float mFrameDuration;
 	float mStateTime;
 	float mAnimationDuration;
 
+	private int frameNumber;
+
 	private int mPlayMode = NORMAL;
-	
+
 	private Texture mCurrentTexture;
-	
+
 	private boolean RUN = false;
-	//	---------------------------------------------------------
-	
+	// ---------------------------------------------------------
+
 	static final int VERTEX_SIZE = 2 + 1 + 2;
 	static final int SPRITE_SIZE = 4 * VERTEX_SIZE;
 
-	//	---------------------------------------------------------
+	// ---------------------------------------------------------
 
 	final float[] vertices = new float[SPRITE_SIZE];
 	final float[] rect = new float[4];
-	
+
 	private final Color color = new Color(1, 1, 1, 1);
 	private float x, y;
 	float width, height;
@@ -95,65 +104,68 @@ public class SpriteA  implements Animator,SpriteBackend{
 	private float rotation;
 	private float scaleX = 1, scaleY = 1;
 	private boolean dirty = true;
-	private final Rectangle bounds ;
-	private int frameNumber;
-	//	---------------------------------------------------------
+	private final Rectangle bounds;
+
+	// ---------------------------------------------------------
 
 	private Updater mUpdater = Updater.instance;
-	
-	/** Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and color set before it can be
-	 * drawn. */
-	public SpriteA () {
-		setColor(1,1,1,1);
+
+	/**
+	 * Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and
+	 * color set before it can be
+	 * drawn.
+	 */
+	public SpriteA() {
+		setColor(1, 1, 1, 1);
 		setSize(100, 100);
 		setOrigin(50, 50);
-		
+
 		bounds = new Rectangle();
 	}
 
-	public SpriteA (Array region) {
+	public SpriteA(Array region) {
 		keyFrames = new TextureRegion[region.size];
-		for(int i =0;i < keyFrames.length;i++)
-			keyFrames[i] = (TextureRegion)region.get(i);
+		for (int i = 0; i < keyFrames.length; i++)
+			keyFrames[i] = (TextureRegion) region.get(i);
 		setRegion(keyFrames[0]);
-		
-		setColor(1,1,1,1);
+
+		setColor(1, 1, 1, 1);
 		setSize(keyFrames[0].getRegionWidth(), keyFrames[0].getRegionHeight());
-		setOrigin(width/2, height/2);
-		
+		setOrigin(width / 2, height / 2);
+
 		setTexture(keyFrames);
-		
+
 		bounds = new Rectangle();
 	}
-
 
 	// Note the region is copied.
-	public SpriteA (TextureRegion[] region) {
+	public SpriteA(TextureRegion[] region) {
 		keyFrames = region;
 		setRegion(region[0]);
 
-		setColor(1,1,1,1);
+		setColor(1, 1, 1, 1);
 		setSize(keyFrames[0].getRegionWidth(), keyFrames[0].getRegionHeight());
-		setOrigin(width/2, height/2);
-		
+		setOrigin(width / 2, height / 2);
+
 		setTexture(keyFrames);
-		
+
 		bounds = new Rectangle();
 	}
 
 	/** Creates a sprite that is a copy in every way of the specified sprite. */
-	public SpriteA (SpriteA sprite) {
+	public SpriteA(SpriteA sprite) {
 		set(sprite);
-		
+
 		bounds = new Rectangle();
 	}
 
 	/***********************************************************
 	 * 
 	 ***********************************************************/
-	
+
 	public void set (SpriteA sprite) {
-		if (sprite == null) throw new IllegalArgumentException("sprite cannot be null.");
+		if (sprite == null)
+			throw new IllegalArgumentException("sprite cannot be null.");
 		System.arraycopy(sprite.vertices, 0, vertices, 0, SPRITE_SIZE);
 		keyFrames = sprite.keyFrames;
 		setTexture(keyFrames);
@@ -169,16 +181,20 @@ public class SpriteA  implements Animator,SpriteBackend{
 		color.set(sprite.color);
 		dirty = sprite.dirty;
 	}
-	
-	/** Sets the position and size of the sprite when drawn, before scaling and rotation are applied. If origin, rotation, or scale
-	 * are changed, it is slightly more efficient to set the bounds after those operations. */
+
+	/**
+	 * Sets the position and size of the sprite when drawn, before scaling and rotation are applied.
+	 * If origin, rotation, or scale
+	 * are changed, it is slightly more efficient to set the bounds after those operations.
+	 */
 	public void setBounds (float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 
-		if (dirty) return;
+		if (dirty)
+			return;
 
 		float x2 = x + width;
 		float y2 = y + height;
@@ -195,17 +211,23 @@ public class SpriteA  implements Animator,SpriteBackend{
 		vertices[X4] = x2;
 		vertices[Y4] = y;
 
-		if (rotation != 0 || scaleX != 1 || scaleY != 1) dirty = true;
+		if (rotation != 0 || scaleX != 1 || scaleY != 1)
+			dirty = true;
 	}
-	
-	/** Sets the size of the sprite when drawn, before scaling and rotation are applied. If origin, rotation, or scale are changed,
-	 * it is slightly more efficient to set the size after those operations. If both position and size are to be changed, it is
-	 * better to use {@link #setBounds(float, float, float, float)}. */
+
+	/**
+	 * Sets the size of the sprite when drawn, before scaling and rotation are applied. If origin,
+	 * rotation, or scale are changed,
+	 * it is slightly more efficient to set the size after those operations. If both position and
+	 * size are to be changed, it is
+	 * better to use {@link #setBounds(float, float, float, float)}.
+	 */
 	public void setSize (float width, float height) {
 		this.width = width;
 		this.height = height;
 
-		if (dirty) return;
+		if (dirty)
+			return;
 
 		float x2 = x + width;
 		float y2 = y + height;
@@ -222,36 +244,50 @@ public class SpriteA  implements Animator,SpriteBackend{
 		vertices[X4] = x2;
 		vertices[Y4] = y;
 
-		if (rotation != 0 || scaleX != 1 || scaleY != 1) dirty = true;
+		if (rotation != 0 || scaleX != 1 || scaleY != 1)
+			dirty = true;
 	}
 
-	/** Sets the position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
-	 * to set the position after those operations. If both position and size are to be changed, it is better to use
-	 * {@link #setBounds(float, float, float, float)}. */
+	/**
+	 * Sets the position where the sprite will be drawn. If origin, rotation, or scale are changed,
+	 * it is slightly more efficient
+	 * to set the position after those operations. If both position and size are to be changed, it
+	 * is better to use {@link #setBounds(float, float, float, float)}.
+	 */
 	public void setPosition (float x, float y) {
 		translate(x - this.x, y - this.y);
 	}
 
-	/** Sets the x position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
-	 * to set the position after those operations. If both position and size are to be changed, it is better to use
-	 * {@link #setBounds(float, float, float, float)}. */
+	/**
+	 * Sets the x position where the sprite will be drawn. If origin, rotation, or scale are
+	 * changed, it is slightly more efficient
+	 * to set the position after those operations. If both position and size are to be changed, it
+	 * is better to use {@link #setBounds(float, float, float, float)}.
+	 */
 	public void setX (float x) {
 		translateX(x - this.x);
 	}
 
-	/** Sets the y position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
-	 * to set the position after those operations. If both position and size are to be changed, it is better to use
-	 * {@link #setBounds(float, float, float, float)}. */
+	/**
+	 * Sets the y position where the sprite will be drawn. If origin, rotation, or scale are
+	 * changed, it is slightly more efficient
+	 * to set the position after those operations. If both position and size are to be changed, it
+	 * is better to use {@link #setBounds(float, float, float, float)}.
+	 */
 	public void setY (float y) {
 		translateY(y - this.y);
 	}
 
-	/** Sets the x position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
-	 * changed, it is slightly more efficient to translate after those operations. */
+	/**
+	 * Sets the x position relative to the current position where the sprite will be drawn. If
+	 * origin, rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
+	 */
 	public void translateX (float xAmount) {
 		this.x += xAmount;
 
-		if (dirty) return;
+		if (dirty)
+			return;
 
 		final float[] vertices = this.vertices;
 		vertices[X1] += xAmount;
@@ -260,12 +296,16 @@ public class SpriteA  implements Animator,SpriteBackend{
 		vertices[X4] += xAmount;
 	}
 
-	/** Sets the y position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
-	 * changed, it is slightly more efficient to translate after those operations. */
+	/**
+	 * Sets the y position relative to the current position where the sprite will be drawn. If
+	 * origin, rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
+	 */
 	public void translateY (float yAmount) {
 		y += yAmount;
 
-		if (dirty) return;
+		if (dirty)
+			return;
 
 		final float[] vertices = this.vertices;
 		vertices[Y1] += yAmount;
@@ -274,13 +314,17 @@ public class SpriteA  implements Animator,SpriteBackend{
 		vertices[Y4] += yAmount;
 	}
 
-	/** Sets the position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
-	 * changed, it is slightly more efficient to translate after those operations. */
+	/**
+	 * Sets the position relative to the current position where the sprite will be drawn. If origin,
+	 * rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
+	 */
 	public void translate (float xAmount, float yAmount) {
 		x += xAmount;
 		y += yAmount;
 
-		if (dirty) return;
+		if (dirty)
+			return;
 
 		final float[] vertices = this.vertices;
 		vertices[X1] += xAmount;
@@ -306,7 +350,8 @@ public class SpriteA  implements Animator,SpriteBackend{
 	}
 
 	public void setColor (float r, float g, float b, float a) {
-		final int intBits = ((int)(255 * a) << 24) | ((int)(255 * b) << 16) | ((int)(255 * g) << 8) | ((int)(255 * r));
+		final int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16)
+				| ((int) (255 * g) << 8) | ((int) (255 * r));
 		float color = NumberUtils.intToFloatColor(intBits);
 		final float[] vertices = this.vertices;
 		vertices[C1] = color;
@@ -333,8 +378,10 @@ public class SpriteA  implements Animator,SpriteBackend{
 		dirty = true;
 	}
 
-	/** Rotates this sprite 90 degrees in-place by rotating the texture coordinates. This rotation is unaffected by
-	 * {@link #setRotation(float)} and {@link #rotate(float)}. */
+	/**
+	 * Rotates this sprite 90 degrees in-place by rotating the texture coordinates. This rotation is
+	 * unaffected by {@link #setRotation(float)} and {@link #rotate(float)}.
+	 */
 	public void rotate90 (boolean clockwise) {
 		final float[] vertices = this.vertices;
 
@@ -383,20 +430,20 @@ public class SpriteA  implements Animator,SpriteBackend{
 		this.scaleY += amount;
 		dirty = true;
 	}
-	
+
 	/***********************************************************
-	 * 
+	 * Animation Controller
 	 ***********************************************************/
-	
-	public void setFrameDuration(float frameDuration){
+
+	public void setFrameDuration (float frameDuration) {
 		this.mFrameDuration = frameDuration;
 	}
-	
-	public void setPlayMode(int playMode){
+
+	public void setPlayMode (int playMode) {
 		mPlayMode = playMode;
 	}
-	
-	public void setLooping(boolean looping){
+
+	public void setLooping (boolean looping) {
 		if (looping && (mPlayMode == NORMAL || mPlayMode == REVERSED)) {
 			if (mPlayMode == NORMAL)
 				mPlayMode = LOOP;
@@ -409,135 +456,137 @@ public class SpriteA  implements Animator,SpriteBackend{
 				mPlayMode = LOOP;
 		}
 	}
-	
-	private void setTexture(TextureRegion[] texture){
+
+	private void setTexture (TextureRegion[] texture) {
 		mCurrentTexture = texture[0].getTexture();
 	}
 
-	public void setKeyFrames(TextureRegion[] keyFrame){
+	public void setKeyFrames (TextureRegion[] keyFrame) {
 		this.keyFrames = keyFrame;
 		setRegion(keyFrames[0]);
 		setTexture(keyFrame);
 	}
 
-	public void setKeyFrames(Array keyFrame){
+	public void setKeyFrames (Array keyFrame) {
 		keyFrames = new TextureRegion[keyFrame.size];
-		for(int i =0;i< keyFrames.length;i++)
-			keyFrames[i] =(TextureRegion) keyFrame.get(i);
+		for (int i = 0; i < keyFrames.length; i++)
+			keyFrames[i] = (TextureRegion) keyFrame.get(i);
 		setRegion(keyFrames[0]);
 		setTexture(keyFrames);
 	}
 
-	public void start(){
+	public void start () {
 		RUN = true;
 	}
-	
-	public void start(float frameDuration){
+
+	public void start (float frameDuration) {
 		RUN = true;
 		mFrameDuration = frameDuration;
 	}
-	
-	public void start(float frameDuration,int playMode){
+
+	public void start (float frameDuration, int playMode) {
 		RUN = true;
 		mFrameDuration = frameDuration;
 		mPlayMode = playMode;
 	}
-	
-	
-	public void stop(){
+
+	public void stop () {
 		RUN = false;
 		mStateTime = 0;
 		setRegion(keyFrames[0]);
 	}
-	
-	public void pause(){
+
+	public void pause () {
 		RUN = false;
 	}
-	
-	public void switchState(){
+
+	public void switchState () {
 		RUN = !RUN;
 	}
-	
-	public void resetFrame(){
+
+	public void resetFrame () {
 		mStateTime = 0;
 		setRegion(keyFrames[0]);
 	}
-	
-	public void update(float delta){
-		if(!RUN || mFrameDuration == 0){
+
+	public void update (float delta) {
+		if (!RUN || mFrameDuration == 0) {
 			mUpdater.update(this, delta);
 			return;
 		}
-		
+
 		mStateTime += delta;
-		
-		frameNumber = (int)(mStateTime / mFrameDuration);
+
+		frameNumber = (int) (mStateTime / mFrameDuration);
 
 		switch (mPlayMode) {
-		case NORMAL:
-			frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-			break;
-		case LOOP:
-			frameNumber = frameNumber % keyFrames.length;
-			break;
-		case LOOP_PINGPONG:
-			frameNumber = frameNumber % (keyFrames.length * 2);
-			if (frameNumber >= keyFrames.length) frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
-			break;
-		case LOOP_RANDOM:
-			frameNumber = MathUtils.random(keyFrames.length - 1);
-			break;
-		case REVERSED:
-			frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
-			break;
-		case LOOP_REVERSED:
-			frameNumber = frameNumber % keyFrames.length;
-			frameNumber = keyFrames.length - frameNumber - 1;
-			break;
+			case NORMAL:
+				frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+				break;
+			case LOOP:
+				frameNumber = frameNumber % keyFrames.length;
+				break;
+			case LOOP_PINGPONG:
+				frameNumber = frameNumber % (keyFrames.length * 2);
+				if (frameNumber >= keyFrames.length)
+					frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
+				break;
+			case LOOP_RANDOM:
+				frameNumber = MathUtils.random(keyFrames.length - 1);
+				break;
+			case REVERSED:
+				frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
+				break;
+			case LOOP_REVERSED:
+				frameNumber = frameNumber % keyFrames.length;
+				frameNumber = keyFrames.length - frameNumber - 1;
+				break;
 
-		default:
-			// play normal otherwise
-			frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-			break;
+			default:
+				// play normal otherwise
+				frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+				break;
 		}
-		
+
 		setRegion(keyFrames[frameNumber]);
 		mUpdater.update(this, delta);
 	}
-	
+
 	/**
 	 * Get current frame number ( unsafe method)
+	 * 
 	 * @return
 	 */
-	public int getFrameNumber(){
+	public int getFrameNumber () {
 		return frameNumber;
 	}
-	
-	public TextureRegion[] getKeyFrames(){
+
+	public TextureRegion[] getKeyFrames () {
 		return this.keyFrames;
 	}
-	
-	public void postUpdater(Updater updater){
+
+	public void postUpdater (Updater updater) {
 		this.mUpdater = updater;
 	}
-	
-	public void noUpdater(){
+
+	public void noUpdater () {
 		this.mUpdater = Updater.instance;
 	}
-	
+
 	@Override
 	public boolean isRunning () {
 		return RUN;
 	}
-	
+
 	public boolean isAnimationFinished () {
-		int frameNumber = (int)(mStateTime / mFrameDuration);
+		int frameNumber = (int) (mStateTime / mFrameDuration);
 		return keyFrames.length - 1 < frameNumber;
 	}
+
 	/***********************************************************
 	 * 
 	 ***********************************************************/
-	
+
 	/** Returns the packed vertices, colors, and texture coordinates for this sprite. */
 	public float[] getVertices () {
 		if (dirty) {
@@ -607,10 +656,14 @@ public class SpriteA  implements Animator,SpriteBackend{
 		return vertices;
 	}
 
-	/** Returns the bounding axis aligned {@link Rectangle} that bounds this sprite. The rectangles x and y coordinates describe its
-	 * bottom left corner. If you change the position or size of the sprite, you have to fetch the triangle again for it to be recomputed.
+	/**
+	 * Returns the bounding axis aligned {@link Rectangle} that bounds this sprite. The rectangles x
+	 * and y coordinates describe its
+	 * bottom left corner. If you change the position or size of the sprite, you have to fetch the
+	 * triangle again for it to be recomputed.
 	 * 
-	 * @return the bounding Rectangle */
+	 * @return the bounding Rectangle
+	 */
 	public Rectangle getBoundingRectangle () {
 		final float[] vertices = getVertices();
 
@@ -642,7 +695,7 @@ public class SpriteA  implements Animator,SpriteBackend{
 
 		return bounds;
 	}
-	
+
 	@Override
 	public float[] getBoundingFloatRect (float offset) {
 		final float[] vertices = getVertices();
@@ -675,11 +728,11 @@ public class SpriteA  implements Animator,SpriteBackend{
 
 		return rect;
 	}
-	
-	public Circle getBoundingCircle(){
+
+	public Circle getBoundingCircle () {
 		return null;
 	}
-	
+
 	public void draw (SpriteBatch spriteBatch) {
 		spriteBatch.draw(mCurrentTexture, getVertices(), 0, SPRITE_SIZE);
 	}
@@ -697,12 +750,12 @@ public class SpriteA  implements Animator,SpriteBackend{
 	/***********************************************************
 	 * 
 	 ***********************************************************/
-	
+
 	public float getX () {
 		return x;
 	}
 
-	public float getCenterX(){
+	public float getCenterX () {
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -716,14 +769,14 @@ public class SpriteA  implements Animator,SpriteBackend{
 		maxx = maxx < vertices[X3] ? vertices[X3] : maxx;
 		maxx = maxx < vertices[X4] ? vertices[X4] : maxx;
 
-		return (minx + maxx)/2;
+		return (minx + maxx) / 2;
 	}
-	
+
 	public float getY () {
 		return y;
 	}
 
-	public float getCenterY(){
+	public float getCenterY () {
 		final float[] vertices = getVertices();
 
 		float miny = vertices[Y1];
@@ -736,10 +789,10 @@ public class SpriteA  implements Animator,SpriteBackend{
 		maxy = maxy < vertices[Y2] ? vertices[Y2] : maxy;
 		maxy = maxy < vertices[Y3] ? vertices[Y3] : maxy;
 		maxy = maxy < vertices[Y4] ? vertices[Y4] : maxy;
-		
-		return (miny + maxy)/2;
+
+		return (miny + maxy) / 2;
 	}
-	
+
 	public float getWidth () {
 		return width;
 	}
@@ -768,8 +821,10 @@ public class SpriteA  implements Animator,SpriteBackend{
 		return scaleY;
 	}
 
-	/** Returns the color of this sprite. Changing the returned color will have no affect, {@link #setColor(Color)} or
-	 * {@link #setColor(float, float, float, float)} must be used. */
+	/**
+	 * Returns the color of this sprite. Changing the returned color will have no affect,
+	 * {@link #setColor(Color)} or {@link #setColor(float, float, float, float)} must be used.
+	 */
 	public Color getColor () {
 		final int intBits = NumberUtils.floatToIntColor(vertices[C1]);
 		final Color color = this.color;
@@ -787,7 +842,7 @@ public class SpriteA  implements Animator,SpriteBackend{
 		final float v2 = region.getV2();
 
 		final float[] vertices = SpriteA.this.vertices;
-		
+
 		vertices[U1] = u;
 		vertices[V1] = v2;
 
@@ -802,7 +857,7 @@ public class SpriteA  implements Animator,SpriteBackend{
 	}
 
 	public void flip (boolean x, boolean y) {
-		for(int i = 0;i < keyFrames.length;i++)
+		for (int i = 0; i < keyFrames.length; i++)
 			keyFrames[i].flip(x, y);
 
 		float[] vertices = SpriteA.this.vertices;
@@ -844,16 +899,15 @@ public class SpriteA  implements Animator,SpriteBackend{
 			vertices[V4] = v2;
 		}
 	}
-	
-	public boolean hit(float x,float y){
-		if(x >= getX() && x <= (getX() + getWidth()) &&
-		   y >= getY() && y <= (getY() + getHeight())){
+
+	public boolean hit (float x, float y) {
+		if (x >= getX() && x <= (getX() + getWidth()) &&
+				y >= getY() && y <= (getY() + getHeight())) {
 			return true;
 		}
 		return false;
 	}
 
-	
 	@Override
 	public void reset () {
 		stop();

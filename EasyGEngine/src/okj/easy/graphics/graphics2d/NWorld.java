@@ -3,7 +3,6 @@ package okj.easy.graphics.graphics2d;
 import org.ege.utils.Factory;
 import org.ege.utils.Pool;
 
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.LongMap;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -19,7 +18,10 @@ public final class NWorld {
 
 	// ===========================================
 	private final LongMap<NativeSpriteBackend> mSpriteMap = new LongMap<NativeSpriteBackend>(100);
+
 	private final Pool<NSprite> mNSpritePool;
+	private final Pool<NSpriteA> mNSpriteAPool;
+	private final Pool<NSpriter> mNSpriterPool;
 
 	private CollideListener collideListener;
 
@@ -27,7 +29,7 @@ public final class NWorld {
 	// manager management
 
 	private final NManager mMainManager;
-	private final LongMap<NManager> mManagerMap = new LongMap<NManager>(3);
+	final LongMap<NManager> mManagerMap = new LongMap<NManager>(3);
 
 	// =============================================
 	// sprite def manager
@@ -35,10 +37,10 @@ public final class NWorld {
 	// count the current number of sprite owning that sprite def
 	private final ObjectMap<String, NSpriteDef> mSpriteDefMap = new ObjectMap<String, NSpriteDef>(3);
 
-	public NWorld(int poolSizeOfNSprite) {
+	public NWorld(int pool_Size_Of_NSprite, int pool_Size_Of_NSpriteA, int pool_Size_Of_Spriter) {
 		address = CreateWorld();
 
-		mNSpritePool = new Pool<NSprite>(poolSizeOfNSprite, new Factory<NSprite>() {
+		mNSpritePool = new Pool<NSprite>(pool_Size_Of_NSprite, new Factory<NSprite>() {
 			@Override
 			public NSprite newObject () {
 				return createNSprite();
@@ -50,9 +52,37 @@ public final class NWorld {
 			}
 		});
 
+		mNSpriteAPool = new Pool<NSpriteA>(pool_Size_Of_NSpriteA, new Factory<NSpriteA>() {
+			@Override
+			public NSpriteA newObject () {
+				return createNSpriteA();
+			}
+
+			@Override
+			public NSpriteA newObject (Object... objects) {
+				return null;
+			}
+		});
+
+		mNSpriterPool = new Pool<NSpriter>(pool_Size_Of_Spriter, new Factory<NSpriter>() {
+			@Override
+			public NSpriter newObject () {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public NSpriter newObject (Object... objects) {
+				return null;
+			}
+
+		});
 		mMainManager = newManager();
 		mManagerMap.put(mMainManager.address, mMainManager);
 	}
+
+	// =====================================
+	// world manager
 
 	private final native long CreateWorld ();
 
@@ -76,6 +106,7 @@ public final class NWorld {
 
 	// =====================================
 	// NSprite
+
 	public NSprite newSprite () {
 		NSprite sprite = mNSpritePool.obtain();
 		sprite.isPooled = false;
@@ -105,8 +136,50 @@ public final class NWorld {
 		return sprite;
 	}
 
+	// ===================================
+	// NSpriteA
+
+	public NSpriteA newSpriteA () {
+		NSpriteA sprite = mNSpriteAPool.obtain();
+		sprite.isPooled = false;
+		if (sprite.manager == null)
+			mMainManager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	public NSpriteA newSpriteA (NManager manager) {
+		NSpriteA sprite = mNSpriteAPool.obtain();
+		sprite.isPooled = false;
+		manager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	public NSpriteA newSpriteA (long managerAddress) {
+		NManager manager = mManagerMap.get(managerAddress);
+		if (manager == null)
+			return null;
+
+		NSpriteA sprite = mNSpriteAPool.obtain();
+		sprite.isPooled = false;
+		manager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	// ====================================
+	// sprite generator
+
 	private final NSprite createNSprite () {
 		final NSprite sprite = new NSprite(CreateNSprite(), this);
+		sprite.isPooled = false;
+		mMainManager.manage(sprite);
+		return sprite;
+	}
+
+	private final NSpriteA createNSpriteA () {
+		final NSpriteA sprite = new NSpriteA(CreateNSprite(), this);
 		sprite.isPooled = false;
 		mMainManager.manage(sprite);
 		return sprite;
@@ -156,33 +229,18 @@ public final class NWorld {
 		return manager;
 	}
 
+	/**
+	 * Direct delete manager
+	 * 1. check manager = null
+	 * 2. dispose sprite
+	 * 3. clear manager list
+	 * 4. dispose manager {@link NManager}
+	 */
 	public void delManager (long address) {
 		if (address == mMainManager.address)
 			return;
 
-		directDeleteManager(mManagerMap.get(address));
-	}
-
-	public void delManager (NManager manager) {
-		if (manager == mMainManager)
-			return;
-
-		directDeleteManager(manager);
-	}
-
-	/**
-	 * Remove sprite from manage map , and reset it put it to the pool. Only use for manager
-	 * {@link NManager}
-	 */
-	void poolSprite (NManager manager) {
-		final Array<NativeSpriteBackend> list = manager.mSpriteList;
-
-		for (NativeSpriteBackend sprite : list) {
-			poolSprite(sprite);
-			sprite.resetWithoutWorldCallback();
-		}
-
-		list.clear();
+		mManagerMap.get(address).dispose();
 	}
 
 	/**
@@ -192,17 +250,11 @@ public final class NWorld {
 	 * 3. clear manager list
 	 * 4. dispose manager {@link NManager}
 	 */
-	final void directDeleteManager (NManager manager) {
-		final Array<NativeSpriteBackend> list = manager.mSpriteList;
+	public void delManager (NManager manager) {
+		if (manager == mMainManager)
+			return;
 
-		for (NativeSpriteBackend sprite : list) {
-			sprite.disposeWithoutWorldCallback();
-			deleteSprite(sprite);
-		}
-
-		list.clear();
-		mManagerMap.remove(manager.address);
-		DisposeManager(manager.address);
+		manager.dispose();
 	}
 
 	// =================================================
@@ -210,7 +262,7 @@ public final class NWorld {
 
 	private final native long CreateManager ();
 
-	private final native void DisposeManager (long address);
+	final native void DisposeManager (long address);
 
 	/**************************************************************
 	 * NSpriteDef
@@ -226,6 +278,9 @@ public final class NWorld {
 		return mSpriteDefMap.get(name);
 	}
 
+	/**
+	 * The sprite is dispose only when no sprite use it
+	 */
 	public void delSpriteDef (String name) {
 		mSpriteDefMap.get(name).dispose();
 	}

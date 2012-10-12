@@ -33,13 +33,6 @@
 /************************************************************************/
 /* Method declearation                                                  */
 /************************************************************************/
-
-float calDistance(float,float,float,float);
-
-bool overlapConvexPolygons(float*,int,int*,int,float*,int,int*,int,Math2D::MinimumTranslationVector*);
-
-bool overlapRectangle(float*,float*);
-
 // primitive converter
 template<class T>
 T max(T value1,T value2){
@@ -50,6 +43,12 @@ template<class T>
 T min(T a,T b){
 	return (a > b? b:a);
 }
+
+float calDistance(float,float,float,float);
+
+bool overlapConvexPolygons(float*,int,int*,int,float*,int,int*,int,Math2D::MinimumTranslationVector*);
+
+bool overlapRectangle(float*,float*);
 
 
 #endif /* EMATH_H_ */

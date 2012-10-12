@@ -10,6 +10,10 @@
 
 using namespace Math2D;
 
+inline float absf(float a){
+	return (a < 0) ? -a :a ;
+}
+
 float calDistance(float x,float y,float x1,float y1){
 	return sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1));
 }
@@ -82,8 +86,8 @@ bool overlapConvexPolygons(float *verts1,int verts1Size,int *noIndex1,int index1
 		} else {
 			float o = min(max1, max2) - max(min1, min2);
 			if ((min1 < min2 && max1 > max2) || (min2 < min1 && max2 > max1)) {
-				float mins = abs(min1 - min2);
-				float maxs = abs(max1 - max2);
+				float mins = absf(min1 - min2);
+				float maxs = absf(max1 - max2);
 				if (mins < maxs) {
 					axisX = -axisX;
 					axisY = -axisY;
@@ -161,8 +165,8 @@ bool overlapConvexPolygons(float *verts1,int verts1Size,int *noIndex1,int index1
 			float o = min(max1, max2) - max(min1, min2);
 
 			if ((min1 < min2 && max1 > max2) || (min2 < min1 && max2 > max1)) {
-				float mins = abs(min1 - min2);
-				float maxs = abs(max1 - max2);
+				float mins = absf(min1 - min2);
+				float maxs = absf(max1 - max2);
 				if (mins < maxs) {
 					axisX = -axisX;
 					axisY = -axisY;

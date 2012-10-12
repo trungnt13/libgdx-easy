@@ -234,6 +234,14 @@ extern "C" {
 
 	/*
 	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    isDirty
+	* Signature: (J)Z
+	*/
+	JNIEXPORT jboolean JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_isDirty
+		(JNIEnv *, jobject, jlong);
+
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
 	* Method:    reset
 	* Signature: (J)V
 	*/
@@ -271,6 +279,7 @@ extern "C" {
 	*/
 	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_noSpriteDef
 		(JNIEnv *, jobject, jlong);
+
 #ifdef __cplusplus
 }
 #endif

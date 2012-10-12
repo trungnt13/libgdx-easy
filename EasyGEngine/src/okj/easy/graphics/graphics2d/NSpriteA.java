@@ -1,5 +1,11 @@
 package okj.easy.graphics.graphics2d;
 
+import static com.badlogic.gdx.graphics.g2d.Animation.LOOP;
+import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_PINGPONG;
+import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_RANDOM;
+import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_REVERSED;
+import static com.badlogic.gdx.graphics.g2d.Animation.NORMAL;
+import static com.badlogic.gdx.graphics.g2d.Animation.REVERSED;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.C1;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.C2;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.C3;
@@ -28,18 +34,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Animator;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.Updater;
 
 /**
  * 
- * NSprite.java
+ * NSpriteA.java
  * 
- * Created on: Oct 7, 2012
+ * Created on: Oct 12, 2012
  * Author: Trung
  */
-public class NSprite extends NativeSpriteBackend {
+public class NSpriteA extends NativeSpriteBackend implements Animator {
+
 	private final float vertices[] = new float[E.sprite.VERTICES_SIZE];
 
 	private Updater mUpdater = Updater.instance;
@@ -47,78 +57,151 @@ public class NSprite extends NativeSpriteBackend {
 
 	// ========================================
 	// texture region params
-	Texture texture;
-	float u, v;
-	float u2, v2;
-	int regionWidth, regionHeight;
+	TextureRegion[] keyFrames;
+
+	float mFrameDuration;
+	float mStateTime;
+	float mAnimationDuration;
+
+	private int frameNumber;
+
+	private int mPlayMode = NORMAL;
+
+	private Texture mCurrentTexture;
+
+	private boolean isRunning = false;
 
 	/************************************************************
 	 * Constructor
 	 ************************************************************/
 
-	NSprite(long address, NWorld world) {
+	NSpriteA(long address, NWorld world) {
 		super(address, world);
 
 		setColor(1, 1, 1, 1);
+		setSize(50, 50);
+		setOrigin(25, 25);
+	}
+
+	/***********************************************************
+	 * Animator controller
+	 ***********************************************************/
+
+	public void setFrameDuration (float frameDuration) {
+		this.mFrameDuration = frameDuration;
+	}
+
+	public void setPlayMode (int playMode) {
+		mPlayMode = playMode;
+	}
+
+	public void setLooping (boolean looping) {
+		if (looping && (mPlayMode == NORMAL || mPlayMode == REVERSED)) {
+			if (mPlayMode == NORMAL)
+				mPlayMode = LOOP;
+			else
+				mPlayMode = LOOP_REVERSED;
+		} else if (!looping && !(mPlayMode == NORMAL || mPlayMode == REVERSED)) {
+			if (mPlayMode == LOOP_REVERSED)
+				mPlayMode = REVERSED;
+			else
+				mPlayMode = LOOP;
+		}
+	}
+
+	public void setKeyFrames (TextureRegion[] keyFrame) {
+		this.keyFrames = keyFrame;
+		setRegion(keyFrames[0]);
+		setTexture(keyFrame);
+	}
+
+	public void setKeyFrames (Array keyFrame) {
+		keyFrames = new TextureRegion[keyFrame.size];
+		for (int i = 0; i < keyFrames.length; i++)
+			keyFrames[i] = (TextureRegion) keyFrame.get(i);
+		setRegion(keyFrames[0]);
+		setTexture(keyFrames);
+	}
+
+	public void start () {
+		isRunning = true;
+	}
+
+	public void start (float frameDuration) {
+		isRunning = true;
+		mFrameDuration = frameDuration;
+	}
+
+	public void start (float frameDuration, int playMode) {
+		isRunning = true;
+		mFrameDuration = frameDuration;
+		mPlayMode = playMode;
+	}
+
+	public void stop () {
+		isRunning = false;
+		mStateTime = 0;
+		setRegion(keyFrames[0]);
+	}
+
+	public void pause () {
+		isRunning = false;
+	}
+
+	public void switchState () {
+		isRunning = !isRunning;
+	}
+
+	public void resetFrame () {
+		mStateTime = 0;
+		setRegion(keyFrames[0]);
+	}
+
+	/**
+	 * Get current frame number ( unsafe method)
+	 * 
+	 * @return
+	 */
+	public int getFrameNumber () {
+		return frameNumber;
+	}
+
+	public TextureRegion[] getKeyFrames () {
+		return this.keyFrames;
+	}
+
+	@Override
+	public boolean isRunning () {
+		return isRunning;
 	}
 
 	/************************************************************
 	 * Texture manager method
 	 ************************************************************/
 
-	public Texture getTexture () {
-		return texture;
+	public void setRegions (Array region) {
+		keyFrames = new TextureRegion[region.size];
+		for (int i = 0; i < keyFrames.length; i++)
+			keyFrames[i] = (TextureRegion) region.get(i);
+
+		setRegion(keyFrames[0]);
+		setTexture(keyFrames);
 	}
 
-	public void setTexture (Texture texture) {
-		this.texture = texture;
-		final int width = texture.getWidth();
-		final int height = texture.getHeight();
-
-		setRegion(0, 0, width, height);
-		setSize(width, height);
-		setOrigin(width >> 1, height >> 1);
-		setOriginSize(address, width, height);
+	public void setRegions (TextureRegion[] region) {
+		keyFrames = region;
+		setRegion(region[0]);
+		setTexture(keyFrames);
 	}
 
-	// ===========================================
-	// region method
+	private void setRegion (TextureRegion region) {
+		final float u = region.getU();
+		final float v = region.getV();
+		final float u2 = region.getU2();
+		final float v2 = region.getV2();
 
-	/**
-	 * @param width The width of the texture region. May be negative to flip the sprite when drawn.
-	 * @param height The height of the texture region. May be negative to flip the sprite when
-	 *            drawn.
-	 */
-	public void setRegion (int x, int y, int width, int height) {
-		float invTexWidth = 1f / texture.getWidth();
-		float invTexHeight = 1f / texture.getHeight();
-		setRegion(x * invTexWidth, y * invTexHeight, (x + width) * invTexWidth, (y + height)
-				* invTexHeight);
-		regionWidth = Math.abs(width);
-		regionHeight = Math.abs(height);
-		setOriginSize(address, regionWidth, regionHeight);
-	}
+		final float[] vertices = this.vertices;
 
-	/**
-	 * Sets the texture to that of the specified region and sets the coordinates relative to the
-	 * specified region.
-	 */
-	public void setRegion (TextureRegion region, int x, int y, int width, int height) {
-		texture = region.getTexture();
-		setRegion(region.getRegionX() + x, region.getRegionY() + y, width, height);
-		setOriginSize(address, width, height);
-	}
-
-	public void setRegion (float u, float v, float u2, float v2) {
-		this.u = u;
-		this.v = v;
-		this.u2 = u2;
-		this.v2 = v2;
-		regionWidth = Math.round(Math.abs(u2 - u) * texture.getWidth());
-		regionHeight = Math.round(Math.abs(v2 - v) * texture.getHeight());
-		setOriginSize(address, regionWidth, regionHeight);
-
-		float[] vertices = this.vertices;
 		vertices[U1] = u;
 		vertices[V1] = v2;
 
@@ -132,92 +215,8 @@ public class NSprite extends NativeSpriteBackend {
 		vertices[V4] = v2;
 	}
 
-	/** Sets the texture and coordinates to the specified region. */
-	public void setRegion (TextureRegion region) {
-		texture = region.getTexture();
-		setRegion(region.getU(), region.getV(), region.getU2(), region.getV2());
-		setOriginSize(address, regionWidth, regionHeight);
-	}
-
-	public void setU (float u) {
-		this.u = u;
-		regionWidth = Math.round(Math.abs(u2 - u) * texture.getWidth());
-		setOriginSize(address, regionWidth, regionHeight);
-
-		vertices[U1] = u;
-		vertices[U2] = u;
-	}
-
-	public void setV (float v) {
-		this.v = v;
-		regionHeight = Math.round(Math.abs(v2 - v) * texture.getHeight());
-		setOriginSize(address, regionWidth, regionHeight);
-
-		vertices[V2] = v;
-		vertices[V3] = v;
-	}
-
-	public void setU2 (float u2) {
-		this.u2 = u2;
-		regionWidth = Math.round(Math.abs(u2 - u) * texture.getWidth());
-		setOriginSize(address, regionWidth, regionHeight);
-
-		vertices[U3] = u2;
-		vertices[U4] = u2;
-	}
-
-	public void setV2 (float v2) {
-		this.v2 = v2;
-		regionHeight = Math.round(Math.abs(v2 - v) * texture.getHeight());
-		setOriginSize(address, regionWidth, regionHeight);
-
-		vertices[V1] = v2;
-		vertices[V4] = v2;
-	}
-
-	// ============================================
-	// getter
-
-	public boolean isFlipX () {
-		return u > u2;
-	}
-
-	public boolean isFlipY () {
-		return v > v2;
-	}
-
-	public float getU () {
-		return u;
-	}
-
-	public float getV () {
-		return v;
-	}
-
-	public float getU2 () {
-		return u2;
-	}
-
-	public float getV2 () {
-		return v2;
-	}
-
-	public int getRegionX () {
-		return Math.round(u * texture.getWidth());
-	}
-
-	public int getRegionY () {
-		return Math.round(v * texture.getHeight());
-	}
-
-	/** Returns the region's width. */
-	public int getRegionWidth () {
-		return regionWidth;
-	}
-
-	/** Returns the region's height. */
-	public int getRegionHeight () {
-		return regionHeight;
+	private void setTexture (TextureRegion[] texture) {
+		mCurrentTexture = texture[0].getTexture();
 	}
 
 	/************************************************************
@@ -553,17 +552,59 @@ public class NSprite extends NativeSpriteBackend {
 			return;
 
 		getVertices(address, vertices);
+
+		// animation process
+		if (!isRunning || mFrameDuration == 0) {
+			mUpdater.update(this, delta);
+			return;
+		}
+
+		mStateTime += delta;
+
+		frameNumber = (int) (mStateTime / mFrameDuration);
+
+		switch (mPlayMode) {
+			case NORMAL:
+				frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+				break;
+			case LOOP:
+				frameNumber = frameNumber % keyFrames.length;
+				break;
+			case LOOP_PINGPONG:
+				frameNumber = frameNumber % (keyFrames.length * 2);
+				if (frameNumber >= keyFrames.length)
+					frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
+				break;
+			case LOOP_RANDOM:
+				frameNumber = MathUtils.random(keyFrames.length - 1);
+				break;
+			case REVERSED:
+				frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
+				break;
+			case LOOP_REVERSED:
+				frameNumber = frameNumber % keyFrames.length;
+				frameNumber = keyFrames.length - frameNumber - 1;
+				break;
+
+			default:
+				// play normal otherwise
+				frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+				break;
+		}
+		setRegion(keyFrames[frameNumber]);
+
+		// updater
 		mUpdater.update(this, delta);
 	}
 
 	@Override
 	public void draw (SpriteBatch batch) {
-		batch.draw(texture, vertices, 0, E.sprite.VERTICES_SIZE);
+		batch.draw(mCurrentTexture, vertices, 0, E.sprite.VERTICES_SIZE);
 	}
 
 	@Override
 	public void draw (SpriteBatch batch, float alpha) {
-		Color color = getColor();
+		final Color color = getColor();
 		float oldAlpha = color.a;
 		color.a *= alpha;
 		setColor(color);
@@ -587,6 +628,7 @@ public class NSprite extends NativeSpriteBackend {
 		vertices[Y4] = 0;
 
 		setColor(1, 1, 1, 1);
+		stop();
 	}
 
 }
