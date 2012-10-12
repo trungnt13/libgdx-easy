@@ -20,7 +20,7 @@ public class NManager implements Disposable {
 	// =========================================
 	// sprite params
 
-	final Array<NativeSpriteBackend> mSpriteList = new Array<NativeSpriteBackend>(13);
+	private final Array<NativeSpriteBackend> mSpriteList = new Array<NativeSpriteBackend>(13);
 
 	NManager(long address, NWorld world) {
 		this.address = address;

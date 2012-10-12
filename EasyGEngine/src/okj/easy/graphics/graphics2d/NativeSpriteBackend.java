@@ -81,10 +81,9 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 		return getTransformedBounding(address, index);
 	}
 
-	// =========================================
-	// native manager
-
-	public abstract boolean isPooled ();
+	public boolean isPooled () {
+		return isPooled;
+	}
 
 	/*****************************************************
 	 * SpriteBackend

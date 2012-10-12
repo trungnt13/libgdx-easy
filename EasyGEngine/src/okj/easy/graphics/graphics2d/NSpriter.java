@@ -1,238 +1,693 @@
 package okj.easy.graphics.graphics2d;
 
+import org.ege.utils.SpriteBackend;
+import org.ege.utils.exception.EasyGEngineRuntimeException;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Animator;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.IdentityMap;
+import com.badlogic.gdx.utils.IdentityMap.Values;
 import com.badlogic.gdx.utils.Updater;
 
-public class NSpriter extends NativeSpriteBackend {
+/**
+ * NSpriter.java {@link NManager}
+ * 
+ * Created on: Oct 12, 2012
+ * Author: Trung
+ */
+public class NSpriter extends NManager implements Animator, SpriteBackend, Disposable {
 
+	// =========================================
+	// sprite params
+	private final Array<NativeSpriteBackend> mSpriteList;
+	private final IdentityMap<NativeSpriteBackend, Scaler> mScaler;
+
+	// ========================================
+	// Config
+
+	private final Array<NativeSpriteBackend> mDrawable;
+
+	private final Array<NativeSpriteBackend> mRunnable;
+
+	// =======================================
+	// param
+
+	private boolean RUN;
+
+	private NativeSpriteBackend mOriginSprite;
+	private float mOriginWidth;
+	private float mOriginHeight;
+
+	// --------------------------------------------------
+
+	private int idx = 0;
+
+	// --------------------------------------------------
+
+	private float x;
+	private float y;
+	private float w;
+	private float h;
+
+	private Updater mUpdater = Updater.instance;
+
+	/**
+	 * Construct a spriter with given sprite limit ( should override this
+	 * method)
+	 * 
+	 * @param limit
+	 */
 	NSpriter(long address, NWorld world) {
 		super(address, world);
-		// TODO Auto-generated constructor stub
+
+		mSpriteList = new Array<NativeSpriteBackend>(13);
+		mScaler = new IdentityMap<NativeSpriteBackend, NSpriter.Scaler>(13);
+
+		mDrawable = new Array<NativeSpriteBackend>(13);
+		mRunnable = new Array<NativeSpriteBackend>(13);
 	}
 
-	@Override
-	public Rectangle getBoundingRectangle () {
-		// TODO Auto-generated method stub
-		return null;
+	/********************************************************
+	 * Layer manage
+	 ********************************************************/
+
+	private Scaler calculateScaler (NativeSpriteBackend sprite, float x, float y,
+			float width,
+			float height) {
+
+		Scaler scale = null;
+		if (mScaler.get(sprite) == null) {
+			scale = new Scaler();
+			mScaler.put(sprite, scale);
+		}
+
+		scale.sprite = sprite;
+		scale.xRatio = x / mOriginWidth;
+		scale.yRatio = y / mOriginHeight;
+		scale.widthRatio = width / mOriginWidth;
+		scale.heightRatio = height / mOriginHeight;
+
+		return scale;
 	}
 
-	@Override
-	public float[] getBoundingFloatRect (float offset) {
-		// TODO Auto-generated method stub
-		return null;
+	public void bindOriginLayer (NativeSpriteBackend sprite) {
+		w = mOriginWidth = sprite.getWidth();
+		h = mOriginHeight = sprite.getHeight();
+		this.x = sprite.getX();
+		this.y = sprite.getY();
+		mOriginSprite = sprite;
+
+		calculateScaler(sprite, 0, 0, w, h);
+		mSpriteList.add(sprite);
+
+		refresh();
 	}
 
-	@Override
-	public Circle getBoundingCircle () {
-		// TODO Auto-generated method stub
-		return null;
+	public void bindLayer (float x, float y, float width, float height, NativeSpriteBackend sprite) {
+		if (mSpriteList.size == 0) {
+			w = mOriginWidth = sprite.getWidth();
+			h = mOriginHeight = sprite.getHeight();
+			this.x = sprite.getX();
+			this.y = sprite.getY();
+			mOriginSprite = sprite;
+			calculateScaler(sprite, 0, 0, w, h);
+		} else {
+			final Scaler scale = calculateScaler(sprite, x, y, width, height);
+			scale.apply();
+		}
+
+		mSpriteList.add(sprite);
 	}
 
-	@Override
-	public boolean isPooled () {
-		// TODO Auto-generated method stub
-		return false;
+	public NSpriter bindLayer (float[] attributes, NativeSpriteBackend... sprites) {
+		if (attributes.length / 4 != sprites.length)
+			throw new EasyGEngineRuntimeException(
+					"Attributes length must be equal regions.length * 4");
+		int i = 0;
+		for (NativeSpriteBackend sprite : sprites) {
+			idx = i * 4;
+			bindLayer(attributes[idx++], attributes[idx++], attributes[idx++], attributes[idx++],
+					sprite);
+			++i;
+		}
+		return this;
 	}
+
+	public void bindLayer (int id, float x, float y, float width, float height,
+			NativeSpriteBackend sprite) {
+		if (id > mSpriteList.size)
+			return;
+		else if (id == mSpriteList.size) {
+			bindLayer(x, y, width, height, sprite);
+			return;
+		}
+		mScaler.remove(mSpriteList.removeIndex(id));
+		mSpriteList.insert(id, sprite);
+
+		if (id == 0) {
+			w = mOriginWidth = sprite.getWidth();
+			h = mOriginHeight = sprite.getHeight();
+			this.x = sprite.getX();
+			this.y = sprite.getY();
+			mOriginSprite = sprite;
+			calculateScaler(sprite, 0, 0, w, h);
+			refresh();
+		} else {
+			final Scaler scale = calculateScaler(sprite, x, y, width, height);
+			scale.apply();
+		}
+	}
+
+	public NativeSpriteBackend getSprite (int id) {
+		return mSpriteList.get(id);
+	}
+
+	public int getLayerId (NativeSpriteBackend sprite) {
+		return mSpriteList.indexOf(sprite, true);
+	}
+
+	/********************************************************
+	 * Color method
+	 ********************************************************/
+
+	public void setColor (float r, float g, float b, float a) {
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.setColor(r, g, b, a);
+	}
+
+	public void setColor (Color color) {
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.setColor(color);
+	}
+
+	public void setColor (Color[] color, int[] layer) {
+		if (color.length != layer.length)
+			throw new EasyGEngineRuntimeException("Color length must be the same with layer length");
+
+		int j = 0;
+		for (NativeSpriteBackend sprite : mSpriteList) {
+			sprite.setColor(color[j]);
+			j++;
+		}
+	}
+
+	public void setColor (Color color, int[] layer) {
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.setColor(color);
+	}
+
+	public void setColor (float r, float g, float b, float a, int[] layer) {
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.setColor(r, g, b, a);
+	}
+
+	public NSpriter setColor (Color color, int layer) {
+		mSpriteList.get(layer).setColor(color);
+		return this;
+	}
+
+	public NSpriter setColor (float r, float g, float b, float a, int layer) {
+		mSpriteList.get(layer).setColor(r, g, b, layer);
+		return this;
+	}
+
+	/********************************************************
+	 * Configuration
+	 ********************************************************/
 
 	@Override
 	public void setBounds (float x, float y, float width, float height) {
-		// TODO Auto-generated method stub
+		final float deltaX = x - this.x;
+		final float deltaY = y - this.y;
 
+		this.x = x;
+		this.y = y;
+		this.w = width;
+		this.h = height;
+
+		mOriginSprite.setSize(width, height);
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.translate(deltaX, deltaY);
+		refresh();
 	}
 
 	@Override
 	public void setSize (float width, float height) {
-		// TODO Auto-generated method stub
+		this.w = width;
+		this.h = height;
 
+		mOriginSprite.setSize(width, height);
+		refresh();
 	}
 
 	@Override
 	public void setPosition (float x, float y) {
-		// TODO Auto-generated method stub
+		final float deltaX = x - this.x;
+		final float deltaY = y - this.y;
+		this.x = x;
+		this.y = y;
 
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.translate(deltaX, deltaY);
 	}
 
-	@Override
 	public void setX (float x) {
-		// TODO Auto-generated method stub
+		final float deltaX = x - this.x;
+		this.x = x;
 
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.translateX(deltaX);
 	}
 
 	@Override
 	public void setY (float y) {
-		// TODO Auto-generated method stub
+		final float deltaY = y - this.y;
+		this.y = y;
 
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.translateY(deltaY);
 	}
 
 	@Override
 	public void translate (float xAmount, float yAmount) {
-		// TODO Auto-generated method stub
+		this.x += xAmount;
+		this.y += yAmount;
 
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.translate(xAmount, yAmount);
 	}
 
 	@Override
 	public void translateX (float xAmount) {
-		// TODO Auto-generated method stub
+		this.x += xAmount;
 
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.translateX(xAmount);
 	}
 
 	@Override
 	public void translateY (float yAmount) {
-		// TODO Auto-generated method stub
+		this.y += yAmount;
 
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.translateY(yAmount);
 	}
+
+	// ------------------------------------------------------
 
 	@Override
 	public void setOrigin (float originX, float originY) {
-		// TODO Auto-generated method stub
-
+		mOriginSprite.setOrigin(originX, originY);
+		float newOriginX;
+		float newOriginY;
+		for (NativeSpriteBackend sprite : mSpriteList) {
+			newOriginX = sprite.getX() - x;
+			newOriginY = sprite.getY() - y;
+			sprite.setOrigin(originX - newOriginX, originY - newOriginY);
+		}
 	}
+
+	public void setOrigin (int layer, float originX, float originY) {
+		mSpriteList.get(layer).setOrigin(originX, originY);
+	}
+
+	// ------------------------------------------------------
 
 	@Override
 	public void setRotation (float degree) {
-		// TODO Auto-generated method stub
-
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.setRotation(degree);
 	}
+
+	public NSpriter setRotation (int layer, float degree) {
+		mSpriteList.get(layer).setRotation(degree);
+		return this;
+	}
+
+	// ------------------------------------------------------
 
 	@Override
 	public void rotate (float degree) {
-		// TODO Auto-generated method stub
-
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.rotate(degree);
 	}
+
+	public void rotate (int layer, float degree) {
+		mSpriteList.get(layer).rotate(degree);
+	}
+
+	// ------------------------------------------------------
 
 	@Override
 	public void setScale (float scaleXY) {
-		// TODO Auto-generated method stub
-
+		mOriginSprite.setScale(scaleXY);
 	}
 
 	@Override
 	public void setScale (float scaleX, float scaleY) {
-		// TODO Auto-generated method stub
-
+		mOriginSprite.setScale(scaleX, scaleY);
 	}
 
 	@Override
 	public void scale (float amount) {
-		// TODO Auto-generated method stub
-
+		mOriginSprite.scale(amount);
 	}
 
-	@Override
-	public void setColor (float r, float g, float b, float a) {
-		// TODO Auto-generated method stub
-
+	public void setScale (int layer, float scaleXY) {
+		mSpriteList.get(layer).setScale(scaleXY);
 	}
 
-	@Override
-	public void setColor (Color color) {
-		// TODO Auto-generated method stub
-
+	public void setScale (int layer, float scaleX, float scaleY) {
+		mSpriteList.get(layer).setScale(scaleX, scaleY);
 	}
+
+	public void scale (int layer, float amount) {
+		mSpriteList.get(layer).scale(amount);
+	}
+
+	/********************************************************
+	 * Getter
+	 ********************************************************/
 
 	@Override
 	public float[] getVertices () {
-		// TODO Auto-generated method stub
-		return null;
+		return mOriginSprite.getVertices();
 	}
 
 	@Override
 	public float getX () {
-		// TODO Auto-generated method stub
-		return 0;
+		return x;
+	}
+
+	public float getX (int layer) {
+		return mSpriteList.get(layer).getX();
 	}
 
 	@Override
 	public float getCenterX () {
-		// TODO Auto-generated method stub
-		return 0;
+		return mOriginSprite.getCenterX();
+	}
+
+	public float getCenterX (int layer) {
+		return mSpriteList.get(layer).getCenterX();
 	}
 
 	@Override
 	public float getY () {
-		// TODO Auto-generated method stub
-		return 0;
+		return y;
+	}
+
+	public float getY (int layer) {
+		return mSpriteList.get(layer).getY();
 	}
 
 	@Override
 	public float getCenterY () {
-		// TODO Auto-generated method stub
-		return 0;
+		return mOriginSprite.getCenterY();
+	}
+
+	public float getCenterY (int layer) {
+		return mSpriteList.get(layer).getCenterY();
 	}
 
 	@Override
 	public float getWidth () {
-		// TODO Auto-generated method stub
-		return 0;
+		return w;
+	}
+
+	public float getWidth (int layer) {
+		return mSpriteList.get(layer).getWidth();
 	}
 
 	@Override
 	public float getHeight () {
-		// TODO Auto-generated method stub
-		return 0;
+		return h;
+	}
+
+	public float getHeight (int layer) {
+		return mSpriteList.get(layer).getHeight();
 	}
 
 	@Override
 	public float getOriginX () {
-		// TODO Auto-generated method stub
-		return 0;
+		return mOriginSprite.getOriginX();
+	}
+
+	public float getOriginX (int layer) {
+		return mSpriteList.get(layer).getOriginX();
 	}
 
 	@Override
 	public float getOriginY () {
-		// TODO Auto-generated method stub
-		return 0;
+		return mOriginSprite.getOriginY();
+	}
+
+	public float getOriginY (int layer) {
+		return mSpriteList.get(layer).getOriginY();
 	}
 
 	@Override
 	public float getRotation () {
-		// TODO Auto-generated method stub
-		return 0;
+		return mOriginSprite.getRotation();
+	}
+
+	public float getRotation (int layer) {
+		return mSpriteList.get(layer).getRotation();
 	}
 
 	@Override
 	public float getScaleX () {
-		// TODO Auto-generated method stub
-		return 0;
+		return mOriginSprite.getScaleX();
+	}
+
+	public float getScaleX (int layer) {
+		return mSpriteList.get(layer).getScaleX();
 	}
 
 	@Override
 	public float getScaleY () {
-		// TODO Auto-generated method stub
-		return 0;
+		return mOriginSprite.getScaleY();
 	}
 
-	@Override
-	public void postUpdater (Updater updater) {
-		// TODO Auto-generated method stub
-
+	public float getScaleY (int layer) {
+		return mSpriteList.get(layer).getScaleY();
 	}
 
-	@Override
-	public void noUpdater () {
-		// TODO Auto-generated method stub
-
+	public int getSize () {
+		return mSpriteList.size;
 	}
 
-	@Override
-	public void update (float delta) {
-		// TODO Auto-generated method stub
+	/********************************************************
+	 * 
+	 ********************************************************/
 
+	@Deprecated
+	public Rectangle getBoundingRectangle () {
+		return null;
 	}
 
-	@Override
+	@Deprecated
+	public float[] getBoundingFloatRect (float offset) {
+		return null;
+	}
+
+	@Deprecated
+	public Circle getBoundingCircle () {
+		return null;
+	}
+
+	/********************************************************
+	 * 
+	 ********************************************************/
+
+	public NSpriter setDrawableLayer (NativeSpriteBackend... list) {
+		for (NativeSpriteBackend s : list) {
+			if (mSpriteList.contains(s, true) &&
+					!mDrawable.contains(s, true))
+				mDrawable.add(s);
+		}
+		return this;
+	}
+
+	public NSpriter removeDrawableLayer (NativeSpriteBackend... list) {
+		for (NativeSpriteBackend s : list)
+			mDrawable.removeValue(s, true);
+		return this;
+	}
+
+	public Array<NativeSpriteBackend> getDrawbleLayer () {
+		return mDrawable;
+	}
+
+	public void clearDrawable () {
+		stop();
+		mDrawable.clear();
+	}
+
 	public void draw (SpriteBatch batch) {
-		// TODO Auto-generated method stub
-
+		for (NativeSpriteBackend s : mDrawable)
+			s.draw(batch);
 	}
 
 	@Override
 	public void draw (SpriteBatch batch, float alpha) {
-		// TODO Auto-generated method stub
+		for (NativeSpriteBackend s : mDrawable)
+			s.draw(batch, alpha);
+	}
 
+	/********************************************************
+	 * 
+	 ********************************************************/
+
+	public NSpriter setRunnableLayer (NativeSpriteBackend... list) {
+		for (NativeSpriteBackend s : list) {
+			if (mSpriteList.contains(s, true) &&
+					!mRunnable.contains(s, true))
+				mRunnable.add(s);
+		}
+		return this;
+	}
+
+	public NSpriter removeRunnableLayer (NativeSpriteBackend... list) {
+		for (NativeSpriteBackend s : list)
+			mRunnable.removeValue(s, true);
+		return this;
+	}
+
+	public void clearRunnable () {
+		mRunnable.clear();
+	}
+
+	public Array<NativeSpriteBackend> getRunnableLayer () {
+		return mRunnable;
+	}
+
+	public void setFrameDuration (float frameDuration) {
+		for (NativeSpriteBackend s : mRunnable)
+			((Animator) s).setFrameDuration(frameDuration);
+	}
+
+	public void start () {
+		RUN = true;
+		for (NativeSpriteBackend s : mRunnable)
+			((Animator) s).start();
+	}
+
+	public void start (float frameDuration) {
+		RUN = true;
+		for (NativeSpriteBackend s : mRunnable)
+			((Animator) s).start(frameDuration);
+	}
+
+	@Override
+	public void start (float frameDuration, int playMode) {
+		RUN = true;
+		for (NativeSpriteBackend s : mRunnable)
+			((Animator) s).start(frameDuration, playMode);
+	}
+
+	@Override
+	public void pause () {
+		RUN = false;
+	}
+
+	@Override
+	public boolean isRunning () {
+		return RUN;
+	}
+
+	public void stop () {
+		RUN = false;
+		resetFrame();
+	}
+
+	public void switchState () {
+		RUN = !RUN;
+	}
+
+	public void resetFrame () {
+		for (NativeSpriteBackend s : mRunnable)
+			((Animator) s).resetFrame();
+	}
+
+	public void resetFrame (NativeSpriteBackend... layers) {
+		for (NativeSpriteBackend s : layers)
+			((Animator) s).resetFrame();
+	}
+
+	public void update (float delta) {
+		if (!RUN) {
+			mUpdater.update(this, delta);
+			return;
+		}
+
+		for (NativeSpriteBackend s : mRunnable)
+			((Animator) s).update(delta);
+		mUpdater.update(this, delta);
+	}
+
+	public void postUpdater (Updater updater) {
+		this.mUpdater = updater;
+	}
+
+	public void noUpdater () {
+		this.mUpdater = Updater.instance;
+	}
+
+	/********************************************************
+	 * 
+	 ********************************************************/
+
+	@Override
+	public void reset () {
+		stop();
+
+		setPosition(0, 0);
+		setSize(0, 0);
+		setOrigin(0, 0);
+		setRotation(0);
+		setScale(1);
+	}
+
+	@Override
+	public void dispose () {
+		super.dispose();
+
+		mSpriteList.clear();
+		mScaler.clear();
+		mDrawable.clear();
+		mRunnable.clear();
+		mOriginSprite = null;
+	}
+
+	private void refresh () {
+		Values<Scaler> list = mScaler.values();
+		for (Scaler s : list)
+			s.apply();
+	}
+
+	class Scaler {
+		float xRatio;
+		float yRatio;
+		float widthRatio;
+		float heightRatio;
+
+		NativeSpriteBackend sprite;
+
+		void apply () {
+			sprite.setBounds(x + xRatio * w, y + yRatio * h, widthRatio * w, heightRatio * h);
+		}
+
+		String info () {
+			return "xRatio : " + xRatio + " " + "yRatio : " + yRatio + " " + "widthRatio : "
+					+ widthRatio + " "
+					+ "heightRatio : " + heightRatio + " ";
+		}
 	}
 
 }
