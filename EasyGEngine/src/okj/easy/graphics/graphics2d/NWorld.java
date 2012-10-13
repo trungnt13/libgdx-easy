@@ -21,7 +21,6 @@ public final class NWorld {
 
 	private final Pool<NSprite> mNSpritePool;
 	private final Pool<NSpriteA> mNSpriteAPool;
-	private final Pool<NSpriter> mNSpriterPool;
 
 	private CollideListener collideListener;
 
@@ -37,7 +36,7 @@ public final class NWorld {
 	// count the current number of sprite owning that sprite def
 	private final ObjectMap<String, NSpriteDef> mSpriteDefMap = new ObjectMap<String, NSpriteDef>(3);
 
-	public NWorld(int pool_Size_Of_NSprite, int pool_Size_Of_NSpriteA, int pool_Size_Of_Spriter) {
+	public NWorld(int pool_Size_Of_NSprite, int pool_Size_Of_NSpriteA) {
 		address = CreateWorld();
 
 		mNSpritePool = new Pool<NSprite>(pool_Size_Of_NSprite, new Factory<NSprite>() {
@@ -64,19 +63,6 @@ public final class NWorld {
 			}
 		});
 
-		mNSpriterPool = new Pool<NSpriter>(pool_Size_Of_Spriter, new Factory<NSpriter>() {
-			@Override
-			public NSpriter newObject () {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public NSpriter newObject (Object... objects) {
-				return null;
-			}
-
-		});
 		mMainManager = newManager();
 		mManagerMap.put(mMainManager.address, mMainManager);
 	}
@@ -227,6 +213,12 @@ public final class NWorld {
 		NManager manager = new NManager(CreateManager(), this);
 		mManagerMap.put(manager.address, manager);
 		return manager;
+	}
+
+	public NSpriter newSpriter () {
+		NSpriter spriter = new NSpriter(CreateManager(), this);
+		mManagerMap.put(spriter.address, spriter);
+		return spriter;
 	}
 
 	/**

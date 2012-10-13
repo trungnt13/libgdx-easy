@@ -50,6 +50,11 @@ public class NManager implements Disposable {
 		return world.newSprite(this);
 	}
 
+	/** Create new sprite which is manage by this manager */
+	public NSpriteA newSpriteA () {
+		return world.newSpriteA(this);
+	}
+
 	/**
 	 * 1. Check sprite is pooled ,or alread contained
 	 * 2. unmanage sprite from its manager

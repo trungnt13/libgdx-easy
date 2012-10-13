@@ -69,10 +69,6 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	/********************************************************
 	 * NManager method
 	 ********************************************************/
-	@Deprecated
-	public NSprite newSprite () {
-		return null;
-	}
 
 	@Override
 	public void manage (NativeSpriteBackend sprite) {
@@ -99,7 +95,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		super.unmanage(sprite);
 	}
 
-	@Override
+	@Deprecated
 	public void clear () {
 		super.clear();
 	}
@@ -116,7 +112,8 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		if (mScaler.get(sprite) == null) {
 			scale = new Scaler();
 			mScaler.put(sprite, scale);
-		}
+		} else
+			scale = mScaler.get(sprite);
 
 		scale.sprite = sprite;
 		scale.xRatio = x / mOriginWidth;
@@ -127,8 +124,8 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		return scale;
 	}
 
-	public NativeSpriteBackend newOriginLayer (float originWidth, float originHeight) {
-		NativeSpriteBackend sprite = world.newSprite(this);
+	public void bindOriginLayer (NativeSpriteBackend sprite, float originWidth, float originHeight) {
+		manage(sprite);
 
 		w = mOriginWidth = originWidth;
 		h = mOriginHeight = originHeight;
@@ -139,11 +136,24 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		calculateScaler(sprite, 0, 0, w, h);
 
 		refresh();
-		return sprite;
 	}
 
-	public NativeSpriteBackend newLayer (float x, float y, float width, float height) {
-		final NativeSpriteBackend sprite = world.newSprite(this);
+	public void bindOriginLayer (NativeSpriteBackend sprite) {
+		manage(sprite);
+
+		w = mOriginWidth = (sprite.getWidth() == 0 ? 1 : sprite.getWidth());
+		h = mOriginHeight = (sprite.getHeight() == 0 ? 1 : sprite.getHeight());
+		this.x = 0;
+		this.y = 0;
+		mOriginSprite = sprite;
+
+		calculateScaler(sprite, 0, 0, w, h);
+
+		refresh();
+	}
+
+	public void bindLayer (NativeSpriteBackend sprite, float x, float y, float width, float height) {
+		manage(sprite);
 
 		if (mSpriteList.size == 0) {
 			w = mOriginWidth = sprite.getWidth();
@@ -156,18 +166,29 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			final Scaler scale = calculateScaler(sprite, x, y, width, height);
 			scale.apply();
 		}
-
-		return sprite;
 	}
 
-	public NativeSpriteBackend newLayer (int id, float x, float y, float width, float height) {
+	public void bindLayer (NativeSpriteBackend sprite) {
+		manage(sprite);
+
+		if (mSpriteList.size == 0) {
+			bindOriginLayer(sprite);
+		} else {
+			final Scaler scale = calculateScaler(sprite, sprite.getX(), sprite.getY(),
+					sprite.getWidth(), sprite.getHeight());
+			scale.apply();
+		}
+	}
+
+	public void bindLayer (NativeSpriteBackend sprite, int id, float x, float y, float width,
+			float height) {
 		if (id > mSpriteList.size)
-			return null;
+			return;
 		else if (id == mSpriteList.size) {
-			return newLayer(x, y, width, height);
+			bindLayer(sprite, x, y, width, height);
 		}
 
-		NativeSpriteBackend sprite = world.newSprite(this);
+		manage(sprite);
 		mScaler.remove(mSpriteList.removeIndex(id));
 
 		if (id == 0) {
@@ -182,7 +203,38 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			final Scaler scale = calculateScaler(sprite, x, y, width, height);
 			scale.apply();
 		}
-		return sprite;
+	}
+
+	public void apply (NativeSpriteBackend sprite, float x, float y, float width, float height) {
+		if (!mSpriteList.contains(sprite, true))
+			return;
+
+		if (sprite != mOriginSprite) {
+			Scaler scale = mScaler.get(sprite);
+			scale.xRatio = x / mOriginWidth;
+			scale.yRatio = y / mOriginHeight;
+			scale.widthRatio = width / mOriginWidth;
+			scale.heightRatio = height / mOriginHeight;
+
+			scale.apply();
+		} else {
+			setSize(width, height);
+		}
+	}
+
+	public void apply (NativeSpriteBackend sprite, float width, float height) {
+		if (!mSpriteList.contains(sprite, true))
+			return;
+
+		if (sprite != mOriginSprite) {
+			Scaler scale = mScaler.get(sprite);
+			scale.widthRatio = width / mOriginWidth;
+			scale.heightRatio = height / mOriginHeight;
+
+			scale.apply();
+		} else {
+			setSize(width, height);
+		}
 	}
 
 	public NativeSpriteBackend getSprite (int id) {
@@ -528,6 +580,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	 ********************************************************/
 
 	public NSpriter setDrawableLayer (NativeSpriteBackend... list) {
+		mDrawable.clear();
 		for (NativeSpriteBackend s : list) {
 			if (mSpriteList.contains(s, true) &&
 					!mDrawable.contains(s, true))
@@ -567,6 +620,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	 ********************************************************/
 
 	public NSpriter setRunnableLayer (NativeSpriteBackend... list) {
+		mRunnable.clear();
 		for (NativeSpriteBackend s : list) {
 			if (mSpriteList.contains(s, true) &&
 					!mRunnable.contains(s, true))
@@ -643,13 +697,8 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	}
 
 	public void update (float delta) {
-		if (!RUN) {
-			mUpdater.update(this, delta);
-			return;
-		}
-
 		for (int i = 0; i < mSpriteList.size; i++)
-			((Animator) mSpriteList.get(i)).update(delta);
+			mSpriteList.get(i).update(delta);
 		mUpdater.update(this, delta);
 	}
 
@@ -669,18 +718,16 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	public void reset () {
 		stop();
 
-		setPosition(0, 0);
-		setSize(0, 0);
-		setOrigin(0, 0);
-		setRotation(0);
-		setScale(1);
+		clear();
+		mScaler.clear();
+		mDrawable.clear();
+		mRunnable.clear();
 	}
 
 	@Override
 	public void dispose () {
 		super.dispose();
 
-		mSpriteList.clear();
 		mScaler.clear();
 		mDrawable.clear();
 		mRunnable.clear();
