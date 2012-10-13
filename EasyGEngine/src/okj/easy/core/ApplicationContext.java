@@ -1,8 +1,8 @@
 package okj.easy.core;
 
 import okj.easy.core.Timer.Task;
-import okj.easy.core.utils.IActivityHandler;
 
+import org.ege.utils.IActivityHandler;
 import org.ege.widget.StyleAtlas;
 
 import com.badlogic.gdx.Gdx;

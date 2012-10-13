@@ -24,7 +24,6 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 
 	// =========================================
 	// sprite params
-	private final Array<NativeSpriteBackend> mSpriteList;
 	private final IdentityMap<NativeSpriteBackend, Scaler> mScaler;
 
 	// ========================================
@@ -43,11 +42,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	private float mOriginWidth;
 	private float mOriginHeight;
 
-	// --------------------------------------------------
-
-	private int idx = 0;
-
-	// --------------------------------------------------
+	// =======================================
 
 	private float x;
 	private float y;
@@ -65,11 +60,48 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	NSpriter(long address, NWorld world) {
 		super(address, world);
 
-		mSpriteList = new Array<NativeSpriteBackend>(13);
 		mScaler = new IdentityMap<NativeSpriteBackend, NSpriter.Scaler>(13);
 
 		mDrawable = new Array<NativeSpriteBackend>(13);
 		mRunnable = new Array<NativeSpriteBackend>(13);
+	}
+
+	/********************************************************
+	 * NManager method
+	 ********************************************************/
+	@Deprecated
+	public NSprite newSprite () {
+		return null;
+	}
+
+	@Override
+	public void manage (NativeSpriteBackend sprite) {
+		super.manage(sprite);
+	}
+
+	@Override
+	public void remove (NSprite sprite) {
+		super.remove(sprite);
+	}
+
+	@Override
+	public int size () {
+		return super.size();
+	}
+
+	@Override
+	public boolean contain (NSprite sprite) {
+		return super.contain(sprite);
+	}
+
+	@Override
+	void unmanage (NativeSpriteBackend sprite) {
+		super.unmanage(sprite);
+	}
+
+	@Override
+	public void clear () {
+		super.clear();
 	}
 
 	/********************************************************
@@ -95,20 +127,24 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		return scale;
 	}
 
-	public void bindOriginLayer (NativeSpriteBackend sprite) {
-		w = mOriginWidth = sprite.getWidth();
-		h = mOriginHeight = sprite.getHeight();
-		this.x = sprite.getX();
-		this.y = sprite.getY();
+	public NativeSpriteBackend newOriginLayer (float originWidth, float originHeight) {
+		NativeSpriteBackend sprite = world.newSprite(this);
+
+		w = mOriginWidth = originWidth;
+		h = mOriginHeight = originHeight;
+		this.x = 0;
+		this.y = 0;
 		mOriginSprite = sprite;
 
 		calculateScaler(sprite, 0, 0, w, h);
-		mSpriteList.add(sprite);
 
 		refresh();
+		return sprite;
 	}
 
-	public void bindLayer (float x, float y, float width, float height, NativeSpriteBackend sprite) {
+	public NativeSpriteBackend newLayer (float x, float y, float width, float height) {
+		final NativeSpriteBackend sprite = world.newSprite(this);
+
 		if (mSpriteList.size == 0) {
 			w = mOriginWidth = sprite.getWidth();
 			h = mOriginHeight = sprite.getHeight();
@@ -121,33 +157,18 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			scale.apply();
 		}
 
-		mSpriteList.add(sprite);
+		return sprite;
 	}
 
-	public NSpriter bindLayer (float[] attributes, NativeSpriteBackend... sprites) {
-		if (attributes.length / 4 != sprites.length)
-			throw new EasyGEngineRuntimeException(
-					"Attributes length must be equal regions.length * 4");
-		int i = 0;
-		for (NativeSpriteBackend sprite : sprites) {
-			idx = i * 4;
-			bindLayer(attributes[idx++], attributes[idx++], attributes[idx++], attributes[idx++],
-					sprite);
-			++i;
-		}
-		return this;
-	}
-
-	public void bindLayer (int id, float x, float y, float width, float height,
-			NativeSpriteBackend sprite) {
+	public NativeSpriteBackend newLayer (int id, float x, float y, float width, float height) {
 		if (id > mSpriteList.size)
-			return;
+			return null;
 		else if (id == mSpriteList.size) {
-			bindLayer(x, y, width, height, sprite);
-			return;
+			return newLayer(x, y, width, height);
 		}
+
+		NativeSpriteBackend sprite = world.newSprite(this);
 		mScaler.remove(mSpriteList.removeIndex(id));
-		mSpriteList.insert(id, sprite);
 
 		if (id == 0) {
 			w = mOriginWidth = sprite.getWidth();
@@ -161,6 +182,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			final Scaler scale = calculateScaler(sprite, x, y, width, height);
 			scale.apply();
 		}
+		return sprite;
 	}
 
 	public NativeSpriteBackend getSprite (int id) {
@@ -502,7 +524,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	}
 
 	/********************************************************
-	 * 
+	 * Drawing method
 	 ********************************************************/
 
 	public NSpriter setDrawableLayer (NativeSpriteBackend... list) {
@@ -541,7 +563,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	}
 
 	/********************************************************
-	 * 
+	 * Animator method
 	 ********************************************************/
 
 	public NSpriter setRunnableLayer (NativeSpriteBackend... list) {
@@ -626,8 +648,8 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			return;
 		}
 
-		for (NativeSpriteBackend s : mRunnable)
-			((Animator) s).update(delta);
+		for (int i = 0; i < mSpriteList.size; i++)
+			((Animator) mSpriteList.get(i)).update(delta);
 		mUpdater.update(this, delta);
 	}
 

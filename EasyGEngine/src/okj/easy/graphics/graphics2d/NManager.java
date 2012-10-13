@@ -15,12 +15,12 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public class NManager implements Disposable {
 	public final long address;
-	private final NWorld world;
+	protected final NWorld world;
 
 	// =========================================
 	// sprite params
 
-	private final Array<NativeSpriteBackend> mSpriteList = new Array<NativeSpriteBackend>(13);
+	final Array<NativeSpriteBackend> mSpriteList = new Array<NativeSpriteBackend>(13);
 
 	NManager(long address, NWorld world) {
 		this.address = address;

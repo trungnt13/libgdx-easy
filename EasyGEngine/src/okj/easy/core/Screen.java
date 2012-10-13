@@ -2,10 +2,10 @@ package okj.easy.core;
 
 import okj.easy.core.Timer.Task;
 import okj.easy.core.utils.Bridge;
-import okj.easy.core.utils.IActivityHandler;
 import okj.easy.screen.SafeLoader;
 
 import org.ege.utils.E;
+import org.ege.utils.IActivityHandler;
 import org.ege.widget.Layout;
 import org.ege.widget.StyleAtlas;
 
