@@ -35,6 +35,9 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 		this.world = world;
 	}
 
+	// =======================================
+	// sprite def
+
 	public void noSpriteDef () {
 		if (this.def != null)
 			this.def.mSpriteCount--;
@@ -68,12 +71,23 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 		return def;
 	}
 
+	// =======================================
+	// manager
+
 	public void setManager (NManager manager) {
 		manager.manage(this);
 	}
 
 	public NManager getManager () {
 		return manager;
+	}
+
+	// ========================================
+	// utils
+
+	/** If true manager will calculate collision for this sprite */
+	public void setCollision (boolean isCollision) {
+		setCollision(address, isCollision);
 	}
 
 	/** this is not safe method just for testing */
@@ -298,4 +312,6 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	private final native void setSpriteDef (long address, long spritedef);
 
 	private final native void noSpriteDef (long address);
+
+	private final native void setCollision (long address, boolean isCollision);
 }

@@ -24,7 +24,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 
 	// =========================================
 	// sprite params
-	private final IdentityMap<NativeSpriteBackend, Scaler> mScaler;
+	private final IdentityMap<NativeSpriteBackend, NScaler> mScaler;
 
 	// ========================================
 	// Config
@@ -57,10 +57,10 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	 * 
 	 * @param limit
 	 */
-	NSpriter(long address, NWorld world) {
+	protected NSpriter(long address, NWorld world) {
 		super(address, world);
 
-		mScaler = new IdentityMap<NativeSpriteBackend, NSpriter.Scaler>(13);
+		mScaler = new IdentityMap<NativeSpriteBackend, NSpriter.NScaler>(13);
 
 		mDrawable = new Array<NativeSpriteBackend>(13);
 		mRunnable = new Array<NativeSpriteBackend>(13);
@@ -104,13 +104,13 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	 * Layer manage
 	 ********************************************************/
 
-	private Scaler calculateScaler (NativeSpriteBackend sprite, float x, float y,
+	private NScaler calculateScaler (NativeSpriteBackend sprite, float x, float y,
 			float width,
 			float height) {
 
-		Scaler scale = null;
+		NScaler scale = null;
 		if (mScaler.get(sprite) == null) {
-			scale = new Scaler();
+			scale = new NScaler();
 			mScaler.put(sprite, scale);
 		} else
 			scale = mScaler.get(sprite);
@@ -163,7 +163,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			mOriginSprite = sprite;
 			calculateScaler(sprite, 0, 0, w, h);
 		} else {
-			final Scaler scale = calculateScaler(sprite, x, y, width, height);
+			final NScaler scale = calculateScaler(sprite, x, y, width, height);
 			scale.apply();
 		}
 	}
@@ -174,7 +174,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		if (mSpriteList.size == 0) {
 			bindOriginLayer(sprite);
 		} else {
-			final Scaler scale = calculateScaler(sprite, sprite.getX(), sprite.getY(),
+			final NScaler scale = calculateScaler(sprite, sprite.getX(), sprite.getY(),
 					sprite.getWidth(), sprite.getHeight());
 			scale.apply();
 		}
@@ -200,7 +200,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			calculateScaler(sprite, 0, 0, w, h);
 			refresh();
 		} else {
-			final Scaler scale = calculateScaler(sprite, x, y, width, height);
+			final NScaler scale = calculateScaler(sprite, x, y, width, height);
 			scale.apply();
 		}
 	}
@@ -210,7 +210,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			return;
 
 		if (sprite != mOriginSprite) {
-			Scaler scale = mScaler.get(sprite);
+			NScaler scale = mScaler.get(sprite);
 			scale.xRatio = x / mOriginWidth;
 			scale.yRatio = y / mOriginHeight;
 			scale.widthRatio = width / mOriginWidth;
@@ -227,7 +227,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			return;
 
 		if (sprite != mOriginSprite) {
-			Scaler scale = mScaler.get(sprite);
+			NScaler scale = mScaler.get(sprite);
 			scale.widthRatio = width / mOriginWidth;
 			scale.heightRatio = height / mOriginHeight;
 
@@ -605,8 +605,9 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	}
 
 	public void draw (SpriteBatch batch) {
-		for (NativeSpriteBackend s : mDrawable)
+		for (NativeSpriteBackend s : mDrawable) {
 			s.draw(batch);
+		}
 	}
 
 	@Override
@@ -735,12 +736,12 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	}
 
 	private void refresh () {
-		Values<Scaler> list = mScaler.values();
-		for (Scaler s : list)
+		Values<NScaler> list = mScaler.values();
+		for (NScaler s : list)
 			s.apply();
 	}
 
-	class Scaler {
+	class NScaler {
 		float xRatio;
 		float yRatio;
 		float widthRatio;

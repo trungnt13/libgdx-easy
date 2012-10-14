@@ -1,5 +1,7 @@
 package okj.easy.core;
 
+import okj.easy.graphics.graphics2d.NWorld;
+
 import org.ege.widget.Layout;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,13 +15,14 @@ import com.badlogic.gdx.math.Matrix4;
  * @Author: TrungNT
  */
 public class eAdmin {
-	public static GameCore	egame;
-	public static eInput	einput;
-	public static eAudio	eaudio;
-	public static eGraphics	egraphics;
-	public static eContext	econtext;
+	public static GameCore egame;
+	public static eInput einput;
+	public static eAudio eaudio;
+	public static eGraphics egraphics;
+	public static eContext econtext;
+	public static NWorld eworld;
 
-	private eAdmin () {
+	private eAdmin() {
 
 	}
 

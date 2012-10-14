@@ -56,7 +56,7 @@ public class NSprite extends NativeSpriteBackend {
 	 * Constructor
 	 ************************************************************/
 
-	NSprite(long address, NWorld world) {
+	protected NSprite(long address, NWorld world) {
 		super(address, world);
 
 		setColor(1, 1, 1, 1);
@@ -583,6 +583,7 @@ public class NSprite extends NativeSpriteBackend {
 		vertices[Y4] = 0;
 
 		setColor(1, 1, 1, 1);
+		noUpdater();
 	}
 
 }

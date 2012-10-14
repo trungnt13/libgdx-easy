@@ -3,6 +3,7 @@ package okj.easy.core;
 import okj.easy.core.Timer.Task;
 import okj.easy.core.utils.Bridge;
 import okj.easy.core.utils.BridgePool;
+import okj.easy.graphics.graphics2d.NWorld;
 import okj.easy.screen.LoadingScreen;
 import okj.easy.screen.SafeLoader;
 
@@ -32,17 +33,17 @@ public abstract class GameCore implements ApplicationListener {
 	/**
 	 * This screen is the main screen which is visible all time
 	 */
-	protected Screen					screen;
+	protected Screen screen;
 	/**
 	 * when the game is call onPause from activity core save it current screen
 	 * to this reference
 	 */
-	private Screen						mSavedScreen;
+	private Screen mSavedScreen;
 
 	/**
 	 * The main loading screen use to load and reload openGL context
 	 */
-	private LoadingScreen				mStartScreen;
+	private LoadingScreen mStartScreen;
 	/**
 	 * This flag show that the game core is come back from pause and now it is
 	 * resume
@@ -51,24 +52,24 @@ public abstract class GameCore implements ApplicationListener {
 	 * @True if is on from running turn to onPause
 	 * @False if is on from onPause back to onResume
 	 */
-	private boolean						isStarted	= false;
+	private boolean isStarted = false;
 
-	private Class<? extends SafeLoader>	mDefaultLoader;
+	private Class<? extends SafeLoader> mDefaultLoader;
 
 	// ==============================================
 	// Utils manage
 
-	private final BridgePool			bridgePool;
+	private final BridgePool bridgePool;
 
-	final IActivityHandler				mActivity;
+	final IActivityHandler mActivity;
 
 	// ===============================================
 	// scheduler of code
 
-	final Timer							mSchedulerTimer;
-	final ThreadManager					mThreadManager;
+	final Timer mSchedulerTimer;
+	final ThreadManager mThreadManager;
 
-	public GameCore (IActivityHandler activity) {
+	public GameCore(IActivityHandler activity) {
 		this.mActivity = activity;
 
 		bridgePool = new BridgePool(13);
@@ -78,7 +79,7 @@ public abstract class GameCore implements ApplicationListener {
 		mThreadManager = new ThreadManager();
 	}
 
-	public GameCore () {
+	public GameCore() {
 		this(new IDesktopHandler());
 	}
 
@@ -117,6 +118,10 @@ public abstract class GameCore implements ApplicationListener {
 		onGameConfig();
 	}
 
+	protected void CreateNativeWorld (int size_of_NSprite, int size_of_NSpriteA) {
+		eAdmin.eworld = new NWorld(size_of_NSprite, size_of_NSpriteA);
+	}
+
 	@Override
 	public void resize (int width, int height) {
 		eAdmin.egraphics.resolve(width, height);
@@ -125,7 +130,7 @@ public abstract class GameCore implements ApplicationListener {
 		onGameChanged(width, height);
 	}
 
-	private float	delta;
+	private float delta;
 
 	@Override
 	public void render () {
@@ -231,7 +236,7 @@ public abstract class GameCore implements ApplicationListener {
 	/**********************************************
 	 * 
 	 **********************************************/
-	private boolean	isLoading	= false;
+	private boolean isLoading = false;
 
 	protected void setStartScreen (LoadingScreen loadScreen) {
 		if (isStarted)

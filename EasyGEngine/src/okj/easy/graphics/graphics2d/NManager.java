@@ -55,6 +55,14 @@ public class NManager implements Disposable {
 		return world.newSpriteA(this);
 	}
 
+	public <T extends NSprite> T newSprite (Class<T> type) {
+		return world.newSprite(type, this);
+	}
+
+	public <T extends NSpriteA> T newSpriteA (Class<T> type) {
+		return world.newSpriteA(type, this);
+	}
+
 	/**
 	 * 1. Check sprite is pooled ,or alread contained
 	 * 2. unmanage sprite from its manager

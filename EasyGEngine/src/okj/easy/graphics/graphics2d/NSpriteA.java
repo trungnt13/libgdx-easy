@@ -75,7 +75,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	 * Constructor
 	 ************************************************************/
 
-	NSpriteA(long address, NWorld world) {
+	protected NSpriteA(long address, NWorld world) {
 		super(address, world);
 
 		setColor(1, 1, 1, 1);
@@ -624,7 +624,9 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 		vertices[Y4] = 0;
 
 		setColor(1, 1, 1, 1);
+		
 		stop();
+		noUpdater();
 	}
 
 }

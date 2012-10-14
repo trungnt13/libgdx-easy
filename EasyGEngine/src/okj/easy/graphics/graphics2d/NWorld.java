@@ -1,9 +1,15 @@
 package okj.easy.graphics.graphics2d;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import org.ege.utils.Factory;
 import org.ege.utils.Pool;
 
+import com.badlogic.gdx.utils.D;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.LongMap;
+import com.badlogic.gdx.utils.LongMap.Values;
 import com.badlogic.gdx.utils.ObjectMap;
 
 /**
@@ -13,14 +19,14 @@ import com.badlogic.gdx.utils.ObjectMap;
  * Created on: Oct 7, 2012
  * Author: Trung
  */
-public final class NWorld {
+public final class NWorld implements Disposable {
 	private long address;
 
 	// ===========================================
 	private final LongMap<NativeSpriteBackend> mSpriteMap = new LongMap<NativeSpriteBackend>(100);
 
-	private final Pool<NSprite> mNSpritePool;
-	private final Pool<NSpriteA> mNSpriteAPool;
+	private final ObjectMap<Class<?>, Pool<?>> mSpritePoolMap = new ObjectMap<Class<?>, Pool<?>>(1);
+	private final ObjectMap<Class<?>, Pool<?>> mSpriteAPoolMap = new ObjectMap<Class<?>, Pool<?>>(1);
 
 	private CollideListener collideListener;
 
@@ -39,7 +45,8 @@ public final class NWorld {
 	public NWorld(int pool_Size_Of_NSprite, int pool_Size_Of_NSpriteA) {
 		address = CreateWorld();
 
-		mNSpritePool = new Pool<NSprite>(pool_Size_Of_NSprite, new Factory<NSprite>() {
+		// create default sprite pool
+		Pool<NSprite> sprite = new Pool<NSprite>(pool_Size_Of_NSprite, new Factory<NSprite>() {
 			@Override
 			public NSprite newObject () {
 				return createNSprite();
@@ -50,8 +57,10 @@ public final class NWorld {
 				return null;
 			}
 		});
+		mSpritePoolMap.put(NSprite.class, sprite);
 
-		mNSpriteAPool = new Pool<NSpriteA>(pool_Size_Of_NSpriteA, new Factory<NSpriteA>() {
+		// create default spriteA pool
+		Pool<NSpriteA> spriteA = new Pool<NSpriteA>(pool_Size_Of_NSpriteA, new Factory<NSpriteA>() {
 			@Override
 			public NSpriteA newObject () {
 				return createNSpriteA();
@@ -62,13 +71,23 @@ public final class NWorld {
 				return null;
 			}
 		});
+		mSpriteAPoolMap.put(NSpriteA.class, spriteA);
 
+		// create default manager
 		mMainManager = newManager();
 		mManagerMap.put(mMainManager.address, mMainManager);
 	}
 
 	// =====================================
 	// world manager
+
+	@Override
+	public void dispose () {
+		Values<NManager> val = mManagerMap.values();
+		for (NManager m : val)
+			m.dispose();
+		DisposeWorld();
+	}
 
 	private final native long CreateWorld ();
 
@@ -89,12 +108,28 @@ public final class NWorld {
 	/************************************************************
 	 * Sprite associate method
 	 ************************************************************/
+	// =====================================
+	// NSPrite vs NSpriteA pool manager
+
+	public <T extends NSprite> Pool<T> makeNSpritePool (Class<T> type, Factory<T> factory,
+			int maxSize) {
+		final Pool<T> pool = new Pool<T>(maxSize, factory);
+		mSpritePoolMap.put(type, pool);
+		return pool;
+	}
+
+	public <T extends NSpriteA> Pool<T> makeNSpriteAPool (Class<T> type, Factory<T> factory,
+			int maxSize) {
+		final Pool<T> pool = new Pool<T>(maxSize, factory);
+		mSpriteAPoolMap.put(type, pool);
+		return pool;
+	}
 
 	// =====================================
 	// NSprite
 
 	public NSprite newSprite () {
-		NSprite sprite = mNSpritePool.obtain();
+		NSprite sprite = (NSprite) mSpritePoolMap.get(NSprite.class).obtain();
 		sprite.isPooled = false;
 		if (sprite.manager == null)
 			mMainManager.manage(sprite);
@@ -103,7 +138,7 @@ public final class NWorld {
 	}
 
 	public NSprite newSprite (NManager manager) {
-		NSprite sprite = mNSpritePool.obtain();
+		NSprite sprite = (NSprite) mSpritePoolMap.get(NSprite.class).obtain();
 		sprite.isPooled = false;
 		manager.manage(sprite);
 		mSpriteMap.put(sprite.address, sprite);
@@ -115,7 +150,7 @@ public final class NWorld {
 		if (manager == null)
 			return null;
 
-		NSprite sprite = mNSpritePool.obtain();
+		NSprite sprite = (NSprite) mSpritePoolMap.get(NSprite.class).obtain();
 		sprite.isPooled = false;
 		manager.manage(sprite);
 		mSpriteMap.put(sprite.address, sprite);
@@ -126,7 +161,7 @@ public final class NWorld {
 	// NSpriteA
 
 	public NSpriteA newSpriteA () {
-		NSpriteA sprite = mNSpriteAPool.obtain();
+		NSpriteA sprite = (NSpriteA) mSpriteAPoolMap.get(NSpriteA.class).obtain();
 		sprite.isPooled = false;
 		if (sprite.manager == null)
 			mMainManager.manage(sprite);
@@ -135,7 +170,7 @@ public final class NWorld {
 	}
 
 	public NSpriteA newSpriteA (NManager manager) {
-		NSpriteA sprite = mNSpriteAPool.obtain();
+		NSpriteA sprite = (NSpriteA) mSpriteAPoolMap.get(NSpriteA.class).obtain();
 		sprite.isPooled = false;
 		manager.manage(sprite);
 		mSpriteMap.put(sprite.address, sprite);
@@ -147,7 +182,68 @@ public final class NWorld {
 		if (manager == null)
 			return null;
 
-		NSpriteA sprite = mNSpriteAPool.obtain();
+		NSpriteA sprite = (NSpriteA) mSpriteAPoolMap.get(NSpriteA.class).obtain();
+		sprite.isPooled = false;
+		manager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	// ===================================
+	// Sprite Customize
+
+	public <T extends NSprite> T newSprite (Class<T> type) {
+		T sprite = (T) mSpritePoolMap.get(type).obtain();
+		sprite.isPooled = false;
+		if (sprite.manager == null)
+			mMainManager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	public <T extends NSprite> T newSprite (Class<T> type, NManager manager) {
+		T sprite = (T) mSpritePoolMap.get(type).obtain();
+		sprite.isPooled = false;
+		manager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	public <T extends NSprite> T newSprite (Class<T> type, long managerAddress) {
+		NManager manager = mManagerMap.get(managerAddress);
+		if (manager == null)
+			return null;
+
+		T sprite = (T) mSpritePoolMap.get(type).obtain();
+		sprite.isPooled = false;
+		manager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	public <T extends NSpriteA> T newSpriteA (Class<T> type) {
+		T sprite = (T) mSpriteAPoolMap.get(type).obtain();
+		sprite.isPooled = false;
+		if (sprite.manager == null)
+			mMainManager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	public <T extends NSpriteA> T newSpriteA (Class<T> type, NManager manager) {
+		T sprite = (T) mSpriteAPoolMap.get(type).obtain();
+		sprite.isPooled = false;
+		manager.manage(sprite);
+		mSpriteMap.put(sprite.address, sprite);
+		return sprite;
+	}
+
+	public <T extends NSpriteA> T newSpriteA (Class<T> type, long managerAddress) {
+		NManager manager = mManagerMap.get(managerAddress);
+		if (manager == null)
+			return null;
+
+		T sprite = (T) mSpriteAPoolMap.get(type).obtain();
 		sprite.isPooled = false;
 		manager.manage(sprite);
 		mSpriteMap.put(sprite.address, sprite);
@@ -159,15 +255,11 @@ public final class NWorld {
 
 	private final NSprite createNSprite () {
 		final NSprite sprite = new NSprite(CreateNSprite(), this);
-		sprite.isPooled = false;
-		mMainManager.manage(sprite);
 		return sprite;
 	}
 
 	private final NSpriteA createNSpriteA () {
 		final NSpriteA sprite = new NSpriteA(CreateNSprite(), this);
-		sprite.isPooled = false;
-		mMainManager.manage(sprite);
 		return sprite;
 	}
 
@@ -177,9 +269,13 @@ public final class NWorld {
 	 * Remove sprite from manage map , and reset it put it to the pool {@link NSprite}
 	 */
 	void poolSprite (NativeSpriteBackend sprite) {
-		if (sprite instanceof NSprite)
-			mNSpritePool.freeNoReset((NSprite) sprite);
-
+		if (sprite instanceof NSprite) {
+			final Pool pool = mSpritePoolMap.get(sprite.getClass());
+			pool.freeNoReset(sprite);
+		} else if (sprite instanceof NSpriteA) {
+			final Pool pool = mSpriteAPoolMap.get(sprite.getClass());
+			pool.freeNoReset(sprite);
+		}
 		mSpriteMap.remove(sprite.address);
 	}
 
@@ -190,8 +286,14 @@ public final class NWorld {
 		if (!sprite.isPooled())
 			mSpriteMap.remove(sprite.address);
 		else {
-			if (sprite instanceof NSprite)
-				mNSpritePool.delete((NSprite) sprite);
+			if (sprite instanceof NSprite) {
+				final Pool pool = mSpritePoolMap.get(sprite.getClass());
+				pool.delete(sprite);
+			} else if (sprite instanceof NSpriteA) {
+				final Pool pool = mSpriteAPoolMap.get(sprite.getClass());
+				pool.delete(sprite);
+			}
+
 		}
 	}
 
@@ -203,7 +305,7 @@ public final class NWorld {
 	 * 
 	 * @return native address of sprite
 	 */
-	private final native long CreateNSprite ();
+	public final native long CreateNSprite ();
 
 	/************************************************************
 	 * Manager associate method
@@ -219,6 +321,29 @@ public final class NWorld {
 		NSpriter spriter = new NSpriter(CreateManager(), this);
 		mManagerMap.put(spriter.address, spriter);
 		return spriter;
+	}
+
+	public <T extends NSpriter> T newSpriter (Class<T> type) {
+		T t = null;
+		try {
+			Constructor<T> cons = type.getDeclaredConstructor(long.class, NWorld.class);
+			cons.setAccessible(true);
+			t = cons.newInstance(CreateManager(), this);
+			mManagerMap.put(t.address, t);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return t;
 	}
 
 	/**
@@ -335,4 +460,5 @@ public final class NWorld {
 	private final native void processCollision (long manager1, long manager2);
 
 	private final native void processCollision (long manager);
+
 }
