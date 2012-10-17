@@ -76,11 +76,13 @@ namespace Entity2D {
 		//	[0,1,2,3] = [x,y,width,height]
 		float *defBounding;
 
+		// if true collision of this sprite will be check
+		int isCollide;
 	public:
 		//	====================================
 		//	params
 		int dirty;
-
+		
 		Manager *parent;
 		SpriteDef *bounding;
 
@@ -112,9 +114,12 @@ namespace Entity2D {
 		void setScale(float) ;
 		void setScale(float,float)  ;
 		void scale(float) ;
-		
+		void setCollision(bool);
+
 		//	======================================
 		//	getter
+
+		bool isCollision();
 
 		void getVertices(float*) ;
 

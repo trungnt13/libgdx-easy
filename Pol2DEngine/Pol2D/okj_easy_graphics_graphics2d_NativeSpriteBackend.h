@@ -280,6 +280,14 @@ extern "C" {
 	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_noSpriteDef
 		(JNIEnv *, jobject, jlong);
 
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+	* Method:    setCollision
+	* Signature: (JZ)V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setCollision
+		(JNIEnv *, jobject, jlong, jboolean);
+
 #ifdef __cplusplus
 }
 #endif

@@ -152,6 +152,8 @@ outer:
 }
 
 void WorldManager::ProcessCollision(Manager* m,CollideListener *listener){
+	int temp = 0;
+
 	float bound1[100];
 	float bound2[100];
 
@@ -163,15 +165,22 @@ void WorldManager::ProcessCollision(Manager* m,CollideListener *listener){
 	for(int i = 0;i < m->size()-1;i++){
 		Sprite *s1 = m->get(i);
 
+		// check isCollide flag
+		if(!s1->isCollision())
+			goto nextS1;
+
 		//traverse sprite list of manager 2
 		for(int j = i+1;j < m->size();j++){
 			Sprite *s2 = m->get(j);
+
+			if(!s2->isCollision())
+				goto nextS2;
 
 			// check grid
 			if(!mGrid->fastCheck(
 				s1->getCenterX(),s1->getCenterY(),
 				s2->getCenterX(),s2->getCenterY()) )
-				goto outer;
+				goto nextS2;
 
 			// get number of polygon in each sprite
 			nof1 = s1->getNumberOfBounding();
@@ -200,14 +209,15 @@ void WorldManager::ProcessCollision(Manager* m,CollideListener *listener){
 							bound1,size1,s1->getBoundingNoIndex(m),s1->getBoundingNoIndexSize(m),
 							bound2,size2,s2->getBoundingNoIndex(n),s2->getBoundingNoIndexSize(n),NULL)){
 								listener->collide((long long)s1,(long long)s2);
-								goto outer;
+								goto nextS2;
 						}
 					}
 				}
 			}// end of collision checking between two sprite
-outer:
-			nof1 = 0;
-			nof2 = 0;
+nextS2:
+			temp = 0;
 		}// turn to next s2
+nextS1:
+		temp = 0;
 	}// turn to next s1
 }

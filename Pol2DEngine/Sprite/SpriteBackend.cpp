@@ -45,6 +45,7 @@ Sprite::Sprite(Manager *parent){
 	scaleY = 1;
 
 	dirty = false;
+	isCollide = true;
 }
 
 Sprite::~Sprite(){
@@ -143,8 +144,16 @@ void Sprite::translateY(float yAmount){
 	this->y += yAmount;
 }
 
+void Sprite::setCollision(bool isCollision){
+	this->isCollide = isCollision;
+}
+
 //	=====================================================
 //	getter
+
+bool Sprite::isCollision(){
+	return this->isCollide;
+}
 
 int Sprite::getNumberOfBounding(){
 	if(bounding == NULL)
@@ -408,6 +417,7 @@ void Sprite::reset(){
 	scaleY = 1;
 
 	dirty = false;
+	isCollide = true;
 }
 
 //////////////////////////////////////////////////////////////////////////

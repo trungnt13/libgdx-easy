@@ -390,3 +390,14 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_noS
 		Sprite *s = (Sprite*)sprite;
 		s->setSpriteDef(NULL);
 }
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NativeSpriteBackend
+* Method:    setCollision
+* Signature: (JZ)V
+*/
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NativeSpriteBackend_setCollision
+	(JNIEnv *env, jobject obj, jlong address, jboolean isCollision){
+		Sprite *s = (Sprite*)address;
+		s->setCollision(isCollision);
+}
