@@ -21,6 +21,7 @@ WorldManager::WorldManager(){
 	mGrid->setGridSize(10000,10000);
 
 	mManagerList.insert(mainList);
+	isCollisionCheckingEnable = true;
 }
 
 WorldManager::~WorldManager(){
@@ -86,11 +87,19 @@ void WorldManager::DeleteSpriteDef(SpriteDef* def){
 
 //	========================================================
 //	processor
+void WorldManager::SetEnableCollisionChecking(bool isEnable){
+	isCollisionCheckingEnable = isEnable;
+}
+
 void WorldManager::CollisionConfig(int worldX,int worldY,int worldWidth,int worldHeight,int numberOfCols,int numberOfRows){
 	mGrid->setStartPosition(worldX,worldY);
 	mGrid->setGridSize(worldWidth,worldHeight,numberOfCols,numberOfRows);
 }
 void WorldManager::ProcessCollision(Manager *m1,Manager *m2,CollideListener *listener){
+	// check enable collision flag
+	if(!isCollisionCheckingEnable)
+		return;
+
 	float bound1[100];
 	float bound2[100];
 
@@ -152,6 +161,10 @@ outer:
 }
 
 void WorldManager::ProcessCollision(Manager* m,CollideListener *listener){
+	// check enable collision flag
+	if(!isCollisionCheckingEnable)
+		return;
+
 	int temp = 0;
 
 	float bound1[100];

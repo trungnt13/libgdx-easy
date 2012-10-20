@@ -1,10 +1,12 @@
 package org.ege.utils;
 
-public class EasyNativeLoader {
-	static public boolean	isWindows	= System.getProperty("os.name").contains("Windows");
-	static public boolean	isLinux		= System.getProperty("os.name").contains("Linux");
+public class EasyNativeLoader
+{
+	static public boolean isWindows = System.getProperty("os.name").contains("Windows");
+	static public boolean isLinux = System.getProperty("os.name").contains("Linux");
 
-	public static void load () {
+	public static void load ()
+	{
 		if (isLinux) {
 			try {
 				System.loadLibrary("enative");

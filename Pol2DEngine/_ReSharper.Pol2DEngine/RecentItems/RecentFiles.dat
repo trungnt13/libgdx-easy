@@ -12,7 +12,6 @@
     <File id="7CBE38D2-4AFE-4737-8010-C7F12F5329D3/f:utils.h" caret="0" fromTop="0" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:Shape.h" caret="153" fromTop="9" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:Shape.cpp" caret="783" fromTop="15" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.h" caret="1322" fromTop="10" />
     <File id="84B31428-233C-422B-B32C-45C771C72595/f:test.cpp" caret="661" fromTop="10" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NManager.h" caret="529" fromTop="10" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NManager.cpp" caret="474" fromTop="9" />
@@ -20,15 +19,16 @@
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:GridSimulation.cpp" caret="2001" fromTop="6" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:eMath.h" caret="495" fromTop="15" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:eMath.cpp" caret="2404" fromTop="6" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.cpp" caret="3849" fromTop="18" />
     <File id="7CBE38D2-4AFE-4737-8010-C7F12F5329D3/f:List.h" caret="6508" fromTop="14" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.cpp" caret="1055" fromTop="0" />
     <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.h" caret="1355" fromTop="10" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NativeSpriteBackend.cpp" caret="11555" fromTop="8" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.cpp" caret="5656" fromTop="7" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NativeSpriteBackend.h" caret="9080" fromTop="19" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.cpp" caret="8693" fromTop="22" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.h" caret="250" fromTop="6" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.cpp" caret="8575" fromTop="11" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.h" caret="1330" fromTop="25" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.cpp" caret="2568" fromTop="12" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NativeSpriteBackend.h" caret="73" fromTop="2" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.h" caret="2199" fromTop="21" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.cpp" caret="3055" fromTop="13" />
   </RecentFiles>
   <RecentEdits>
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:Shape.h" caret="325" fromTop="12" />
@@ -47,19 +47,19 @@
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NSpriteDef.cpp" caret="1057" fromTop="6" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:Shape.cpp" caret="896" fromTop="10" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:GridSimulation.h" caret="867" fromTop="6" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.h" caret="2820" fromTop="32" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.h" caret="1755" fromTop="31" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.cpp" caret="3925" fromTop="15" />
     <File id="84B31428-233C-422B-B32C-45C771C72595/f:test.cpp" caret="778" fromTop="18" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NManager.h" caret="529" fromTop="10" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NManager.cpp" caret="474" fromTop="9" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:GridSimulation.cpp" caret="1978" fromTop="5" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:eMath.h" caret="1137" fromTop="26" />
     <File id="08D87861-F78F-4CB6-8CBF-BE2181A913DB/f:eMath.cpp" caret="187" fromTop="15" />
-    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NativeSpriteBackend.h" caret="9080" fromTop="27" />
     <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.h" caret="1355" fromTop="10" />
-    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.cpp" caret="6014" fromTop="17" />
     <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NativeSpriteBackend.cpp" caret="11388" fromTop="11" />
     <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteBackend.cpp" caret="8693" fromTop="22" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.h" caret="1685" fromTop="19" />
+    <File id="8B7E1341-DD4D-4E30-958E-B6E4A8299EDB/f:SpriteManager.cpp" caret="4489" fromTop="19" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NativeSpriteBackend.h" caret="5145" fromTop="8" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.h" caret="98" fromTop="2" />
+    <File id="23151B49-96C6-45EA-8A6F-40D8F8793BC0/f:okj_easy_graphics_graphics2d_NWorld.cpp" caret="3332" fromTop="20" />
   </RecentEdits>
 </RecentFiles>

@@ -114,6 +114,26 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_DisposeSpriteDef
 
 /*
 * Class:     okj_easy_graphics_graphics2d_NWorld
+* Method:    StopCollisionProcessing
+* Signature: ()V
+*/
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_StopCollisionProcessing
+	(JNIEnv *env, jobject obj){
+		world->SetEnableCollisionChecking(false);
+}
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NWorld
+* Method:    ResumeCollisionProcessing
+* Signature: ()V
+*/
+JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_ResumeCollisionProcessing
+	(JNIEnv *env, jobject obj){
+		world->SetEnableCollisionChecking(true);
+}
+
+/*
+* Class:     okj_easy_graphics_graphics2d_NWorld
 * Method:    CollisionConfig
 * Signature: (IIIIII)V
 */

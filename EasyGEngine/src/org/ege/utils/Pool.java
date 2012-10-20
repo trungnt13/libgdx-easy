@@ -4,7 +4,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
-public class Pool<T> {
+public class Pool<T>
+{
 	public final int max;
 
 	private final Array<T> freeObjects;
@@ -35,7 +36,8 @@ public class Pool<T> {
 	 * Returns an object from this pool. The object may be new (from {@link #newObject()}) or reused
 	 * (previously {@link #free(Object) freed}).
 	 */
-	public T obtain () {
+	public T obtain ()
+	{
 		return freeObjects.size == 0 ? mFactory.newObject() : freeObjects.pop();
 	}
 
@@ -43,7 +45,8 @@ public class Pool<T> {
 	 * Returns an object from this pool. The object may be new (from {@link #newObject()}) or reused
 	 * (previously {@link #free(Object) freed}).
 	 */
-	public T obtain (Object... objects) {
+	public T obtain (Object... objects)
+	{
 		return freeObjects.size == 0 ? mFactory.newObject(objects) : freeObjects.pop();
 	}
 
@@ -52,13 +55,17 @@ public class Pool<T> {
 	 * by {@link #obtain()}. If the pool already contains {@link #max} free
 	 * objects, the specified object is ignored.
 	 */
-	public void free (T object) {
+	public boolean free (T object)
+	{
 		if (object == null)
 			throw new IllegalArgumentException("object cannot be null.");
-		if (freeObjects.size < max)
+		if (freeObjects.size < max) {
 			freeObjects.add(object);
-		if (object instanceof Poolable)
-			((Poolable) object).reset();
+			if (object instanceof Poolable)
+				((Poolable) object).reset();
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -66,12 +73,18 @@ public class Pool<T> {
 	 * by {@link #obtain()}. If the pool already contains {@link #max} free
 	 * objects, the specified object is ignored.
 	 * <b>This method won't reset the object</b>
+	 * 
+	 * @return true if pool success, otherwise false
 	 */
-	public void freeNoReset (T object) {
+	public boolean freeNoReset (T object)
+	{
 		if (object == null)
 			throw new IllegalArgumentException("object cannot be null.");
-		if (freeObjects.size < max)
+		if (freeObjects.size < max) {
 			freeObjects.add(object);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -79,7 +92,8 @@ public class Pool<T> {
 	 * 
 	 * @see #free(Object)
 	 */
-	public void free (Array<T> objects) {
+	public void free (Array<T> objects)
+	{
 		for (int i = 0, n = Math.min(objects.size, max - freeObjects.size); i < n; i++) {
 			T object = objects.get(i);
 			freeObjects.add(object);
@@ -91,30 +105,36 @@ public class Pool<T> {
 	/**
 	 * Puts the specified objects in the pool.
 	 * <b>This method won't reset the object</b>
+	 * 
 	 * @see #free(Object)
 	 */
-	public void freeNoReset (Array<T> objects) {
+	public void freeNoReset (Array<T> objects)
+	{
 		for (int i = 0, n = Math.min(objects.size, max - freeObjects.size); i < n; i++) {
 			T object = objects.get(i);
 			freeObjects.add(object);
 		}
 	}
 
-	public void delete (T... object) {
+	public void delete (T... object)
+	{
 		for (T t : object)
 			freeObjects.removeValue(t, true);
 	}
 
-	public int size () {
+	public int size ()
+	{
 		return freeObjects.size;
 	}
 
-	public Array<T> getFreeObj () {
+	public Array<T> getFreeObj ()
+	{
 		return freeObjects;
 	}
 
 	/** Removes all free objects from this pool. */
-	public void clear () {
+	public void clear ()
+	{
 		final int size = freeObjects.size;
 		for (int i = 0; i < size; i++)
 			if (freeObjects instanceof Disposable)

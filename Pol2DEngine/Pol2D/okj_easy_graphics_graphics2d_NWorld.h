@@ -66,6 +66,22 @@ extern "C" {
 
 	/*
 	* Class:     okj_easy_graphics_graphics2d_NWorld
+	* Method:    StopCollisionProcessing
+	* Signature: ()V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_StopCollisionProcessing
+		(JNIEnv *, jobject);
+
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NWorld
+	* Method:    ResumeCollisionProcessing
+	* Signature: ()V
+	*/
+	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_ResumeCollisionProcessing
+		(JNIEnv *, jobject);
+
+	/*
+	* Class:     okj_easy_graphics_graphics2d_NWorld
 	* Method:    CollisionConfig
 	* Signature: (IIIIII)V
 	*/
@@ -87,7 +103,6 @@ extern "C" {
 	*/
 	JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision__J
 		(JNIEnv *, jobject, jlong);
-
 
 #ifdef __cplusplus
 }

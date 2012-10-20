@@ -25,10 +25,10 @@ import com.badlogic.gdx.utils.PauseableThread;
  * @CreateOn: Sep 15, 2012 - 11:05:26 AM
  * @Author: TrungNT
  */
-public abstract class GameCore implements ApplicationListener {
+public abstract class GameCore implements ApplicationListener
+{
 
-	// ===============================================
-	// Screen manage
+	// ============= Screen mangage =============
 
 	/**
 	 * This screen is the main screen which is visible all time
@@ -56,18 +56,18 @@ public abstract class GameCore implements ApplicationListener {
 
 	private Class<? extends SafeLoader> mDefaultLoader;
 
-	// ==============================================
-	// Utils manage
-
+	// ============= Utils manage =============
 	private final BridgePool bridgePool;
 
 	final IActivityHandler mActivity;
 
-	// ===============================================
-	// scheduler of code
-
+	// ============= Schedule code =============
 	final Timer mSchedulerTimer;
 	final ThreadManager mThreadManager;
+
+	/***********************************************************
+	 * Constructors
+	 ***********************************************************/
 
 	public GameCore(IActivityHandler activity) {
 		this.mActivity = activity;
@@ -83,22 +83,25 @@ public abstract class GameCore implements ApplicationListener {
 		this(new IDesktopHandler());
 	}
 
+	// ============= default loader method =============
 	/**
 	 * The safe loader is use to change screen in safe mode when you not sure
 	 * all contexts are loaded
 	 * 
 	 * @param yourSafeLoader
 	 */
-	public void setDefaultSafeLoader (Class<? extends SafeLoader> yourSafeLoader) {
+	public void setDefaultSafeLoader (Class<? extends SafeLoader> yourSafeLoader)
+	{
 		mDefaultLoader = yourSafeLoader;
 	}
 
 	/**************************************************************
-	 * 
+	 * ApplicationListener methods
 	 **************************************************************/
 
 	@Override
-	public void create () {
+	public void create ()
+	{
 		eAdmin.egame = GameCore.this;
 		eAdmin.einput = new eInput();
 		eAdmin.egraphics = new eGraphics();
@@ -118,12 +121,14 @@ public abstract class GameCore implements ApplicationListener {
 		onGameConfig();
 	}
 
-	protected void CreateNativeWorld (int size_of_NSprite, int size_of_NSpriteA) {
+	protected void CreateNativeWorld (int size_of_NSprite, int size_of_NSpriteA)
+	{
 		eAdmin.eworld = new NWorld(size_of_NSprite, size_of_NSpriteA);
 	}
 
 	@Override
-	public void resize (int width, int height) {
+	public void resize (int width, int height)
+	{
 		eAdmin.egraphics.resolve(width, height);
 		if (screen != null)
 			screen.resize(width, height);
@@ -133,7 +138,8 @@ public abstract class GameCore implements ApplicationListener {
 	private float delta;
 
 	@Override
-	public void render () {
+	public void render ()
+	{
 		delta = Gdx.graphics.getDeltaTime();
 		if (screen != null) {
 			screen.onRender(delta);
@@ -143,7 +149,8 @@ public abstract class GameCore implements ApplicationListener {
 	}
 
 	@Override
-	public void pause () {
+	public void pause ()
+	{
 		onGamePause();
 
 		// stop scheduler
@@ -159,7 +166,8 @@ public abstract class GameCore implements ApplicationListener {
 	}
 
 	@Override
-	public void resume () {
+	public void resume ()
+	{
 		onGameResume();
 
 		// start schedule
@@ -168,9 +176,11 @@ public abstract class GameCore implements ApplicationListener {
 		// reload context
 		if (!isStarted) {
 			screen = mStartScreen;
-			mStartScreen.setChangedScreenListener(new LoadingScreen.OnChangedScreen() {
+			mStartScreen.setChangedScreenListener(new LoadingScreen.OnChangedScreen()
+			{
 				@Override
-				public Screen screenChanged () {
+				public Screen screenChanged ()
+				{
 					return mSavedScreen;
 				}
 			});
@@ -182,7 +192,8 @@ public abstract class GameCore implements ApplicationListener {
 	}
 
 	@Override
-	public void dispose () {
+	public void dispose ()
+	{
 		if (screen != null)
 			screen.destroy(E.screen.RELEASE);
 		isStarted = false;
@@ -192,7 +203,7 @@ public abstract class GameCore implements ApplicationListener {
 	}
 
 	/**************************************************************
-	 * 
+	 * Main GameCore methods
 	 **************************************************************/
 
 	/**
@@ -234,11 +245,12 @@ public abstract class GameCore implements ApplicationListener {
 	protected abstract void onGameDestroy ();
 
 	/**********************************************
-	 * 
+	 * Screen changing methods
 	 **********************************************/
 	private boolean isLoading = false;
 
-	protected void setStartScreen (LoadingScreen loadScreen) {
+	protected void setStartScreen (LoadingScreen loadScreen)
+	{
 		if (isStarted)
 			throw new EasyGEngineRuntimeException("One GameCore cant set start screen twice");
 		this.mStartScreen = loadScreen;
@@ -254,7 +266,8 @@ public abstract class GameCore implements ApplicationListener {
 	 * @param destroyMode
 	 *            destroyMode of old Screen
 	 */
-	void setScreen (Screen screen, int destroyMode) {
+	void setScreen (Screen screen, int destroyMode)
+	{
 		/*
 		 * check if the current screen is the loading screen , if is the loading
 		 * screen the show of next screen method only call for the first time
@@ -276,7 +289,8 @@ public abstract class GameCore implements ApplicationListener {
 		}
 	}
 
-	void setScreen (Screen screen, SafeLoader loader, ResourcePack pack) {
+	void setScreen (Screen screen, SafeLoader loader, ResourcePack pack)
+	{
 		if (pack.isTotallyLoaded()) {
 			setScreen(screen, E.screen.RELEASE);
 			return;
@@ -285,7 +299,8 @@ public abstract class GameCore implements ApplicationListener {
 		setScreen(loader, E.screen.RELEASE);
 	}
 
-	void setScreen (Screen screen, SafeLoader loader, ResourceContext... contexts) {
+	void setScreen (Screen screen, SafeLoader loader, ResourceContext... contexts)
+	{
 		final ResourcePack pack = new ResourcePack(SafeLoader.name, contexts);
 		if (pack.isTotallyLoaded()) {
 			setScreen(screen, E.screen.RELEASE);
@@ -295,7 +310,8 @@ public abstract class GameCore implements ApplicationListener {
 		setScreen(loader, E.screen.RELEASE);
 	}
 
-	void setScreen (Screen screen, ResourceContext... contexts) {
+	void setScreen (Screen screen, ResourceContext... contexts)
+	{
 		final ResourcePack pack = new ResourcePack(SafeLoader.name, contexts);
 		if (pack.isTotallyLoaded()) {
 			setScreen(screen, E.screen.RELEASE);
@@ -315,7 +331,8 @@ public abstract class GameCore implements ApplicationListener {
 		}
 	}
 
-	void setScreen (Screen screen, ResourcePack pack) {
+	void setScreen (Screen screen, ResourcePack pack)
+	{
 		if (pack.isTotallyLoaded()) {
 			setScreen(screen, E.screen.RELEASE);
 			return;
@@ -334,7 +351,8 @@ public abstract class GameCore implements ApplicationListener {
 		}
 	}
 
-	public Screen getCurrentScreen () {
+	public Screen getCurrentScreen ()
+	{
 		return screen;
 	}
 
@@ -342,37 +360,43 @@ public abstract class GameCore implements ApplicationListener {
 	 * Bridge Manage method
 	 **************************************************************/
 
-	public Bridge newBridge (Class<?> firstClass, Class<?> secondClass) {
+	public Bridge newBridge (Class<?> firstClass, Class<?> secondClass)
+	{
 		Bridge tmp = getBridge(firstClass, secondClass);
 		if (tmp == null)
 			return this.bridgePool.obtain(firstClass, secondClass);
 		return tmp;
 	}
 
-	public Bridge newBridge (String name) {
+	public Bridge newBridge (String name)
+	{
 		Bridge tmp = getBridge(name);
 		if (tmp == null)
 			return this.bridgePool.obtain(name);
 		return tmp;
 	}
 
-	private Bridge getBridge (Class<?> firstClass, Class<?> secondClass) {
+	private Bridge getBridge (Class<?> firstClass, Class<?> secondClass)
+	{
 		return bridgePool.getUsingBridges().get(firstClass.getName() + secondClass.getName());
 	}
 
-	private Bridge getBridge (String name) {
+	private Bridge getBridge (String name)
+	{
 		return bridgePool.getUsingBridges().get(name);
 	}
 
 	/**************************************************************
-	 * 
+	 * Activity handler methods
 	 **************************************************************/
 
-	public IActivityHandler getActivity () {
+	public IActivityHandler getActivity ()
+	{
 		return mActivity;
 	}
 
-	public boolean isBindActivity () {
+	public boolean isBindActivity ()
+	{
 		return mActivity == null;
 	}
 
@@ -380,35 +404,43 @@ public abstract class GameCore implements ApplicationListener {
 	 * Schedule method for timer
 	 **************************************************************/
 
-	public void postTask (Task task) {
+	public void postTask (Task task)
+	{
 		mSchedulerTimer.postTask(task);
 	}
 
-	public void schedule (Task task) {
+	public void schedule (Task task)
+	{
 		mSchedulerTimer.scheduleTask(task);
 	}
 
-	public void schedule (Task task, float delaySeconds) {
+	public void schedule (Task task, float delaySeconds)
+	{
 		mSchedulerTimer.scheduleTask(task, delaySeconds);
 	}
 
-	public void schedule (Task task, float delaySeconds, float intervalSeconds) {
+	public void schedule (Task task, float delaySeconds, float intervalSeconds)
+	{
 		mSchedulerTimer.scheduleTask(task, delaySeconds, intervalSeconds);
 	}
 
-	public void schedule (Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
+	public void schedule (Task task, float delaySeconds, float intervalSeconds, int repeatCount)
+	{
 		mSchedulerTimer.scheduleTask(task, delaySeconds, intervalSeconds, repeatCount);
 	}
 
-	public void stopScheduler () {
+	public void stopScheduler ()
+	{
 		mSchedulerTimer.stop();
 	}
 
-	public void startScheduler () {
+	public void startScheduler ()
+	{
 		mSchedulerTimer.start();
 	}
 
-	public void clearScheduler () {
+	public void clearScheduler ()
+	{
 		mSchedulerTimer.clear();
 	}
 
@@ -416,19 +448,23 @@ public abstract class GameCore implements ApplicationListener {
 	 * Thread manager
 	 **************************************************************/
 
-	public int newThreadId (Runnable runnable) {
+	public int newThreadId (Runnable runnable)
+	{
 		return mThreadManager.obtainForID(runnable);
 	}
 
-	public PauseableThread newThread (Runnable runnable) {
+	public PauseableThread newThread (Runnable runnable)
+	{
 		return mThreadManager.obtainForThread(runnable);
 	}
 
-	public boolean startThread (int id) {
+	public boolean startThread (int id)
+	{
 		return mThreadManager.startThread(id);
 	}
 
-	public boolean stopThread (int id) {
+	public boolean stopThread (int id)
+	{
 		return mThreadManager.stopThread(id);
 	}
 
@@ -438,7 +474,8 @@ public abstract class GameCore implements ApplicationListener {
 	 * @param id
 	 * @return true if successful pause , otherwise false
 	 */
-	public boolean pauseThread (int id) {
+	public boolean pauseThread (int id)
+	{
 		return mThreadManager.pauseThread(id);
 	}
 
@@ -448,23 +485,28 @@ public abstract class GameCore implements ApplicationListener {
 	 * @param id
 	 * @return true if successful resume , otherwise false
 	 */
-	public boolean resumeThread (int id) {
+	public boolean resumeThread (int id)
+	{
 		return mThreadManager.resumeThread(id);
 	}
 
-	public boolean containThread (int id) {
+	public boolean containThread (int id)
+	{
 		return mThreadManager.containThread(id);
 	}
 
-	public boolean containThread (PauseableThread thread) {
+	public boolean containThread (PauseableThread thread)
+	{
 		return mThreadManager.containThread(thread);
 	}
 
-	public int sizeOfThread () {
+	public int sizeOfThread ()
+	{
 		return mThreadManager.size();
 	}
 
-	public int sizeOfRunningThread () {
+	public int sizeOfRunningThread ()
+	{
 		return mThreadManager.sizeOfAlive();
 	}
 }

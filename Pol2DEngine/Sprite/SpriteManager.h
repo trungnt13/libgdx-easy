@@ -46,6 +46,7 @@ namespace Entity2D{
 		BasicDataStructures::List<SpriteDef*> mSpriteDefList;
 		Math2D::GridAdvance *mGrid;
 
+		bool isCollisionCheckingEnable;
 	public:
 		Manager *mainList;
 
@@ -69,6 +70,7 @@ namespace Entity2D{
 		/**
 		Collision
 		*/
+		void SetEnableCollisionChecking(bool);
 		void CollisionConfig(int,int,int,int,int,int);
 		void ProcessCollision(Manager*,Manager*,CollideListener*);
 		void ProcessCollision(Manager*,CollideListener*);
