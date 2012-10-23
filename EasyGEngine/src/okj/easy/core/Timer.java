@@ -27,35 +27,41 @@ import com.badlogic.gdx.utils.Disposable;
  * @Author: Nathan Sweet
  * @Author: TrungNT
  */
-public class Timer {
+public class Timer
+{
 
-	static private final int	CANCELLED		= 0;
-	static private final int	FOREVER			= -2;
+	static private final int CANCELLED = 0;
+	static private final int FOREVER = -2;
 
-	private final Array<Task>	tasks			= new Array(false, 8);
-	private boolean				stopped, posted;
+	private final Array<Task> tasks = new Array(false, 8);
+	private boolean stopped, posted;
 
-	private final Runnable		timerRunnable	= new Runnable() {
-													public void run () {
-														update();
-													}
-												};
+	private final Runnable timerRunnable = new Runnable()
+	{
+		public void run ()
+		{
+			update();
+		}
+	};
 
-	Timer () {
+	Timer() {
 	}
 
 	/** Schedules a task to occur once at the start of the next frame. */
-	void postTask (Task task) {
+	void postTask (Task task)
+	{
 		scheduleTask(task, 0, 0, 1);
 	}
 
 	/** Schedules a task to occur every frame until cancelled. */
-	void scheduleTask (Task task) {
+	void scheduleTask (Task task)
+	{
 		scheduleTask(task, 0, 0, FOREVER);
 	}
 
 	/** Schedules a task to occur once after the specified delay. */
-	void scheduleTask (Task task, float delaySeconds) {
+	void scheduleTask (Task task, float delaySeconds)
+	{
 		scheduleTask(task, delaySeconds, 0, 1);
 	}
 
@@ -63,7 +69,8 @@ public class Timer {
 	 * Schedules a task to occur once after the specified delay and then
 	 * repeatedly at the specified interval until cancelled.
 	 */
-	void scheduleTask (Task task, float delaySeconds, float intervalSeconds) {
+	void scheduleTask (Task task, float delaySeconds, float intervalSeconds)
+	{
 		scheduleTask(task, delaySeconds, intervalSeconds, FOREVER);
 	}
 
@@ -71,7 +78,8 @@ public class Timer {
 	 * Schedules a task to occur once after the specified delay and then a
 	 * number of additional times at the specified interval.
 	 */
-	void scheduleTask (Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
+	void scheduleTask (Task task, float delaySeconds, float intervalSeconds, int repeatCount)
+	{
 		if (task.repeatCount != CANCELLED)
 			throw new IllegalArgumentException("The same task may not be scheduled twice.");
 		task.delaySeconds = delaySeconds;
@@ -88,7 +96,8 @@ public class Timer {
 	 *            the number of fps you want your task run
 	 * @param task
 	 */
-	void scheduleTask (float fps, Task task) {
+	void scheduleTask (float fps, Task task)
+	{
 		float interval = 1 / fps;
 		scheduleTask(task, 0, interval, FOREVER);
 	}
@@ -97,38 +106,44 @@ public class Timer {
 	 * Stops the timer, tasks will not be executed and time that passes will not
 	 * be applied to the task delays.
 	 */
-	void stop () {
+	void stop ()
+	{
 		stopped = true;
 		posted = false;
 	}
 
 	/** Starts the timer if it was stopped. */
-	void start () {
+	void start ()
+	{
 		stopped = false;
 		postRunnable();
 	}
 
-	void reset () {
+	void reset ()
+	{
 		posted = false;
 		stopped = false;
 		clear();
 	}
 
 	/** Cancels all tasks. */
-	void clear () {
+	void clear ()
+	{
 		for (int i = 0, n = tasks.size; i < n; i++)
 			tasks.get(i).cancel();
 		tasks.clear();
 	}
 
-	private void postRunnable () {
+	private void postRunnable ()
+	{
 		if (stopped || posted)
 			return;
 		posted = true;
-		Gdx.app.postRunnable(timerRunnable);
+		eAdmin.egame.postRunnable(timerRunnable);
 	}
 
-	void update () {
+	void update ()
+	{
 		if (stopped) {
 			return;
 		}
@@ -158,7 +173,7 @@ public class Timer {
 		if (tasks.size == 0)
 			posted = false;
 		else
-			Gdx.app.postRunnable(timerRunnable);
+			eAdmin.egame.postRunnable(timerRunnable);
 	}
 
 	/**
@@ -167,10 +182,11 @@ public class Timer {
 	 * @see Timer
 	 * @author Nathan Sweet
 	 */
-	static abstract public class Task implements Runnable {
-		float	delaySeconds;
-		float	intervalSeconds;
-		int		repeatCount	= CANCELLED;
+	static abstract public class Task implements Runnable
+	{
+		float delaySeconds;
+		float intervalSeconds;
+		int repeatCount = CANCELLED;
 
 		/**
 		 * If this is the last time the task will be ran or the task is first
@@ -182,7 +198,8 @@ public class Timer {
 		 * Cancels the task. It will not be executed until it is scheduled
 		 * again. This method can be called at any time.
 		 */
-		public void cancel () {
+		public void cancel ()
+		{
 			delaySeconds = 0;
 			repeatCount = CANCELLED;
 		}
@@ -191,20 +208,22 @@ public class Timer {
 		 * Returns true if this task is scheduled to be executed in the future
 		 * by a timer.
 		 */
-		public boolean isScheduled () {
+		public boolean isScheduled ()
+		{
 			return repeatCount != CANCELLED;
 		}
 	}
 
-	static public class TaskGroup extends Task implements Disposable {
-		private final Array<Task>	taskList;
-		private int					tmp;
+	static public class TaskGroup extends Task implements Disposable
+	{
+		private final Array<Task> taskList;
+		private int tmp;
 
-		public TaskGroup () {
+		public TaskGroup() {
 			taskList = new Array<Timer.Task>();
 		}
 
-		public TaskGroup (int init) {
+		public TaskGroup(int init) {
 			taskList = new Array<Timer.Task>(init);
 		}
 
@@ -215,7 +234,8 @@ public class Timer {
 		/**
 		 * schedule task with given information
 		 */
-		public TaskGroup add (Task task, float delaySeconds, float intervalSeconds, int repeatCount) {
+		public TaskGroup add (Task task, float delaySeconds, float intervalSeconds, int repeatCount)
+		{
 			task.delaySeconds = delaySeconds;
 			task.intervalSeconds = intervalSeconds;
 			task.repeatCount = repeatCount;
@@ -226,7 +246,8 @@ public class Timer {
 		/**
 		 * schedule task base on desire frames per second
 		 */
-		public TaskGroup add (Task task, float fps) {
+		public TaskGroup add (Task task, float fps)
+		{
 			task.delaySeconds = 0;
 			task.intervalSeconds = 1 / fps;
 			task.repeatCount = FOREVER;
@@ -237,7 +258,8 @@ public class Timer {
 		/**
 		 * schedule task forever with max FPS
 		 */
-		public TaskGroup add (Task task) {
+		public TaskGroup add (Task task)
+		{
 			task.delaySeconds = 0;
 			task.intervalSeconds = 0;
 			task.repeatCount = FOREVER;
@@ -249,12 +271,14 @@ public class Timer {
 		 * 
 		 *****************************************************/
 
-		public void start () {
+		public void start ()
+		{
 			eAdmin.egame.postTask(this);
 		}
 
 		@Override
-		public void run () {
+		public void run ()
+		{
 			for (Task t : taskList) {
 				tmp = t.repeatCount;
 				t.repeatCount = CANCELLED;
@@ -269,17 +293,20 @@ public class Timer {
 		/**
 		 * Cancel all tasks
 		 */
-		public void cancel () {
+		public void cancel ()
+		{
 			for (Task t : taskList)
 				t.cancel();
 		}
 
-		public int size () {
+		public int size ()
+		{
 			return taskList.size;
 		}
 
 		@Override
-		public void dispose () {
+		public void dispose ()
+		{
 			cancel();
 			taskList.clear();
 		}

@@ -17,6 +17,7 @@ import org.ege.widget.Dialog;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.PauseableThread;
 
 /**
@@ -44,6 +45,7 @@ public abstract class GameCore implements ApplicationListener
 	 * The main loading screen use to load and reload openGL context
 	 */
 	private LoadingScreen mStartScreen;
+
 	/**
 	 * This flag show that the game core is come back from pause and now it is
 	 * resume
@@ -53,6 +55,11 @@ public abstract class GameCore implements ApplicationListener
 	 * @False if is on from onPause back to onResume
 	 */
 	private boolean isStarted = false;
+
+	/**
+	 * Flag show that the game is pause
+	 */
+	private boolean isPause = false;
 
 	private Class<? extends SafeLoader> mDefaultLoader;
 
@@ -64,6 +71,10 @@ public abstract class GameCore implements ApplicationListener
 	// ============= Schedule code =============
 	final Timer mSchedulerTimer;
 	final ThreadManager mThreadManager;
+
+	// ============= Runnable for synchoronize schedule =============
+	final Array<Runnable> runnables = new Array();
+	final Array<Runnable> executedRunnables = new Array();
 
 	/***********************************************************
 	 * Constructors
@@ -140,6 +151,25 @@ public abstract class GameCore implements ApplicationListener
 	@Override
 	public void render ()
 	{
+		if (isPause)
+			return;
+
+		// ============= Start schedule =============
+		synchronized (runnables) {
+			executedRunnables.clear();
+			executedRunnables.addAll(runnables);
+			runnables.clear();
+
+			for (int i = 0; i < executedRunnables.size; i++) {
+				try {
+					executedRunnables.get(i).run();
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+		}
+
+		// ============= Update screen =============
 		delta = Gdx.graphics.getDeltaTime();
 		if (screen != null) {
 			screen.onRender(delta);
@@ -151,6 +181,8 @@ public abstract class GameCore implements ApplicationListener
 	@Override
 	public void pause ()
 	{
+		isPause = true;
+
 		onGamePause();
 
 		// stop scheduler
@@ -168,6 +200,7 @@ public abstract class GameCore implements ApplicationListener
 	@Override
 	public void resume ()
 	{
+		isPause = false;
 		onGameResume();
 
 		// start schedule
@@ -442,6 +475,15 @@ public abstract class GameCore implements ApplicationListener
 	public void clearScheduler ()
 	{
 		mSchedulerTimer.clear();
+	}
+
+	// ============= Synchronize schedule =============
+	public void postRunnable (Runnable runnable)
+	{
+		synchronized (runnables) {
+			runnables.add(runnable);
+			Gdx.graphics.requestRendering();
+		}
 	}
 
 	/**************************************************************
