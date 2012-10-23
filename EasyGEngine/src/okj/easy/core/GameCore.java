@@ -477,7 +477,11 @@ public abstract class GameCore implements ApplicationListener
 		mSchedulerTimer.clear();
 	}
 
-	// ============= Synchronize schedule =============
+	public void removeTask (Task task)
+	{
+		mSchedulerTimer.removeTask(task);
+	}
+
 	public void postRunnable (Runnable runnable)
 	{
 		synchronized (runnables) {

@@ -30,10 +30,11 @@ import com.badlogic.gdx.utils.Disposable;
 public class Timer
 {
 
-	static private final int CANCELLED = 0;
-	static private final int FOREVER = -2;
+	static public final int CANCELLED = 0;
+	static public final int FOREVER = -2;
 
-	private final Array<Task> tasks = new Array(false, 8);
+	private final Array<Task> tasks = new Array(false, 13);
+
 	private boolean stopped, posted;
 
 	private final Runnable timerRunnable = new Runnable()
@@ -44,8 +45,16 @@ public class Timer
 		}
 	};
 
+	/***********************************************************
+	 * Constructor
+	 ***********************************************************/
+
 	Timer() {
 	}
+
+	/***********************************************************
+	 * Methods
+	 ***********************************************************/
 
 	/** Schedules a task to occur once at the start of the next frame. */
 	void postTask (Task task)
@@ -80,8 +89,10 @@ public class Timer
 	 */
 	void scheduleTask (Task task, float delaySeconds, float intervalSeconds, int repeatCount)
 	{
-		if (task.repeatCount != CANCELLED)
-			throw new IllegalArgumentException("The same task may not be scheduled twice.");
+		if (task.repeatCount != CANCELLED) {
+			Gdx.app.log("IllegalArgumentException", "The same task may not be scheduled twice.");
+			return;
+		}
 		task.delaySeconds = delaySeconds;
 		task.intervalSeconds = intervalSeconds;
 		task.repeatCount = repeatCount;
@@ -100,6 +111,12 @@ public class Timer
 	{
 		float interval = 1 / fps;
 		scheduleTask(task, 0, interval, FOREVER);
+	}
+
+	void removeTask (Task task)
+	{
+		tasks.removeValue(task, true);
+		task.repeatCount = CANCELLED;
 	}
 
 	/**
@@ -184,9 +201,9 @@ public class Timer
 	 */
 	static abstract public class Task implements Runnable
 	{
-		float delaySeconds;
-		float intervalSeconds;
-		int repeatCount = CANCELLED;
+		protected float delaySeconds;
+		protected float intervalSeconds;
+		protected int repeatCount = CANCELLED;
 
 		/**
 		 * If this is the last time the task will be ran or the task is first
