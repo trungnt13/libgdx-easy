@@ -12,22 +12,21 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
  * @CreateOn: Sep 15, 2012 - 11:06:15 AM
  * @Author: TrungNT
  */
-public class Context implements ResourceContext {
+public class Context implements ResourceContext
+{
 
-	public final String				name;
+	public final String name;
 
-	final ObjectMap<String, Data>	mDataMap			= new ObjectMap<String, Data>();
-	final ArrayDeque<String>		mUnloadedData		= new ArrayDeque<String>();
-
-	boolean							isTotallyUnloaded	= false;
+	final ObjectMap<String, Data> mDataMap = new ObjectMap<String, Data>();
+	final ArrayDeque<String> mUnloadedData = new ArrayDeque<String>();
 
 	/**
 	 * When this mode is enable , the load function just push to references not
 	 * load the data until you calll reload
 	 */
-	boolean							isReferencesMode	= false;
+	boolean isReferencesMode = false;
 
-	public Context (String name) {
+	public Context(String name) {
 		this.name = name;
 		eAdmin.econtext.addContext(this);
 	}
@@ -36,19 +35,23 @@ public class Context implements ResourceContext {
 	 * When this mode enable , the references of data will only be store not
 	 * load
 	 */
-	public Context (String name, boolean isRefStore) {
+	public Context(String name, boolean isRefStore) {
 		this(name);
 		this.isReferencesMode = isRefStore;
 	}
 
-	/**
-	 * When this mode enable , the references of data will only be store not
-	 * load
-	 * 
-	 * @param isRefStore
-	 */
-	public void setRefStoreMode (boolean isRefStore) {
+	public void setRefStoreMode (boolean isRefStore)
+	{
 		this.isReferencesMode = isRefStore;
+		if (isRefStore)
+			unload();
+		else
+			reload();
+	}
+
+	public boolean isRefStoreMode ()
+	{
+		return isReferencesMode;
 	}
 
 	/*************************************************************
@@ -61,7 +64,8 @@ public class Context implements ResourceContext {
 	 * @param data
 	 *            data's array
 	 */
-	public <T> void load (String linkName, Class<T> clazz) {
+	public <T> void load (String linkName, Class<T> clazz)
+	{
 		if (!isReferencesMode) {
 			mDataMap.put(linkName, new Data<T>(clazz, null));
 			eAdmin.econtext.loadContextData(linkName, clazz);
@@ -77,7 +81,8 @@ public class Context implements ResourceContext {
 	 * @param data
 	 *            data's array
 	 */
-	public <T> void load (String linkName, Class<T> clazz, AssetLoaderParameters<T> param) {
+	public <T> void load (String linkName, Class<T> clazz, AssetLoaderParameters<T> param)
+	{
 		if (!isReferencesMode) {
 			mDataMap.put(linkName, new Data<T>(clazz, param));
 			eAdmin.econtext.loadContextData(linkName, clazz, param);
@@ -87,16 +92,14 @@ public class Context implements ResourceContext {
 		}
 	}
 
-	public void reload () {
-		if (isTotallyUnloaded) {
-			eAdmin.econtext.loadContext(this);
-			isTotallyUnloaded = false;
-		} else {
-			String tmp = null;
-			while (mUnloadedData.size() > 0) {
-				tmp = mUnloadedData.poll();
-				eAdmin.econtext.loadGraphicsData(tmp, mDataMap.get(tmp));
-			}
+	public void reload ()
+	{
+		isReferencesMode = false;
+
+		String tmp = null;
+		while (mUnloadedData.size() > 0) {
+			tmp = mUnloadedData.poll();
+			eAdmin.econtext.loadGraphicsData(tmp, mDataMap.get(tmp));
 		}
 	}
 
@@ -106,17 +109,16 @@ public class Context implements ResourceContext {
 	 * @param data
 	 *            the data you want
 	 */
-	public void unload () {
-		if (isTotallyUnloaded)
-			return;
+	public void unload ()
+	{
 		eAdmin.econtext.unloadContext(this);
-		mUnloadedData.clear();
-		isTotallyUnloaded = true;
+		for (String s : mDataMap.keys())
+			if (!mUnloadedData.contains(s))
+				mUnloadedData.add(s);
 	}
 
-	public void unload (String... linkName) {
-		if (isTotallyUnloaded)
-			return;
+	public void unload (String... linkName)
+	{
 		for (String s : linkName) {
 			if (eAdmin.econtext.isLoaded(s, mDataMap.get(s).clazz)) {
 				mUnloadedData.add(s);
@@ -125,7 +127,8 @@ public class Context implements ResourceContext {
 		}
 	}
 
-	public void remove (String... listName) {
+	public void remove (String... listName)
+	{
 		for (String linkName : listName) {
 			mDataMap.remove(linkName);
 			mUnloadedData.remove(linkName);
@@ -140,19 +143,23 @@ public class Context implements ResourceContext {
 	 *            the given data
 	 * @return true if list contain data,otherwise false
 	 */
-	public boolean contain (String assetName) {
+	public boolean contain (String assetName)
+	{
 		return mDataMap.containsKey(assetName);
 	}
 
-	public boolean isUnloaded (String assetName) {
+	public boolean isUnloaded (String assetName)
+	{
 		return mUnloadedData.contains(assetName);
 	}
 
-	public boolean isLoaded (String assetName) {
+	public boolean isLoaded (String assetName)
+	{
 		return eAdmin.econtext.isLoaded(assetName, mDataMap.get(assetName).clazz);
 	}
 
-	Data<?> getContextData (String assetName) {
+	Data<?> getContextData (String assetName)
+	{
 		return mDataMap.get(assetName);
 	}
 
@@ -161,11 +168,13 @@ public class Context implements ResourceContext {
 	 * 
 	 * @return data list's size
 	 */
-	public int size () {
+	public int size ()
+	{
 		return mDataMap.size;
 	}
 
-	public int unloadedSize () {
+	public int unloadedSize ()
+	{
 		return mUnloadedData.size();
 	}
 
@@ -174,9 +183,11 @@ public class Context implements ResourceContext {
 	 * 
 	 * @return true if all assets was loaded, false otherwise
 	 */
-	public boolean isTotallyLoaded () {
-		if (isTotallyUnloaded)
+	public boolean isTotallyLoaded ()
+	{
+		if (isReferencesMode)
 			return true;
+
 		for (Entry<String, Data> entries : mDataMap.entries()) {
 			if (!eAdmin.econtext.isLoaded(entries.key, entries.value.clazz))
 				return false;
@@ -184,7 +195,8 @@ public class Context implements ResourceContext {
 		return true;
 	}
 
-	public boolean isTotallyUnloaded () {
+	public boolean isTotallyUnloaded ()
+	{
 		for (Entry<String, Data> entries : mDataMap.entries()) {
 			if (eAdmin.econtext.isLoaded(entries.key, entries.value.clazz))
 				return false;
@@ -195,7 +207,8 @@ public class Context implements ResourceContext {
 	/**
 	 * You must call this method constantly until all assets done loading
 	 */
-	public boolean update () {
+	public boolean update ()
+	{
 		return eAdmin.econtext.update();
 	}
 
@@ -204,28 +217,30 @@ public class Context implements ResourceContext {
 	 * 
 	 * @return the progress (0 to 1)
 	 */
-	public float getProgress () {
+	public float getProgress ()
+	{
 		return eAdmin.econtext.getProgress();
 	}
 
-	public <T> T get (String name, Class<T> clazz) {
+	public <T> T get (String name, Class<T> clazz)
+	{
 		return eAdmin.econtext.get(name, clazz);
 	}
 
-	public void clear () {
+	public void clear ()
+	{
 		eAdmin.econtext.unloadContext(this);
 		mUnloadedData.clear();
 		mDataMap.clear();
-		isTotallyUnloaded = false;
 	}
 
 	/**
 	 * Strongly release the art (make it disappear:D)
 	 */
-	public void dispose () {
+	public void dispose ()
+	{
 		eAdmin.econtext.removeContext(this);
 		mDataMap.clear();
 		mUnloadedData.clear();
-		isTotallyUnloaded = false;
 	}
 }

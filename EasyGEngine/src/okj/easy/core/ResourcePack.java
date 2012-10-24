@@ -8,19 +8,20 @@ import com.badlogic.gdx.utils.Array;
  * @CreateOn: Sep 15, 2012 - 11:11:27 AM
  * @Author: TrungNT
  */
-public class ResourcePack implements ResourceContext {
-	public final String						name;
+public class ResourcePack implements ResourceContext
+{
+	public final String name;
 
-	private final Array<ResourceContext>	mManageContext;
+	private final Array<ResourceContext> mManageContext;
 
-	public ResourcePack (String name, ResourceContext... contexts) {
+	public ResourcePack(String name, ResourceContext... contexts) {
 		this.name = name;
 
 		mManageContext = new Array<ResourceContext>();
 		mManageContext.addAll(contexts);
 	}
 
-	public ResourcePack (String name) {
+	public ResourcePack(String name) {
 		this.name = name;
 
 		mManageContext = new Array<ResourceContext>();
@@ -30,23 +31,27 @@ public class ResourcePack implements ResourceContext {
 	 * ResourceContext manage
 	 *************************************************/
 
-	public void manage (ResourceContext... contexts) {
+	public void manage (ResourceContext... contexts)
+	{
 		mManageContext.addAll(contexts);
 	}
 
-	public void unmanage (ResourceContext... contexts) {
+	public void unmanage (ResourceContext... contexts)
+	{
 		for (ResourceContext context : contexts)
 			mManageContext.removeValue(context, true);
 	}
 
 	@Override
-	public void reload () {
+	public void reload ()
+	{
 		for (ResourceContext context : mManageContext)
 			context.reload();
 	}
 
 	@Override
-	public void unload () {
+	public void unload ()
+	{
 		for (ResourceContext context : mManageContext)
 			context.unload();
 	}
@@ -56,7 +61,8 @@ public class ResourcePack implements ResourceContext {
 	 *************************************************/
 
 	@Override
-	public boolean isTotallyUnloaded () {
+	public boolean isTotallyUnloaded ()
+	{
 		for (ResourceContext context : mManageContext)
 			if (!context.isTotallyUnloaded())
 				return false;
@@ -64,7 +70,8 @@ public class ResourcePack implements ResourceContext {
 	}
 
 	@Override
-	public boolean isTotallyLoaded () {
+	public boolean isTotallyLoaded ()
+	{
 		for (ResourceContext context : mManageContext)
 			if (!context.isTotallyLoaded())
 				return false;
@@ -72,7 +79,8 @@ public class ResourcePack implements ResourceContext {
 	}
 
 	@Override
-	public int size () {
+	public int size ()
+	{
 		return mManageContext.size;
 	}
 
@@ -81,20 +89,35 @@ public class ResourcePack implements ResourceContext {
 	 *************************************************/
 
 	@Override
-	public boolean update () {
+	public boolean update ()
+	{
 		return eAdmin.econtext.update() & eAdmin.eaudio.update();
 	}
 
 	@Override
-	public void clear () {
+	public void clear ()
+	{
 		mManageContext.clear();
 	}
 
 	@Override
-	public void dispose () {
+	public void dispose ()
+	{
 		for (ResourceContext context : mManageContext)
 			context.dispose();
 		mManageContext.clear();
+	}
+
+	public void setRefStoreMode (boolean isRefStore)
+	{
+		for (ResourceContext context : mManageContext) {
+			context.setRefStoreMode(isRefStore);
+		}
+	}
+
+	public boolean isRefStoreMode ()
+	{
+		return false;
 	}
 
 }

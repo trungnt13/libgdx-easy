@@ -15,21 +15,20 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
  * @CreateOn: Sep 15, 2012 - 11:05:58 AM
  * @Author: TrungNT
  */
-public class Album implements ResourceContext {
-	final String						name;
+public class Album implements ResourceContext
+{
+	final String name;
 
-	final ObjectMap<String, AudioType>	mDataMap			= new ObjectMap<String, AudioType>();
-	final ArrayDeque<String>			mUnloadedData		= new ArrayDeque<String>();
-
-	boolean								isTotallyUnloaded	= false;
+	final ObjectMap<String, AudioType> mDataMap = new ObjectMap<String, AudioType>();
+	final ArrayDeque<String> mUnloadedData = new ArrayDeque<String>();
 
 	/**
 	 * When this mode is enable , the load function just push to references not
 	 * load the data until you calll reload
 	 */
-	boolean								isReferencesMode	= false;
+	boolean isReferencesMode = false;
 
-	public Album (String name) {
+	public Album(String name) {
 		this.name = name;
 		eAdmin.eaudio.addAlbum(this);
 	}
@@ -38,26 +37,32 @@ public class Album implements ResourceContext {
 	 * When this mode enable , the references of data will only be store not
 	 * load
 	 */
-	public Album (String name, boolean isRefStore) {
+	public Album(String name, boolean isRefStore) {
 		this(name);
 		this.isReferencesMode = isRefStore;
 	}
 
-	/**
-	 * When this mode enable , the references of data will only be store not
-	 * load
-	 * 
-	 * @param isRefStore
-	 */
-	public void setRefStoreMode (boolean isRefStore) {
+	public void setRefStoreMode (boolean isRefStore)
+	{
 		this.isReferencesMode = isRefStore;
+		if (isRefStore)
+			unload();
+		else
+			reload();
 	}
 
-	public Sound getSound (String name) {
+	public boolean isRefStoreMode ()
+	{
+		return isReferencesMode;
+	}
+
+	public Sound getSound (String name)
+	{
 		return eAdmin.eaudio.getSound(name);
 	}
 
-	public Music getMusic (String name) {
+	public Music getMusic (String name)
+	{
 		return eAdmin.eaudio.getMusic(name);
 	}
 
@@ -73,7 +78,8 @@ public class Album implements ResourceContext {
 	 * @param audioType
 	 *            AudioType
 	 */
-	public void load (String assetName, AudioType audioType) {
+	public void load (String assetName, AudioType audioType)
+	{
 		if (!isReferencesMode) {
 			mDataMap.put(assetName, audioType);
 			eAdmin.eaudio.load(assetName, audioType);
@@ -87,28 +93,26 @@ public class Album implements ResourceContext {
 	 * When the album is unload it need to be reload so all sound and music can
 	 * work again
 	 */
-	public void reload () {
-		if (isTotallyUnloaded) {
-			eAdmin.eaudio.loadAlbum(this);
-			isTotallyUnloaded = false;
-		} else {
-			String tmp = null;
-			while (mUnloadedData.size() > 0) {
-				tmp = mUnloadedData.poll();
-				eAdmin.eaudio.load(tmp, mDataMap.get(tmp));
-			}
+	public void reload ()
+	{
+		isReferencesMode = false;
+
+		String tmp = null;
+		while (mUnloadedData.size() > 0) {
+			tmp = mUnloadedData.poll();
+			eAdmin.eaudio.load(tmp, mDataMap.get(tmp));
 		}
 	}
 
 	/**
 	 * Unload the whole album
 	 */
-	public void unload () {
-		if (isTotallyUnloaded)
-			return;
+	public void unload ()
+	{
 		eAdmin.eaudio.unloadAlbum(this);
-		isTotallyUnloaded = true;
-		mUnloadedData.clear();
+		for (String s : mDataMap.keys())
+			if (!mUnloadedData.contains(s))
+				mUnloadedData.add(s);
 	}
 
 	/**
@@ -117,9 +121,8 @@ public class Album implements ResourceContext {
 	 * @param name
 	 *            list of file name
 	 */
-	public void unload (String... name) {
-		if (isTotallyUnloaded)
-			return;
+	public void unload (String... name)
+	{
 		for (String s : name) {
 			if (eAdmin.eaudio.isLoaded(s, mDataMap.get(s))) {
 				mUnloadedData.add(s);
@@ -134,7 +137,8 @@ public class Album implements ResourceContext {
 	 * @param assetList
 	 *            file list
 	 */
-	public void remove (String... assetList) {
+	public void remove (String... assetList)
+	{
 		for (String asset : assetList) {
 			eAdmin.eaudio.unload(asset);
 			mDataMap.remove(asset);
@@ -142,11 +146,13 @@ public class Album implements ResourceContext {
 		}
 	}
 
-	public boolean contain (String linkName) {
+	public boolean contain (String linkName)
+	{
 		return mDataMap.containsKey(linkName);
 	}
 
-	public int size () {
+	public int size ()
+	{
 		return mDataMap.size;
 	}
 
@@ -155,11 +161,13 @@ public class Album implements ResourceContext {
 	 * 
 	 * @return
 	 */
-	public int unloadedSize () {
+	public int unloadedSize ()
+	{
 		return mUnloadedData.size();
 	}
 
-	public boolean isTotallyUnloaded () {
+	public boolean isTotallyUnloaded ()
+	{
 		for (Entry<String, AudioType> entries : mDataMap.entries()) {
 			if (eAdmin.eaudio.isLoaded(entries.key, entries.value))
 				return false;
@@ -168,8 +176,9 @@ public class Album implements ResourceContext {
 	}
 
 	@Override
-	public boolean isTotallyLoaded () {
-		if (isTotallyUnloaded)
+	public boolean isTotallyLoaded ()
+	{
+		if (isReferencesMode)
 			return true;
 		for (Entry<String, AudioType> entries : mDataMap.entries()) {
 			if (!eAdmin.eaudio.isLoaded(entries.key, entries.value))
@@ -178,7 +187,8 @@ public class Album implements ResourceContext {
 		return true;
 	}
 
-	public ObjectMap<String, AudioType> toData () {
+	public ObjectMap<String, AudioType> toData ()
+	{
 		return mDataMap;
 	}
 
@@ -189,7 +199,8 @@ public class Album implements ResourceContext {
 	/**
 	 * You must call this method constantly until all assets done loading
 	 */
-	public boolean update () {
+	public boolean update ()
+	{
 		return eAdmin.eaudio.update();
 	}
 
@@ -198,24 +209,25 @@ public class Album implements ResourceContext {
 	 * 
 	 * @return the progress (0 to 1)
 	 */
-	public float getProgress () {
+	public float getProgress ()
+	{
 		if (size() > 0)
 			return eAdmin.eaudio.getProgress();
 		return 1;
 	}
 
-	public void clear () {
+	public void clear ()
+	{
 		eAdmin.eaudio.unloadAlbum(this);
 		mDataMap.clear();
 		mUnloadedData.clear();
-		isTotallyUnloaded = false;
 	}
 
-	public void dispose () {
+	public void dispose ()
+	{
 		eAdmin.eaudio.removeAlbum(this);
 		mDataMap.clear();
 		mUnloadedData.clear();
-		isTotallyUnloaded = false;
 	}
 
 }

@@ -8,8 +8,18 @@ import com.badlogic.gdx.utils.Disposable;
  * @CreateOn: Sep 15, 2012 - 11:11:32 AM
  * @Author: TrungNT
  */
-public interface ResourceContext extends Disposable {
+public interface ResourceContext extends Disposable
+{
+	/**
+	 * When this mode enable , the references of data will only be store not
+	 * load
+	 * 
+	 * @param isRefStore
+	 */
+	public void setRefStoreMode (boolean isRefStore);
 
+	public boolean isRefStoreMode();
+	
 	/**
 	 * Reload all resource after isTottlayUnloaded or when unload data size > 0
 	 * Make sure no untrack data
