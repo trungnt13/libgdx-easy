@@ -18,6 +18,7 @@ package okj.easy.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Executes tasks in the future on the main loop thread.
@@ -27,13 +28,14 @@ import com.badlogic.gdx.utils.Disposable;
  * @Author: Nathan Sweet
  * @Author: TrungNT
  */
-public class Timer
+public final class Timer
 {
 
 	static public final int CANCELLED = 0;
 	static public final int FOREVER = -2;
 
 	private final Array<Task> tasks = new Array(false, 13);
+	private final ObjectMap<String, Timer> mSchdulerMap = new ObjectMap<String, Timer>();
 
 	private boolean stopped, posted;
 
@@ -55,7 +57,6 @@ public class Timer
 	/***********************************************************
 	 * Methods
 	 ***********************************************************/
-
 	/** Schedules a task to occur once at the start of the next frame. */
 	void postTask (Task task)
 	{
@@ -169,6 +170,8 @@ public class Timer
 		for (int i = 0, n = tasks.size; i < n; i++) {
 			final Task task = tasks.get(i);
 			task.delaySeconds -= delta;
+
+			// ============= check if task need to execute =============
 			if (task.delaySeconds > 0)
 				continue;
 			if (task.repeatCount != CANCELLED) {
@@ -176,6 +179,8 @@ public class Timer
 					task.repeatCount = CANCELLED;
 				task.run();
 			}
+
+			// ============= Done execute task =============
 			if (task.repeatCount == CANCELLED) {
 				tasks.removeIndex(i);
 				i--;

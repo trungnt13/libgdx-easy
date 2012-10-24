@@ -5,7 +5,6 @@ import okj.easy.core.utils.Bridge;
 import okj.easy.core.utils.BridgePool;
 import okj.easy.graphics.graphics2d.NWorld;
 import okj.easy.screen.LoadingScreen;
-import okj.easy.screen.SafeLoader;
 
 import org.ege.utils.E;
 import org.ege.utils.EasyNativeLoader;
@@ -203,9 +202,6 @@ public abstract class GameCore implements ApplicationListener
 		isPause = false;
 		onGameResume();
 
-		// start schedule
-		mSchedulerTimer.start();
-
 		// reload context
 		if (!isStarted) {
 			screen = mStartScreen;
@@ -214,6 +210,9 @@ public abstract class GameCore implements ApplicationListener
 				@Override
 				public Screen screenChanged ()
 				{
+					// re-start schedule
+					mSchedulerTimer.start();
+
 					return mSavedScreen;
 				}
 			});
@@ -322,30 +321,10 @@ public abstract class GameCore implements ApplicationListener
 		}
 	}
 
-	void setScreen (Screen screen, SafeLoader loader, ResourcePack pack)
-	{
-		if (pack.isTotallyLoaded()) {
-			setScreen(screen, E.screen.RELEASE);
-			return;
-		}
-		loader.enableSafeMode(screen, pack);
-		setScreen(loader, E.screen.RELEASE);
-	}
-
-	void setScreen (Screen screen, SafeLoader loader, ResourceContext... contexts)
-	{
-		final ResourcePack pack = new ResourcePack(SafeLoader.name, contexts);
-		if (pack.isTotallyLoaded()) {
-			setScreen(screen, E.screen.RELEASE);
-			return;
-		}
-		loader.enableSafeMode(screen, pack);
-		setScreen(loader, E.screen.RELEASE);
-	}
-
 	void setScreen (Screen screen, ResourceContext... contexts)
 	{
 		final ResourcePack pack = new ResourcePack(SafeLoader.name, contexts);
+		pack.setRefStoreMode(false);
 		if (pack.isTotallyLoaded()) {
 			setScreen(screen, E.screen.RELEASE);
 			return;
@@ -366,6 +345,7 @@ public abstract class GameCore implements ApplicationListener
 
 	void setScreen (Screen screen, ResourcePack pack)
 	{
+		pack.setRefStoreMode(false);
 		if (pack.isTotallyLoaded()) {
 			setScreen(screen, E.screen.RELEASE);
 			return;

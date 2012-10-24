@@ -14,7 +14,8 @@ import com.badlogic.gdx.math.Matrix4;
  * @CreateOn: Sep 15, 2012 - 11:06:31 AM
  * @Author: TrungNT
  */
-public class eAdmin {
+public class eAdmin
+{
 	public static GameCore egame;
 	public static eInput einput;
 	public static eAudio eaudio;
@@ -26,7 +27,8 @@ public class eAdmin {
 
 	}
 
-	public static void destroy () {
+	public static void destroy ()
+	{
 		econtext.dispose();
 		eaudio.dispose();
 	}
@@ -39,27 +41,33 @@ public class eAdmin {
 	 * GameCore method
 	 **************************************************************************/
 
-	public static int gameWidth () {
+	public static int gameWidth ()
+	{
 		return eGraphics.game.GAME_WIDTH;
 	}
 
-	public static int gameHeight () {
+	public static int gameHeight ()
+	{
 		return eGraphics.game.GAME_HEIGHT;
 	}
 
-	public static int uiWidth () {
+	public static int uiWidth ()
+	{
 		return eGraphics.ui.UI_WIDTH;
 	}
 
-	public static int uiHeight () {
+	public static int uiHeight ()
+	{
 		return eGraphics.ui.UI_HEIGHT;
 	}
 
-	public static int orientaion () {
+	public static int orientaion ()
+	{
 		return eGraphics.ORIENTATION;
 	}
 
-	public static float toastWidth () {
+	public static float toastWidth ()
+	{
 		return eGraphics.ui.TOAST_WIDTH;
 	}
 
@@ -67,19 +75,22 @@ public class eAdmin {
 	 * eGame Method
 	 **************************************************************************/
 
-	public static void apply (SpriteCache cache) {
+	public static void apply (SpriteCache cache)
+	{
 		final Matrix4 proj = egame.getCurrentScreen().projection;
 		proj.setToOrtho2D(0, 0, gameWidth(), gameHeight());
 		cache.setProjectionMatrix(proj);
 	}
 
-	public static void apply (SpriteBatch batch) {
+	public static void apply (SpriteBatch batch)
+	{
 		final Matrix4 proj = egame.getCurrentScreen().projection;
 		proj.setToOrtho2D(0, 0, gameWidth(), gameHeight());
 		batch.setProjectionMatrix(proj);
 	}
 
-	public static void apply (Layout layout) {
+	public static void apply (Layout layout)
+	{
 		layout.setViewport(uiWidth(), uiHeight(), false);
 	}
 	/***************************************************************************

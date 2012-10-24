@@ -4,12 +4,14 @@ import okj.easy.core.eAdmin;
 
 import org.ege.utils.Pauseable;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 
@@ -19,33 +21,34 @@ import com.badlogic.gdx.utils.Scaling;
  * @author Trung
  * 
  */
-public class Layout extends Stage implements Pauseable {
+public class Layout extends Stage implements Pauseable
+{
 
-	private static int			LAYOUT_ID				= 999;
+	private static int LAYOUT_ID = 999;
 
 	// ================================================
 	// Panel manage
 
-	private final Panel			mDefaultPanel			= new Panel();
+	private final Panel mDefaultPanel = new Panel();
 
 	// for safemode enable
-	private Panel				mSafeModePanel			= null;
+	private Panel mSafeModePanel = null;
 
 	/**
 	 * We only use this in safemode to save the last UI when pause and resume
 	 */
-	private final Array<Actor>	mCurrentVisiblePanel	= new Array<Actor>(6);
-	private boolean				isSafeModeEnable		= false;
+	private final Array<Actor> mCurrentVisiblePanel = new Array<Actor>(6);
+	private boolean isSafeModeEnable = false;
 
 	// ==================================================
 
-	public final int			ID;
+	public final int ID;
 
-	public float				alpha					= 1f;
+	public float alpha = 1f;
 
-	final Image					mBackground;
+	final Image mBackground;
 
-	public Layout (boolean strecth) {
+	public Layout(boolean strecth) {
 		super(eAdmin.uiWidth(), eAdmin.uiHeight(), strecth);
 		addPanelToRoot(mDefaultPanel);
 		mCurPanel = mDefaultPanel;
@@ -66,13 +69,22 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 *******************************************************/
 
-	public void setBackground (Drawable drawable) {
+	public void setBackground (Drawable drawable)
+	{
 		if (mBackground.getParent() == null)
 			mDefaultPanel.addActorAt(0, mBackground);
 		mBackground.setDrawable(drawable);
 	}
 
-	public Image getBackground () {
+	public void setBackground (TextureRegion region)
+	{
+		if (mBackground.getParent() == null)
+			mDefaultPanel.addActorAt(0, mBackground);
+		mBackground.setDrawable(new TextureRegionDrawable(region));
+	}
+
+	public Image getBackground ()
+	{
 		return mBackground;
 	}
 
@@ -80,12 +92,14 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 *******************************************************/
 
-	public void addAction (Action action) {
+	public void addAction (Action action)
+	{
 		mBackground.addAction(action);
 		getRoot().addAction(action);
 	}
 
-	public Layout setEnable (boolean enable) {
+	public Layout setEnable (boolean enable)
+	{
 		mBackground.setTouchable(Touchable.enabled);
 		return this;
 	}
@@ -99,7 +113,8 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 * @param panel
 	 */
-	public void addPanel (Panel panel) {
+	public void addPanel (Panel panel)
+	{
 		addPanelToRoot(panel);
 	}
 
@@ -108,7 +123,8 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 * @return
 	 */
-	public Panel createPanel () {
+	public Panel createPanel ()
+	{
 		Panel panel = new Panel();
 		mCurPanel = panel;
 		addPanelToRoot(panel);
@@ -120,7 +136,8 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 * @return
 	 */
-	public Panel createSafeModePanel () {
+	public Panel createSafeModePanel ()
+	{
 		// save visible list
 		mCurrentVisiblePanel.clear();
 		Array<Actor> list = getActors();
@@ -143,7 +160,8 @@ public class Layout extends Stage implements Pauseable {
 	/**
 	 * Restore the panel state to the before enable safe mode
 	 */
-	public void restore () {
+	public void restore ()
+	{
 		if (isSafeModeEnable) {
 			mSafeModePanel.clear();
 			getRoot().removeActor(mSafeModePanel);
@@ -154,11 +172,13 @@ public class Layout extends Stage implements Pauseable {
 		}
 	}
 
-	public void removePanel (Panel panel) {
+	public void removePanel (Panel panel)
+	{
 		getRoot().removeActor(panel);
 	}
 
-	public void setVisiblePanel (Panel... list) {
+	public void setVisiblePanel (Panel... list)
+	{
 		Array<Actor> root = getActors();
 		for (Actor a : root)
 			a.setVisible(false);
@@ -166,7 +186,8 @@ public class Layout extends Stage implements Pauseable {
 			panel.setVisible(true);
 	}
 
-	public void setToDefault () {
+	public void setToDefault ()
+	{
 		mCurPanel = mDefaultPanel;
 		Array<Actor> root = getActors();
 		for (Actor a : root)
@@ -174,39 +195,45 @@ public class Layout extends Stage implements Pauseable {
 		mDefaultPanel.setVisible(true);
 	}
 
-	public void setToCurrent () {
+	public void setToCurrent ()
+	{
 		Array<Actor> root = getActors();
 		for (Actor a : root)
 			a.setVisible(false);
 		mCurPanel.setVisible(true);
 	}
 
-	private void addPanelToRoot (Panel panel) {
+	private void addPanelToRoot (Panel panel)
+	{
 		getRoot().addActor(panel);
 	}
 
 	// ==========================================
 	// getter method
 
-	public Panel getCurrentPanel () {
+	public Panel getCurrentPanel ()
+	{
 		return mCurPanel;
 	}
 
-	public Panel getDefaultPanel () {
+	public Panel getDefaultPanel ()
+	{
 		return mDefaultPanel;
 	}
 
 	/*******************************************************
 	 * Actor manage
 	 *******************************************************/
-	private Panel	mCurPanel	= mDefaultPanel;
+	private Panel mCurPanel = mDefaultPanel;
 
 	@Override
-	public void addActor (Actor actor) {
+	public void addActor (Actor actor)
+	{
 		mCurPanel.addActor(actor);
 	}
 
-	public void setCurrentPanel (Panel panel) {
+	public void setCurrentPanel (Panel panel)
+	{
 		if (getActors().contains(panel, true))
 			mCurPanel = panel;
 	}
@@ -215,12 +242,14 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 *******************************************************/
 	@Override
-	public void Pause () {
+	public void Pause ()
+	{
 		eAdmin.einput.removeProcessor(ID);
 	}
 
 	@Override
-	public void Resume () {
+	public void Resume ()
+	{
 		eAdmin.einput.addProcessor(ID, this);
 	}
 
@@ -232,7 +261,8 @@ public class Layout extends Stage implements Pauseable {
 	 * This method will remove all panel (just keep default panel ) and then
 	 * reset the default panel
 	 */
-	public void clear () {
+	public void clear ()
+	{
 		super.clear();
 
 		mDefaultPanel.clear();
@@ -245,7 +275,8 @@ public class Layout extends Stage implements Pauseable {
 	}
 
 	@Override
-	public void dispose () {
+	public void dispose ()
+	{
 		super.dispose();
 		clear();
 		eAdmin.einput.removeProcessor(ID);

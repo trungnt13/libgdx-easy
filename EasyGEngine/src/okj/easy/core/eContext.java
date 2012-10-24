@@ -26,17 +26,18 @@ import com.badlogic.gdx.utils.ObjectMap;
  * @CreateOn: Sep 15, 2012 - 11:11:52 AM
  * @Author: TrungNT
  */
-public class eContext {
-	public final AssetManager					manager;
+public class eContext
+{
+	public final AssetManager manager;
 
-	private final ObjectMap<String, Context>	mContextMap;
-	private final ObjectMap<String, Class<?>>	mNoManageData;
+	private final ObjectMap<String, Context> mContextMap;
+	private final ObjectMap<String, Class<?>> mNoManageData;
 
-	private StyleAtlas							mCurStyleAtlas	= null;
+	private StyleAtlas mCurStyleAtlas = null;
 
-	private TextureAtlas						mCurAtlas		= null;
+	private TextureAtlas mCurAtlas = null;
 
-	public eContext () {
+	public eContext() {
 		manager = new AssetManager();
 		manager.setLoader(StyleAtlas.class, new StyleLoader(new InternalFileHandleResolver()));
 
@@ -52,7 +53,8 @@ public class eContext {
 	 * Style manager
 	 ********************************************************************************/
 
-	StyleAtlas styleQuery (String name) {
+	StyleAtlas styleQuery (String name)
+	{
 		return mCurStyleAtlas = manager.get(name, StyleAtlas.class);
 	}
 
@@ -63,9 +65,11 @@ public class eContext {
 	 * @param type
 	 * @return
 	 */
-	<T> T getStyle (String styleName, Class<T> type) {
+	<T> T getStyle (String styleName, Class<T> type)
+	{
 		if (mCurStyleAtlas == null)
-			throw new EasyGEngineRuntimeException("Plz  use eAdmin.eContext.atlasQuery(...) mode first");
+			throw new EasyGEngineRuntimeException(
+					"Plz  use eAdmin.eContext.atlasQuery(...) mode first");
 		return mCurStyleAtlas.get(styleName, type);
 	}
 
@@ -76,23 +80,29 @@ public class eContext {
 	 * @param type
 	 * @return
 	 */
-	<T> T optional (String resourceName, Class<T> type) {
+	<T> T optional (String resourceName, Class<T> type)
+	{
 		if (mCurStyleAtlas == null)
-			throw new EasyGEngineRuntimeException("Plz  use eAdmin.eContext.atlasQuery(...) mode first");
+			throw new EasyGEngineRuntimeException(
+					"Plz  use eAdmin.eContext.atlasQuery(...) mode first");
 		return mCurStyleAtlas.optional(resourceName, type);
 	}
 
-	StyleAtlas getStyleAtlas (String name) {
+	StyleAtlas getStyleAtlas (String name)
+	{
 		return manager.get(name, StyleAtlas.class);
 	}
 
-	void stopQuery () {
+	void stopQuery ()
+	{
 		mCurStyleAtlas = null;
 	}
 
-	public void setStyleResolution (Resolution... resolutions) {
+	public void setStyleResolution (Resolution... resolutions)
+	{
 		if (resolutions.length > 0) {
-			ResolutionFileResolver resolver = new ResolutionFileResolver(new InternalFileHandleResolver(), resolutions);
+			ResolutionFileResolver resolver = new ResolutionFileResolver(
+					new InternalFileHandleResolver(), resolutions);
 			manager.setLoader(StyleAtlas.class, new StyleLoader(resolver));
 		} else {
 			manager.setLoader(StyleAtlas.class, new StyleLoader(new InternalFileHandleResolver()));
@@ -122,56 +132,69 @@ public class eContext {
 	 * AssetManager method
 	 *******************************************************/
 
-	<T> T get (String name, Class<T> clazz) {
+	<T> T get (String name, Class<T> clazz)
+	{
 		return manager.get(name, clazz);
 	}
 
-	void unload (String dataPath) {
+	void unload (String dataPath)
+	{
 		if (mNoManageData.containsKey(dataPath)) {
 			mNoManageData.remove(dataPath);
 			manager.unload(dataPath);
 		}
 	}
 
-	public boolean update () {
+	public boolean update ()
+	{
 		return manager.update();
 	}
 
-	public boolean isLoaded (String dataPath) {
+	public boolean isLoaded (String dataPath)
+	{
 		return manager.isLoaded(dataPath);
 	}
 
-	public boolean isLoaded (String dataPath, Class type) {
+	public boolean isLoaded (String dataPath, Class type)
+	{
 		return manager.isLoaded(dataPath, type);
 	}
 
-	public void finishLoading () {
+	public void finishLoading ()
+	{
 		manager.finishLoading();
 	}
 
-	public int getLoadedAssets () {
+	public int getLoadedAssets ()
+	{
 		return manager.getLoadedAssets();
 	}
 
-	public int getQueueAssets () {
+	public int getQueueAssets ()
+	{
 		return manager.getQueuedAssets();
 	}
 
-	public float getProgress () {
+	public float getProgress ()
+	{
 		return manager.getProgress();
 	}
 
-	<T> void load (String name, Class<T> type) {
+	<T> void load (String name, Class<T> type)
+	{
 		mNoManageData.put(name, type);
 		manager.load(name, type);
 	}
 
-	<T> void load (String name, Class<T> type, AssetLoaderParameters<T> param) {
+	<T> void load (String name, Class<T> type, AssetLoaderParameters<T> param)
+	{
 		mNoManageData.put(name, type);
 		manager.load(name, type, param);
 	}
 
-	public <T, P extends AssetLoaderParameters<T>> void setLoader (Class<T> type, AssetLoader<T, P> loader) {
+	public <T, P extends AssetLoaderParameters<T>> void setLoader (Class<T> type,
+			AssetLoader<T, P> loader)
+	{
 		manager.setLoader(type, loader);
 	}
 
@@ -180,25 +203,29 @@ public class eContext {
 	 * 
 	 * @return the array list of art
 	 */
-	public Iterator<Context> toContexts () {
+	public Iterator<Context> toContexts ()
+	{
 		return mContextMap.values();
 	}
 
 	/**
 	 * Destroy the manager (game down)
 	 */
-	void dispose () {
+	void dispose ()
+	{
 		manager.dispose();
 	}
 
 	/**
 	 * Clear all asset of the manager
 	 */
-	void superClear () {
+	void superClear ()
+	{
 		manager.clear();
 	}
 
-	public int totalData () {
+	public int totalData ()
+	{
 		int size = 0;
 		for (Iterator<Context> iterator = mContextMap.values(); iterator.hasNext();) {
 			size += iterator.next().size();
@@ -210,11 +237,13 @@ public class eContext {
 	 * public Context manager method
 	 ********************************************************************************/
 
-	void reloadContext (String contextName) {
+	void reloadContext (String contextName)
+	{
 		mContextMap.get(contextName).reload();
 	}
 
-	void unloadContext (String contextName) {
+	void unloadContext (String contextName)
+	{
 		mContextMap.get(contextName).unload();
 	}
 
@@ -225,12 +254,12 @@ public class eContext {
 	 * @param context
 	 *            your context
 	 */
-	void clearContext (String contextName) {
+	void clearContext (String contextName)
+	{
 		Context context = mContextMap.get(contextName);
 		unloadContext(context);
 		context.mDataMap.clear();
 		context.mUnloadedData.clear();
-		context.isTotallyUnloaded = false;
 	}
 
 	/**
@@ -240,7 +269,8 @@ public class eContext {
 	 *            your context
 	 * @return true if success removed, otherwise false
 	 */
-	void removeContext (String contextName) {
+	void removeContext (String contextName)
+	{
 		mContextMap.get(contextName).remove();
 	}
 
@@ -255,7 +285,8 @@ public class eContext {
 	 * @return true if context != null and success load context , otherwise
 	 *         false
 	 */
-	void addContext (Context context) {
+	void addContext (Context context)
+	{
 		if (context != null && !mContextMap.containsValue(context, true)) {
 			mContextMap.put(context.name, context);
 		}
@@ -266,7 +297,8 @@ public class eContext {
 	 * 
 	 * @param data
 	 */
-	<T> void loadContextData (String linkName, Class<T> clazz) {
+	<T> void loadContextData (String linkName, Class<T> clazz)
+	{
 		manager.load(linkName, clazz);
 	}
 
@@ -275,18 +307,21 @@ public class eContext {
 	 * 
 	 * @param data
 	 */
-	<T> void loadContextData (String linkName, Class<T> clazz, AssetLoaderParameters<T> param) {
+	<T> void loadContextData (String linkName, Class<T> clazz, AssetLoaderParameters<T> param)
+	{
 		manager.load(linkName, clazz, param);
 	}
 
-	<T> void loadGraphicsData (String linkName, Data<T> data) {
+	<T> void loadGraphicsData (String linkName, Data<T> data)
+	{
 		if (data.param != null)
 			loadContextData(linkName, data.clazz, data.param);
 		else
 			loadContextData(linkName, data.clazz);
 	}
 
-	void loadContext (Context context) {
+	void loadContext (Context context)
+	{
 		Iterator<String> assetList = context.mDataMap.keys();
 		String tmp = null;
 		while (assetList.hasNext()) {
@@ -295,13 +330,15 @@ public class eContext {
 		}
 	}
 
-	void unloadContext (Context context) {
+	void unloadContext (Context context)
+	{
 		Iterator<String> dataName = context.mDataMap.keys();
 		while (dataName.hasNext())
 			unloadDirectly(dataName.next());
 	}
 
-	void removeContext (Context context) {
+	void removeContext (Context context)
+	{
 		unloadContext(context);
 		mContextMap.remove(context.name);
 	}
@@ -313,7 +350,8 @@ public class eContext {
 	 * @param data
 	 *            unLoaded data
 	 */
-	void unloadDirectly (String linkName) {
+	void unloadDirectly (String linkName)
+	{
 		manager.unload(linkName);
 	}
 
@@ -328,7 +366,8 @@ public class eContext {
 	 *            art's name
 	 * @return found art(maybe null)
 	 */
-	Context findContextByName (String name) {
+	Context findContextByName (String name)
+	{
 		return mContextMap.get(name);
 	}
 
@@ -339,7 +378,8 @@ public class eContext {
 	 * @param clazz
 	 * @return
 	 */
-	<T> T findDataByName (String linkName, Class<T> clazz) {
+	<T> T findDataByName (String linkName, Class<T> clazz)
+	{
 		return manager.get(linkName, clazz);
 	}
 
@@ -347,24 +387,28 @@ public class eContext {
 	 * Query function
 	 ***************************************************************************/
 
-	TextureAtlas atlasQuery (String name) {
+	TextureAtlas atlasQuery (String name)
+	{
 		mCurAtlas = manager.get(name, TextureAtlas.class);
 		return mCurAtlas;
 	}
 
-	TextureRegion findGRegionByName (String regionName) {
+	TextureRegion findGRegionByName (String regionName)
+	{
 		if (mCurAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz use eAdmin.egraphics.atlasQuery(...) first");
 		return mCurAtlas.findRegion(regionName);
 	}
 
-	TextureRegion findGRegionByName (String regionName, int index) {
+	TextureRegion findGRegionByName (String regionName, int index)
+	{
 		if (mCurAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz use eAdmin.egraphics.atlasQuery(...) first");
 		return mCurAtlas.findRegion(regionName, index);
 	}
 
-	TextureRegion[] findGRegionsByName (String regionName) {
+	TextureRegion[] findGRegionsByName (String regionName)
+	{
 		if (mCurAtlas == null)
 			throw new EasyGEngineRuntimeException("Plz use eAdmin.egraphics.atlasQuery(...) first");
 		return eGraphics.regionConvert(mCurAtlas.findRegions(regionName));
@@ -374,69 +418,85 @@ public class eContext {
 	 * Pool Manager
 	 ********************************************************************************/
 
-	private final ObjectMap<Class<?>, Pool<?>>	mPools;
-	private Pool								mCurrentPool;
+	private final ObjectMap<Class<?>, Pool<?>> mPools;
+	private Pool mCurrentPool;
 
-	public Pool poolQuery (Class type) {
+	public Pool poolQuery (Class type)
+	{
 		mCurrentPool = mPools.get(type);
 		if (mCurrentPool == null)
-			throw new EasyGEngineRuntimeException("You haven't make any pool for class : " + type.getName());
+			throw new EasyGEngineRuntimeException("You haven't make any pool for class : "
+					+ type.getName());
 		return mCurrentPool;
 	}
 
-	public <T> void makePool (final Class<T> type, Factory<T> factory) {
+	public <T> void makePool (final Class<T> type, Factory<T> factory)
+	{
 		mPools.put(type, new Pool<T>(factory));
 	}
 
-	public <T> void makePool (int initCapacity, Class<T> type, Factory<T> factory) {
+	public <T> void makePool (int initCapacity, Class<T> type, Factory<T> factory)
+	{
 		mPools.put(type, new Pool<T>(initCapacity, factory));
 	}
 
-	public <T> T newObject () {
+	public <T> T newObject ()
+	{
 		return (T) mCurrentPool.obtain();
 	}
 
-	public <T> T newObject (Object... objects) {
+	public <T> T newObject (Object... objects)
+	{
 		return (T) mCurrentPool.obtain(objects);
 	}
 
-	public <T> T newObject (Class<T> type) {
+	public <T> T newObject (Class<T> type)
+	{
 		return (T) mPools.get(type).obtain();
 	}
 
-	public <T> T newObject (Class<T> type, Object... objects) {
+	public <T> T newObject (Class<T> type, Object... objects)
+	{
 		return (T) mPools.get(type).obtain(objects);
 	}
 
-	public <T> void free (T obj) {
+	public <T> void free (T obj)
+	{
 		mCurrentPool.free(obj);
 	}
 
-	public <T> void free (Array<T> objs) {
+	public <T> void free (Array<T> objs)
+	{
 		mCurrentPool.free(objs);
 	}
 
-	public <T> void free (Class<T> type, T obj) {
+	public <T> void free (Class<T> type, T obj)
+	{
 		((Pool<T>) mPools.get(type)).free(obj);
 	}
 
-	public <T> void free (Class<T> type, Array<T> objs) {
+	public <T> void free (Class<T> type, Array<T> objs)
+	{
 		((Pool<T>) mPools.get(type)).free(objs);
 	}
 
-	public int poolSize () {
+	public int poolSize ()
+	{
 		return mCurrentPool.size();
 	}
 
-	public <T> int poolSize (Class<T> type) {
+	public <T> int poolSize (Class<T> type)
+	{
 		return mPools.get(type).size();
 	}
 
-	public void clearPool () {
+	public void clearPool ()
+	{
 		mCurrentPool.clear();
 	}
 
-	public void clearPool (Class<?> type) {
+	public void clearPool (Class<?> type)
+	{
 		mPools.get(type).clear();
 	}
 }

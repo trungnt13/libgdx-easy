@@ -1,43 +1,46 @@
-package okj.easy.screen;
-
-import okj.easy.core.ResourcePack;
-import okj.easy.core.Screen;
-import okj.easy.core.eAdmin;
+package okj.easy.core;
 
 import org.ege.utils.E;
 
-public abstract class SafeLoader extends Screen {
-	public static final String	name	= SafeLoader.class.getName();
+public abstract class SafeLoader extends Screen
+{
+	public static final String name = SafeLoader.class.getName();
 
-	private Screen				mDstScreen;
-	protected ResourcePack		resources;
+	private Screen mDstScreen;
+	protected ResourcePack resources;
 
-	protected float				progress;
+	protected float progress;
+
+	private boolean isAutoChangeScreen = true;
 
 	@Override
-	public void show () {
+	public void show ()
+	{
 		onCreate();
 	}
 
 	@Override
-	public void resize (int width, int height) {
+	public void resize (int width, int height)
+	{
 		super.resize(width, height);
 		onResize(width, height);
 	}
 
 	@Override
-	public void update (float delta) {
+	public void update (float delta)
+	{
 		super.update(delta);
 		eAdmin.econtext.update();
 		eAdmin.eaudio.update();
-		if (resources.isTotallyLoaded())
+		if (resources.isTotallyLoaded() && isAutoChangeScreen)
 			setScreen(mDstScreen, E.screen.RELEASE);
 		progress = (eAdmin.econtext.getProgress() + eAdmin.eaudio.getProgress()) / 2;
 	}
 
 	@Override
-	public void destroy (int destroyMode) {
-		super.destroy(destroyMode);
+	public void destroy (int destroyMode)
+	{
+		super.destroy(E.screen.RELEASE);
 		onDestroy();
 	}
 
@@ -51,10 +54,15 @@ public abstract class SafeLoader extends Screen {
 
 	public abstract void onDestroy ();
 
-	public void enableSafeMode (Screen screen, ResourcePack pack) {
+	void enableSafeMode (Screen screen, ResourcePack pack)
+	{
 		mDstScreen = screen;
 
 		resources = pack;
 	}
 
+	public void setAutoChangeScreen (boolean isAuto)
+	{
+		this.isAutoChangeScreen = isAuto;
+	}
 }
