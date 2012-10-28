@@ -18,7 +18,6 @@ package okj.easy.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Executes tasks in the future on the main loop thread.
@@ -35,7 +34,6 @@ public final class Timer
 	static public final int FOREVER = -2;
 
 	private final Array<Task> tasks = new Array(false, 13);
-	private final ObjectMap<String, Timer> mSchdulerMap = new ObjectMap<String, Timer>();
 
 	private boolean stopped, posted;
 

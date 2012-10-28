@@ -8,58 +8,60 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.FloatArray;
-import com.badlogic.gdx.utils.Updater;
+import com.badlogic.gdx.utils.Updateable;
 
 /**
  * SpriteCAA : <b>ASYNCHRONIZE COMPOSITE ANIMATE Sprite</b>
  * 
  * @author Ngo Trong Trung
  */
-public class Spriter implements SpriteBackend, Disposable, Animator {
-	private final SpriteBackend[]	mSpriteList;
-	private final Scaler[]			mScaler;
+public class Spriter implements SpriteBackend, Disposable, Animator
+{
+	private final SpriteBackend[] mSpriteList;
+	private final Scaler[] mScaler;
 
 	// Config
-	private final int[]				mDrawable;
-	private int						drawableSize	= 0;
+	private final int[] mDrawable;
+	private int drawableSize = 0;
 
-	private final int[]				mRunnable;
-	private int						runnbaleSize	= 0;
+	private final int[] mRunnable;
+	private int runnbaleSize = 0;
 
-	private final int[]				mCollision;
-	private int						collisionSize	= 0;
+	private final int[] mCollision;
+	private int collisionSize = 0;
 
 	// param
 
-	private boolean					RUN;
+	private boolean RUN;
 
-	private final int				limit;
-	private int						size			= 0;
+	private final int limit;
+	private int size = 0;
 
-	private SpriteBackend			mOriginSprite;
-	private float					mOriginWidth;
-	private float					mOriginHeight;
+	private SpriteBackend mOriginSprite;
+	private float mOriginWidth;
+	private float mOriginHeight;
 
-	private final FloatArray		rect			= new FloatArray(4);
+	private final FloatArray rect = new FloatArray(4);
 	// --------------------------------------------------
 
-	private int						idx				= 0;
+	private int idx = 0;
 
 	// --------------------------------------------------
 
-	private float					x;
-	private float					y;
-	private float					w;
-	private float					h;
+	private float x;
+	private float y;
+	private float w;
+	private float h;
 
-	private Updater					mUpdater		= Updater.instance;
+	private Array<Updateable> mUpdater = new Array<Updateable>(0);
 
 	/**
 	 * Construct a default spriter with size 13 child sprite
 	 */
-	public Spriter () {
+	public Spriter() {
 		this(13);
 	}
 
@@ -69,7 +71,7 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	 * 
 	 * @param limit
 	 */
-	protected Spriter (int limit) {
+	protected Spriter(int limit) {
 		this.limit = limit;
 
 		mSpriteList = new SpriteBackend[limit];
@@ -89,7 +91,9 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	 * Layer manage
 	 ********************************************************/
 
-	private Scaler calculateScaler (int id, SpriteBackend sprite, float x, float y, float width, float height) {
+	private Scaler calculateScaler (int id, SpriteBackend sprite, float x, float y, float width,
+			float height)
+	{
 		if (mScaler[id] == null) {
 			mScaler[id] = new Scaler();
 		}
@@ -105,7 +109,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return scale;
 	}
 
-	public void bindOriginLayer (SpriteBackend sprite) {
+	public void bindOriginLayer (SpriteBackend sprite)
+	{
 		w = mOriginWidth = sprite.getWidth();
 		h = mOriginHeight = sprite.getHeight();
 		this.x = sprite.getX();
@@ -121,7 +126,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 			refresh();
 	}
 
-	public void bindLayer (float x, float y, float width, float height, SpriteBackend sprite) {
+	public void bindLayer (float x, float y, float width, float height, SpriteBackend sprite)
+	{
 		if (size > limit)
 			throw new EasyGEngineRuntimeException("Out bound of sprite limit");
 
@@ -140,19 +146,23 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		mSpriteList[size++] = sprite;
 	}
 
-	public Spriter bindLayer (float[] attributes, SpriteBackend... sprites) {
+	public Spriter bindLayer (float[] attributes, SpriteBackend... sprites)
+	{
 		if (attributes.length / 4 != sprites.length)
-			throw new EasyGEngineRuntimeException("Attributes length must be equal regions.length * 4");
+			throw new EasyGEngineRuntimeException(
+					"Attributes length must be equal regions.length * 4");
 		int i = 0;
 		for (SpriteBackend sprite : sprites) {
 			idx = i * 4;
-			bindLayer(attributes[idx++], attributes[idx++], attributes[idx++], attributes[idx++], sprite);
+			bindLayer(attributes[idx++], attributes[idx++], attributes[idx++], attributes[idx++],
+					sprite);
 			++i;
 		}
 		return this;
 	}
 
-	public void bindLayer (int id, float x, float y, float width, float height, SpriteBackend sprite) {
+	public void bindLayer (int id, float x, float y, float width, float height, SpriteBackend sprite)
+	{
 		if (size > limit)
 			throw new EasyGEngineRuntimeException("Out bound of sprite limit");
 
@@ -179,11 +189,13 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public SpriteBackend getSprite (int id) {
+	public SpriteBackend getSprite (int id)
+	{
 		return mSpriteList[id];
 	}
 
-	public int getLayerId (SpriteBackend sprite) {
+	public int getLayerId (SpriteBackend sprite)
+	{
 		final SpriteBackend[] list = Spriter.this.mSpriteList;
 		for (int i = 0; i < size; i++)
 			if (list[i] == sprite)
@@ -195,19 +207,22 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	 * Color method
 	 ********************************************************/
 
-	public void setColor (float r, float g, float b, float a) {
+	public void setColor (float r, float g, float b, float a)
+	{
 		final SpriteBackend[] list = Spriter.this.mSpriteList;
 		for (int i = 0; i < size; i++)
 			list[i].setColor(r, g, b, a);
 	}
 
-	public void setColor (Color color) {
+	public void setColor (Color color)
+	{
 		final SpriteBackend[] list = Spriter.this.mSpriteList;
 		for (int i = 0; i < size; i++)
 			list[i].setColor(color);
 	}
 
-	public void setColor (Color[] color, int[] layer) {
+	public void setColor (Color[] color, int[] layer)
+	{
 		if (color.length != layer.length)
 			throw new EasyGEngineRuntimeException("Color length must be the same with layer length");
 
@@ -219,7 +234,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void setColor (Color color, int[] layer) {
+	public void setColor (Color color, int[] layer)
+	{
 		if (layer.length > size)
 			throw new EasyGEngineRuntimeException("Layer length must  <= size");
 
@@ -228,7 +244,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 			list[i].setColor(color);
 	}
 
-	public void setColor (float r, float g, float b, float a, int[] layer) {
+	public void setColor (float r, float g, float b, float a, int[] layer)
+	{
 		if (layer.length > size)
 			throw new EasyGEngineRuntimeException("Layer length must  <= size");
 
@@ -237,12 +254,14 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 			list[i].setColor(r, g, b, a);
 	}
 
-	public Spriter setColor (Color color, int layer) {
+	public Spriter setColor (Color color, int layer)
+	{
 		mSpriteList[layer].setColor(color);
 		return this;
 	}
 
-	public Spriter setColor (float r, float g, float b, float a, int layer) {
+	public Spriter setColor (float r, float g, float b, float a, int layer)
+	{
 		mSpriteList[layer].setColor(r, g, b, layer);
 		return this;
 	}
@@ -252,7 +271,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	 ********************************************************/
 
 	@Override
-	public void setBounds (float x, float y, float width, float height) {
+	public void setBounds (float x, float y, float width, float height)
+	{
 		this.x = x;
 		this.y = y;
 		this.w = width;
@@ -263,7 +283,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void setSize (float width, float height) {
+	public void setSize (float width, float height)
+	{
 		this.w = width;
 		this.h = height;
 
@@ -272,7 +293,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void setPosition (float x, float y) {
+	public void setPosition (float x, float y)
+	{
 		final float deltaX = x - this.x;
 		final float deltaY = y - this.y;
 		this.x = x;
@@ -284,7 +306,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 			mSpriteList[i].translate(deltaX, deltaY);
 	}
 
-	public void setX (float x) {
+	public void setX (float x)
+	{
 		final float deltaX = x - this.x;
 		this.x = x;
 
@@ -295,7 +318,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void setY (float y) {
+	public void setY (float y)
+	{
 		final float deltaY = y - this.y;
 		this.y = y;
 
@@ -306,7 +330,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void translate (float xAmount, float yAmount) {
+	public void translate (float xAmount, float yAmount)
+	{
 		this.x += xAmount;
 		this.y += yAmount;
 
@@ -316,7 +341,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void translateX (float xAmount) {
+	public void translateX (float xAmount)
+	{
 		this.x += xAmount;
 
 		mOriginSprite.translateX(xAmount);
@@ -325,7 +351,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void translateY (float yAmount) {
+	public void translateY (float yAmount)
+	{
 		this.y += yAmount;
 
 		mOriginSprite.translateY(yAmount);
@@ -336,7 +363,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	// ------------------------------------------------------
 
 	@Override
-	public void setOrigin (float originX, float originY) {
+	public void setOrigin (float originX, float originY)
+	{
 		mOriginSprite.setOrigin(originX, originY);
 		float newOriginX;
 		float newOriginY;
@@ -348,20 +376,23 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void setOrigin (int layer, float originX, float originY) {
+	public void setOrigin (int layer, float originX, float originY)
+	{
 		mSpriteList[layer].setOrigin(originX, originY);
 	}
 
 	// ------------------------------------------------------
 
 	@Override
-	public void setRotation (float degree) {
+	public void setRotation (float degree)
+	{
 		mOriginSprite.setRotation(degree);
 		for (int i = 1; i < size; i++)
 			mSpriteList[i].setRotation(degree);
 	}
 
-	public Spriter setRotation (int layer, float degree) {
+	public Spriter setRotation (int layer, float degree)
+	{
 		mSpriteList[layer].setRotation(degree);
 		return this;
 	}
@@ -369,42 +400,50 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	// ------------------------------------------------------
 
 	@Override
-	public void rotate (float degree) {
+	public void rotate (float degree)
+	{
 		mOriginSprite.rotate(degree);
 		for (int i = 1; i < size; i++)
 			mSpriteList[i].rotate(degree);
 	}
 
-	public void rotate (int layer, float degree) {
+	public void rotate (int layer, float degree)
+	{
 		mSpriteList[layer].rotate(degree);
 	}
 
 	// ------------------------------------------------------
 
 	@Override
-	public void setScale (float scaleXY) {
+	public void setScale (float scaleXY)
+	{
 		mOriginSprite.setScale(scaleXY);
 	}
 
 	@Override
-	public void setScale (float scaleX, float scaleY) {
+	public void setScale (float scaleX, float scaleY)
+	{
 		mOriginSprite.setScale(scaleX, scaleY);
 	}
 
 	@Override
-	public void scale (float amount) {
+	public void scale (float amount)
+	{
 		mOriginSprite.scale(amount);
 	}
 
-	public void setScale (int layer, float scaleXY) {
+	public void setScale (int layer, float scaleXY)
+	{
 		mSpriteList[layer].setScale(scaleXY);
 	}
 
-	public void setScale (int layer, float scaleX, float scaleY) {
+	public void setScale (int layer, float scaleX, float scaleY)
+	{
 		mSpriteList[layer].setScale(scaleX, scaleY);
 	}
 
-	public void scale (int layer, float amount) {
+	public void scale (int layer, float amount)
+	{
 		mSpriteList[layer].scale(amount);
 	}
 
@@ -413,114 +452,139 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	 ********************************************************/
 
 	@Override
-	public float[] getVertices () {
+	public float[] getVertices ()
+	{
 		return mOriginSprite.getVertices();
 	}
 
 	@Override
-	public float getX () {
+	public float getX ()
+	{
 		return x;
 	}
 
-	public float getX (int layer) {
+	public float getX (int layer)
+	{
 		return mSpriteList[layer].getX();
 	}
 
 	@Override
-	public float getCenterX () {
+	public float getCenterX ()
+	{
 		return mOriginSprite.getCenterX();
 	}
 
-	public float getCenterX (int layer) {
+	public float getCenterX (int layer)
+	{
 		return mSpriteList[layer].getCenterX();
 	}
 
 	@Override
-	public float getY () {
+	public float getY ()
+	{
 		return y;
 	}
 
-	public float getY (int layer) {
+	public float getY (int layer)
+	{
 		return mSpriteList[layer].getY();
 	}
 
 	@Override
-	public float getCenterY () {
+	public float getCenterY ()
+	{
 		return mOriginSprite.getCenterY();
 	}
 
-	public float getCenterY (int layer) {
+	public float getCenterY (int layer)
+	{
 		return mSpriteList[layer].getCenterY();
 	}
 
 	@Override
-	public float getWidth () {
+	public float getWidth ()
+	{
 		return w;
 	}
 
-	public float getWidth (int layer) {
+	public float getWidth (int layer)
+	{
 		return mSpriteList[layer].getWidth();
 	}
 
 	@Override
-	public float getHeight () {
+	public float getHeight ()
+	{
 		return h;
 	}
 
-	public float getHeight (int layer) {
+	public float getHeight (int layer)
+	{
 		return mSpriteList[layer].getHeight();
 	}
 
 	@Override
-	public float getOriginX () {
+	public float getOriginX ()
+	{
 		return mOriginSprite.getOriginX();
 	}
 
-	public float getOriginX (int layer) {
+	public float getOriginX (int layer)
+	{
 		return mSpriteList[layer].getOriginX();
 	}
 
 	@Override
-	public float getOriginY () {
+	public float getOriginY ()
+	{
 		return mOriginSprite.getOriginY();
 	}
 
-	public float getOriginY (int layer) {
+	public float getOriginY (int layer)
+	{
 		return mSpriteList[layer].getOriginY();
 	}
 
 	@Override
-	public float getRotation () {
+	public float getRotation ()
+	{
 		return mOriginSprite.getRotation();
 	}
 
-	public float getRotation (int layer) {
+	public float getRotation (int layer)
+	{
 		return mSpriteList[layer].getRotation();
 	}
 
 	@Override
-	public float getScaleX () {
+	public float getScaleX ()
+	{
 		return mOriginSprite.getScaleX();
 	}
 
-	public float getScaleX (int layer) {
+	public float getScaleX (int layer)
+	{
 		return mSpriteList[layer].getScaleX();
 	}
 
 	@Override
-	public float getScaleY () {
+	public float getScaleY ()
+	{
 		return mOriginSprite.getScaleY();
 	}
 
-	public float getScaleY (int layer) {
+	public float getScaleY (int layer)
+	{
 		return mSpriteList[layer].getScaleY();
 	}
 
-	public int getLimit () {
+	public int getLimit ()
+	{
 		return limit;
 	}
 
-	public int getSize () {
+	public int getSize ()
+	{
 		return size;
 	}
 
@@ -529,7 +593,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	 ********************************************************/
 
 	@Override
-	public Rectangle getBoundingRectangle () {
+	public Rectangle getBoundingRectangle ()
+	{
 		final Rectangle origin = mOriginSprite.getBoundingRectangle();
 		for (int i = 0; i < collisionSize; i++)
 			origin.merge(mSpriteList[mCollision[i]].getBoundingRectangle());
@@ -537,7 +602,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public float[] getBoundingFloatRect (float offset) {
+	public float[] getBoundingFloatRect (float offset)
+	{
 		final FloatArray result = Spriter.this.rect;
 		result.clear();
 		for (int i = 0; i < collisionSize; i++) {
@@ -550,24 +616,28 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public Circle getBoundingCircle () {
+	public Circle getBoundingCircle ()
+	{
 		return null;
 	}
 
-	private boolean containCollision (int layer) {
+	private boolean containCollision (int layer)
+	{
 		for (int i = 0; i < collisionSize; i++)
 			if (mCollision[i] == layer)
 				return true;
 		return false;
 	}
 
-	public Spriter addCollisionLayer (int layer) {
+	public Spriter addCollisionLayer (int layer)
+	{
 		if (collisionSize < limit && !containCollision(layer) && mSpriteList[layer] != null)
 			mCollision[collisionSize++] = layer;
 		return this;
 	}
 
-	public Spriter setCollisionLayer (int... layer) {
+	public Spriter setCollisionLayer (int... layer)
+	{
 		if (layer.length > limit)
 			return this;
 		collisionSize = 0;
@@ -578,7 +648,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public Spriter removeCollisionLayer (int layer) {
+	public Spriter removeCollisionLayer (int layer)
+	{
 		int i;
 		outer: for (i = 0; i < collisionSize; i++)
 			if (mCollision[i] == layer)
@@ -588,7 +659,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public Spriter removeCollsionLayer (int[] layer) {
+	public Spriter removeCollsionLayer (int[] layer)
+	{
 		if (layer.length > collisionSize)
 			return this;
 
@@ -598,11 +670,13 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public int[] getCollisionLayer () {
+	public int[] getCollisionLayer ()
+	{
 		return mCollision;
 	}
 
-	public void clearCollision () {
+	public void clearCollision ()
+	{
 		for (int i = 0; i < limit; i++)
 			mCollision[i] = -1;
 		collisionSize = 0;
@@ -612,7 +686,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	 * 
 	 ********************************************************/
 
-	private boolean containDrawable (int layer) {
+	private boolean containDrawable (int layer)
+	{
 		for (int i = 0; i < drawableSize; i++)
 			if (mDrawable[i] == layer)
 				return true;
@@ -620,13 +695,15 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return false;
 	}
 
-	public Spriter addDrawableLayer (int layer) {
+	public Spriter addDrawableLayer (int layer)
+	{
 		if (drawableSize < limit && !containDrawable(layer) && mSpriteList[layer] != null)
 			mDrawable[drawableSize++] = layer;
 		return this;
 	}
 
-	public Spriter setDrawableLayer (int... layer) {
+	public Spriter setDrawableLayer (int... layer)
+	{
 		if (layer.length > limit)
 			return this;
 
@@ -638,7 +715,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public Spriter removeDrawableLayer (int layer) {
+	public Spriter removeDrawableLayer (int layer)
+	{
 		int i;
 		outer: for (i = 0; i < drawableSize; i++)
 			if (mDrawable[i] == layer)
@@ -648,7 +726,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public Spriter removeDrawableLayer (int[] layer) {
+	public Spriter removeDrawableLayer (int[] layer)
+	{
 		if (layer.length > drawableSize)
 			return this;
 
@@ -658,18 +737,21 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public int[] getDrawbleLayer () {
+	public int[] getDrawbleLayer ()
+	{
 		return mDrawable;
 	}
 
-	public void clearDrawable () {
+	public void clearDrawable ()
+	{
 		stop();
 		for (int i = 0; i < limit; i++)
 			mDrawable[i] = -1;
 		drawableSize = 0;
 	}
 
-	public void draw (SpriteBatch batch) {
+	public void draw (SpriteBatch batch)
+	{
 		final int[] drawable = Spriter.this.mDrawable;
 		for (int i = 0; i < drawableSize; i++) {
 			mSpriteList[drawable[i]].draw(batch);
@@ -677,7 +759,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void draw (SpriteBatch batch, float alpha) {
+	public void draw (SpriteBatch batch, float alpha)
+	{
 		final int[] drawable = Spriter.this.mDrawable;
 		for (int i = 0; i < drawableSize; i++) {
 			mSpriteList[drawable[i]].draw(batch, alpha);
@@ -687,7 +770,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	/********************************************************
 	 * 
 	 ********************************************************/
-	private boolean containRunnable (int layer) {
+	private boolean containRunnable (int layer)
+	{
 		for (int i = 0; i < runnbaleSize; i++)
 			if (mRunnable[i] == layer)
 				return true;
@@ -695,13 +779,15 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return false;
 	}
 
-	public Spriter addRunnableLayer (int layer) {
+	public Spriter addRunnableLayer (int layer)
+	{
 		if (runnbaleSize < limit && !containRunnable(layer) && mSpriteList[layer] != null)
 			mDrawable[runnbaleSize++] = layer;
 		return this;
 	}
 
-	public Spriter setRunnableLayer (int... layer) {
+	public Spriter setRunnableLayer (int... layer)
+	{
 		if (layer.length > limit)
 			return this;
 
@@ -714,7 +800,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public Spriter removeRunnableLayer (int layer) {
+	public Spriter removeRunnableLayer (int layer)
+	{
 		int i;
 		outer: for (i = 0; i < runnbaleSize; i++)
 			if (mRunnable[i] == layer)
@@ -724,7 +811,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public Spriter removeRunnableLayer (int[] layer) {
+	public Spriter removeRunnableLayer (int[] layer)
+	{
 		if (layer.length > runnbaleSize)
 			return this;
 
@@ -734,18 +822,21 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public void clearRunnable () {
+	public void clearRunnable ()
+	{
 		stop();
 		for (int i = 0; i < limit; i++)
 			mRunnable[i] = -1;
 		runnbaleSize = 0;
 	}
 
-	public int[] getRunnableLayer () {
+	public int[] getRunnableLayer ()
+	{
 		return mRunnable;
 	}
 
-	public void setFrameDuration (float frameDuration) {
+	public void setFrameDuration (float frameDuration)
+	{
 		final int[] runnable = this.mRunnable;
 
 		for (int i = 0; i < runnbaleSize; i++) {
@@ -753,7 +844,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void setFrameDuration (float frameDuration, int[] layer) {
+	public void setFrameDuration (float frameDuration, int[] layer)
+	{
 		for (int i : layer) {
 			if (i < 0 && i >= size)
 				continue;
@@ -765,7 +857,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void setFrameDuration (float[] frameDurations, int[] layer) {
+	public void setFrameDuration (float[] frameDurations, int[] layer)
+	{
 		if (frameDurations.length != layer.length)
 			return;
 		int i = 0;
@@ -781,13 +874,15 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void start () {
+	public void start ()
+	{
 		RUN = true;
 		for (int i = 0; i < runnbaleSize; i++)
 			((Animator) mSpriteList[mRunnable[i]]).start();
 	}
 
-	public void start (float frameDuration) {
+	public void start (float frameDuration)
+	{
 		RUN = true;
 		for (int i = 0; i < runnbaleSize; i++) {
 			((Animator) mSpriteList[mRunnable[i]]).start(frameDuration);
@@ -795,59 +890,95 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void start (float frameDuration, int playMode) {
+	public void start (float frameDuration, int playMode)
+	{
 		RUN = true;
 		for (int i = 0; i < runnbaleSize; i++)
 			((Animator) mSpriteList[mRunnable[i]]).start(frameDuration, playMode);
 	}
 
 	@Override
-	public void pause () {
+	public void pause ()
+	{
 		RUN = false;
 	}
 
 	@Override
-	public boolean isRunning () {
+	public boolean isRunning ()
+	{
 		return RUN;
 	}
 
-	public void stop () {
+	public void stop ()
+	{
 		RUN = false;
 		resetFrame();
 	}
 
-	public void switchState () {
+	public void switchState ()
+	{
 		RUN = !RUN;
 	}
 
-	public void resetFrame () {
+	public void resetFrame ()
+	{
 		for (int i = 0; i < runnbaleSize; i++)
 			((Animator) mSpriteList[mRunnable[i]]).resetFrame();
 	}
 
-	public void resetFrame (int... layer) {
+	public void resetFrame (int... layer)
+	{
 		for (int i : layer)
 			((Animator) mSpriteList[i]).resetFrame();
 	}
 
-	public void update (float delta) {
+	public void update (float delta)
+	{
 		if (!RUN) {
-			mUpdater.update(this, delta);
+			// ============= update updatable =============
+			for (int i = 0, n = mUpdater.size; i < n; i++) {
+				final Updateable tmp = mUpdater.get(i);
+
+				if (!tmp.isStoped())
+					tmp.update(this, delta);
+				else {
+					mUpdater.removeValue(tmp, true);
+					--i;
+					--n;
+				}
+			}
 			return;
 		}
 
 		final int[] runnable = this.mRunnable;
 		for (int i = 0; i < runnbaleSize; i++)
 			((Animator) mSpriteList[runnable[i]]).update(delta);
-		mUpdater.update(this, delta);
+		// ============= update updatable =============
+		for (int i = 0, n = mUpdater.size; i < n; i++) {
+			final Updateable tmp = mUpdater.get(i);
+
+			if (!tmp.isStoped())
+				tmp.update(this, delta);
+			else {
+				mUpdater.removeValue(tmp, true);
+				--i;
+				--n;
+			}
+		}
 	}
 
-	public void postUpdater (Updater updater) {
-		this.mUpdater = updater;
+	public void postUpdater (Updateable updater)
+	{
+		if (mUpdater.contains(updater, true))
+			return;
+
+		updater.start();
+		this.mUpdater.add(updater);
 	}
 
-	public void noUpdater () {
-		this.mUpdater = Updater.instance;
+	public void noUpdater ()
+	{
+		this.mUpdater.clear();
 	}
 
 	/********************************************************
@@ -855,7 +986,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	 ********************************************************/
 
 	@Override
-	public void reset () {
+	public void reset ()
+	{
 		stop();
 
 		setPosition(0, 0);
@@ -866,7 +998,8 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void dispose () {
+	public void dispose ()
+	{
 		for (int i = 0; i < limit; i++) {
 			mScaler[i] = null;
 			mSpriteList[i] = null;
@@ -874,26 +1007,31 @@ public class Spriter implements SpriteBackend, Disposable, Animator {
 		mOriginSprite = null;
 	}
 
-	private void refresh () {
+	private void refresh ()
+	{
 		for (int i = 0; i < size; i++) {
 			mScaler[i].apply();
 		}
 	}
 
-	class Scaler {
-		float			xRatio;
-		float			yRatio;
-		float			widthRatio;
-		float			heightRatio;
+	class Scaler
+	{
+		float xRatio;
+		float yRatio;
+		float widthRatio;
+		float heightRatio;
 
-		SpriteBackend	sprite;
+		SpriteBackend sprite;
 
-		void apply () {
+		void apply ()
+		{
 			sprite.setBounds(x + xRatio * w, y + yRatio * h, widthRatio * w, heightRatio * h);
 		}
 
-		String info () {
-			return "xRatio : " + xRatio + " " + "yRatio : " + yRatio + " " + "widthRatio : " + widthRatio + " "
+		String info ()
+		{
+			return "xRatio : " + xRatio + " " + "yRatio : " + yRatio + " " + "widthRatio : "
+					+ widthRatio + " "
 					+ "heightRatio : " + heightRatio + " ";
 		}
 	}

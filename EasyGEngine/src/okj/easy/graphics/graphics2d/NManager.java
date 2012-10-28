@@ -5,6 +5,7 @@ import org.ege.utils.exception.EasyGEngineRuntimeException;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Updateable;
 
 /**
  * 
@@ -13,7 +14,8 @@ import com.badlogic.gdx.utils.Disposable;
  * Created on: Oct 7, 2012
  * Author: Trung
  */
-public class NManager implements Disposable {
+public class NManager implements Disposable
+{
 	public final long address;
 	protected final NWorld world;
 
@@ -30,13 +32,20 @@ public class NManager implements Disposable {
 	/******************************************************
 	 * manager processor
 	 ******************************************************/
+	public void postUpdater (Updateable update)
+	{
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.postUpdater(update);
+	}
 
-	public void update (float delta) {
+	public void update (float delta)
+	{
 		for (int i = 0; i < mSpriteList.size; i++)
 			mSpriteList.get(i).update(delta);
 	}
 
-	public void draw (SpriteBatch batch) {
+	public void draw (SpriteBatch batch)
+	{
 		for (NativeSpriteBackend s : mSpriteList)
 			s.draw(batch);
 	}
@@ -46,20 +55,24 @@ public class NManager implements Disposable {
 	 ******************************************************/
 
 	/** Create new sprite which is manage by this manager */
-	public NSprite newSprite () {
+	public NSprite newSprite ()
+	{
 		return world.newSprite(this);
 	}
 
 	/** Create new sprite which is manage by this manager */
-	public NSpriteA newSpriteA () {
+	public NSpriteA newSpriteA ()
+	{
 		return world.newSpriteA(this);
 	}
 
-	public <T extends NSprite> T newSprite (Class<T> type) {
+	public <T extends NSprite> T newSprite (Class<T> type)
+	{
 		return world.newSprite(type, this);
 	}
 
-	public <T extends NSpriteA> T newSpriteA (Class<T> type) {
+	public <T extends NSpriteA> T newSpriteA (Class<T> type)
+	{
 		return world.newSpriteA(type, this);
 	}
 
@@ -68,7 +81,8 @@ public class NManager implements Disposable {
 	 * 2. unmanage sprite from its manager
 	 * 3. manage it
 	 */
-	public void manage (NativeSpriteBackend sprite) {
+	public void manage (NativeSpriteBackend sprite)
+	{
 		if (sprite.isPooled || mSpriteList.contains(sprite, true))
 			return;
 
@@ -86,11 +100,13 @@ public class NManager implements Disposable {
 	 * 
 	 * @param sprite
 	 */
-	public void remove (NSprite sprite) {
+	public void remove (NSprite sprite)
+	{
 		sprite.reset();
 	}
 
-	public int size () {
+	public int size ()
+	{
 		final int size = size(address);
 		if (mSpriteList.size != size)
 			throw new EasyGEngineRuntimeException("Size sync between native : " + size
@@ -98,12 +114,14 @@ public class NManager implements Disposable {
 		return size;
 	}
 
-	public boolean contain (NSprite sprite) {
+	public boolean contain (NSprite sprite)
+	{
 		return mSpriteList.contains(sprite, true);
 	}
 
 	/** remove from java list and native list */
-	void unmanage (NativeSpriteBackend sprite) {
+	void unmanage (NativeSpriteBackend sprite)
+	{
 		mSpriteList.removeValue(sprite, true);
 		sprite.unmanage();
 	}
@@ -112,14 +130,16 @@ public class NManager implements Disposable {
 	 * manager self method
 	 ******************************************************/
 
-	public void clear () {
+	public void clear ()
+	{
 		for (NativeSpriteBackend sprite : mSpriteList)
 			sprite.reset();
 		mSpriteList.clear();
 		clear(address);
 	}
 
-	public void dispose () {
+	public void dispose ()
+	{
 
 		for (NativeSpriteBackend sprite : mSpriteList)
 			sprite.dispose();

@@ -33,79 +33,81 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.Updater;
+import com.badlogic.gdx.utils.Updateable;
 
 /**
  * SpriteCAS : <b>SYNCHRONIZE COMPOSITE ANIMATE Sprite</b>
  * 
  * @author Ngo Trong Trung
  */
-public class SpriteCA implements SpriteBackend, Disposable, Animator {
-	static public final int						STATE_TIME		= 0;
-	static public final int						FRAME_DURATION	= 1;
-	static public final int						FRAME_LENGTH	= 2;
-	static public final int						FRAME_NUMBER	= 3;
-	static public final int						COLOR			= 4;
-	static public final int						ROTATION		= 5;
-	static public final int						ORIGIN_X		= 6;
-	static public final int						ORIGIN_Y		= 7;
-	static public final int						SCALE_X			= 8;
-	static public final int						SCALE_Y			= 9;
+public class SpriteCA implements SpriteBackend, Disposable, Animator
+{
+	static public final int STATE_TIME = 0;
+	static public final int FRAME_DURATION = 1;
+	static public final int FRAME_LENGTH = 2;
+	static public final int FRAME_NUMBER = 3;
+	static public final int COLOR = 4;
+	static public final int ROTATION = 5;
+	static public final int ORIGIN_X = 6;
+	static public final int ORIGIN_Y = 7;
+	static public final int SCALE_X = 8;
+	static public final int SCALE_Y = 9;
 
-	static public final int						VERTICES		= 20;
+	static public final int VERTICES = 20;
 
-	private final ArrayList<TextureRegion[]>	mRegions;
-	private final float[]						mInfo;
-	private final float[]						mVertices		= new float[VERTICES];
-	private final float[]						rect			= new float[4];
+	private final ArrayList<TextureRegion[]> mRegions;
+	private final float[] mInfo;
+	private final float[] mVertices = new float[VERTICES];
+	private final float[] rect = new float[4];
 
-	final int									length;
-	private int									size			= 0;
-	int											idx				= 0;
+	final int length;
+	private int size = 0;
+	int idx = 0;
 
-	IntArray									mRunnable;
-	IntArray									mDrawable;
-	public static final int						SPRITE_SIZE		= 5;
-	private boolean								RUN;
-
-	// ---------------------------------------------------
-
-	float										x;
-	float										y;
-	float										originX;
-	float										originY;
-
-	float										scaleX			= 1;
-	float										scaleY			= 1;
-
-	float										rotation;
-	float										width;
-	float										height;
-
-	boolean										dirty			= false;
-
-	private Color								color			= Color.WHITE;
-	float										alpha			= 1;
+	IntArray mRunnable;
+	IntArray mDrawable;
+	public static final int SPRITE_SIZE = 5;
+	private boolean RUN;
 
 	// ---------------------------------------------------
 
-	private TextureRegion[]						tmpRegion;
-	private final float[]						tmpInfo			= new float[SPRITE_SIZE];
+	float x;
+	float y;
+	float originX;
+	float originY;
+
+	float scaleX = 1;
+	float scaleY = 1;
+
+	float rotation;
+	float width;
+	float height;
+
+	boolean dirty = false;
+
+	private Color color = Color.WHITE;
+	float alpha = 1;
 
 	// ---------------------------------------------------
 
-	private final Rectangle						mBound			= new Rectangle();
+	private TextureRegion[] tmpRegion;
+	private final float[] tmpInfo = new float[SPRITE_SIZE];
 
-	private Updater								mUpdater		= Updater.instance;
+	// ---------------------------------------------------
 
-	public SpriteCA () {
+	private final Rectangle mBound = new Rectangle();
+
+	private Array<Updateable> mUpdater = new Array<Updateable>(0);
+
+	public SpriteCA() {
 		this(13);
 	}
 
-	protected SpriteCA (int size) {
+	protected SpriteCA(int size) {
 		mInfo = new float[size * SPRITE_SIZE];
 		mRegions = new ArrayList<TextureRegion[]>(size);
 		length = size;
@@ -121,7 +123,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	 * 
 	 **********************************************************/
 
-	public void bindLayer (TextureRegion[] regionLayer) {
+	public void bindLayer (TextureRegion[] regionLayer)
+	{
 		if (size > length)
 			throw new EasyGEngineRuntimeException("Out bound of sprite length");
 		mRegions.add(regionLayer);
@@ -137,20 +140,23 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		info[idx++] = color.toFloatBits();
 	}
 
-	public SpriteCA bindLayer (TextureRegion[]... regions) {
+	public SpriteCA bindLayer (TextureRegion[]... regions)
+	{
 		for (TextureRegion[] region : regions)
 			bindLayer(region);
 		return this;
 	}
 
-	public void swapLayer (int firstLayer, int secondLayer) {
+	public void swapLayer (int firstLayer, int secondLayer)
+	{
 		if (size <= firstLayer || size <= secondLayer || firstLayer == secondLayer)
 			return;
 
 		tmpRegion = mRegions.get(firstLayer);
 
 		mRegions.remove(firstLayer);
-		mRegions.add(firstLayer, mRegions.get(secondLayer > firstLayer ? secondLayer - 1 : secondLayer));
+		mRegions.add(firstLayer,
+				mRegions.get(secondLayer > firstLayer ? secondLayer - 1 : secondLayer));
 
 		mRegions.remove(secondLayer);
 		mRegions.add(secondLayer, tmpRegion);
@@ -166,7 +172,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 
 	}
 
-	public void removeTopLayer () {
+	public void removeTopLayer ()
+	{
 		idx = size--;
 		mRegions.remove(idx);
 
@@ -174,7 +181,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		mRunnable.removeValue(idx);
 	}
 
-	public void removeFirstLayer () {
+	public void removeFirstLayer ()
+	{
 		--size;
 		mRegions.remove(0);
 		System.arraycopy(mInfo, SPRITE_SIZE, mInfo, 0, size * SPRITE_SIZE);
@@ -195,7 +203,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		mRunnable.shrink();
 	}
 
-	public void removeLayer (int layer) {
+	public void removeLayer (int layer)
+	{
 		if (layer < 0 || layer >= size)
 			return;
 		mRegions.remove(layer);
@@ -231,7 +240,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	 * 
 	 **********************************************************/
 
-	public void setBounds (float x, float y, float width, float height) {
+	public void setBounds (float x, float y, float width, float height)
+	{
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -252,7 +262,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		vertices[Y4] = y;
 	}
 
-	public void setSize (float width, float height) {
+	public void setSize (float width, float height)
+	{
 		this.width = width;
 		this.height = height;
 
@@ -271,19 +282,23 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		vertices[Y4] = y;
 	}
 
-	public void setPosition (float x, float y) {
+	public void setPosition (float x, float y)
+	{
 		translate(x - this.x, y - this.y);
 	}
 
-	public void setX (float x) {
+	public void setX (float x)
+	{
 		translateX(x - this.x);
 	}
 
-	public void setY (float y) {
+	public void setY (float y)
+	{
 		translateY(y - this.y);
 	}
 
-	public void translateX (float xAmount) {
+	public void translateX (float xAmount)
+	{
 		this.x += xAmount;
 
 		final float[] vertices = this.mVertices;
@@ -293,7 +308,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		vertices[X4] += xAmount;
 	}
 
-	public void translateY (float yAmount) {
+	public void translateY (float yAmount)
+	{
 		this.y += yAmount;
 
 		final float[] vertices = this.mVertices;
@@ -303,7 +319,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		vertices[Y4] += yAmount;
 	}
 
-	public void translate (float xAmount, float yAmount) {
+	public void translate (float xAmount, float yAmount)
+	{
 		x += xAmount;
 		y += yAmount;
 
@@ -321,7 +338,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		vertices[Y4] += yAmount;
 	}
 
-	public void setAlpha (float alpha) {
+	public void setAlpha (float alpha)
+	{
 		this.alpha = alpha;
 		final float[] info = this.mInfo;
 		for (int i = 0; i < size; i++) {
@@ -334,35 +352,41 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 
 	/* ------------------------------------------- */
 
-	public void setOrigin (float originX, float originY) {
+	public void setOrigin (float originX, float originY)
+	{
 		this.originX = originX;
 		this.originY = originY;
 		dirty = true;
 	}
 
-	public void setRotation (float degree) {
+	public void setRotation (float degree)
+	{
 		rotation = degree;
 		dirty = true;
 	}
 
-	public void rotate (float degree) {
+	public void rotate (float degree)
+	{
 		rotation += degree;
 		dirty = true;
 	}
 
-	public void setScale (float scaleXY) {
+	public void setScale (float scaleXY)
+	{
 		this.scaleX = scaleXY;
 		this.scaleY = scaleXY;
 		dirty = true;
 	}
 
-	public void setScale (float scaleX, float scaleY) {
+	public void setScale (float scaleX, float scaleY)
+	{
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
 		dirty = true;
 	}
 
-	public void scale (float amount) {
+	public void scale (float amount)
+	{
 		this.scaleX += amount;
 		this.scaleY += amount;
 		dirty = true;
@@ -372,17 +396,20 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	 * 
 	 *************************************************************/
 
-	public void setColor (float r, float g, float b, float a) {
+	public void setColor (float r, float g, float b, float a)
+	{
 		for (int i = 0; i < length; i++)
 			setColor(r, g, b, a, i);
 	}
 
-	public void setColor (Color color) {
+	public void setColor (Color color)
+	{
 		for (int i = 0; i < length; i++)
 			setColor(color, i);
 	}
 
-	public void setColor (Color[] color, int[] layer) {
+	public void setColor (Color[] color, int[] layer)
+	{
 		if (color.length != layer.length)
 			throw new EasyGEngineRuntimeException("Color length must be the same with layer length");
 
@@ -395,7 +422,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void setColor (Color color, int[] layer) {
+	public void setColor (Color color, int[] layer)
+	{
 		final float[] info = this.mInfo;
 		for (int i : layer) {
 			idx = i * SPRITE_SIZE;
@@ -403,9 +431,11 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void setColor (float r, float g, float b, float a, int[] layer) {
+	public void setColor (float r, float g, float b, float a, int[] layer)
+	{
 		final float[] info = this.mInfo;
-		final int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16) | ((int) (255 * g) << 8) | ((int) (255 * r));
+		final int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16)
+				| ((int) (255 * g) << 8) | ((int) (255 * r));
 		final float floatBits = NumberUtils.intToFloatColor(intBits);
 
 		for (int i : layer) {
@@ -414,16 +444,19 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public SpriteCA setColor (Color color, int layer) {
+	public SpriteCA setColor (Color color, int layer)
+	{
 		final float[] info = this.mInfo;
 		idx = layer * SPRITE_SIZE;
 		info[idx + COLOR] = color.toFloatBits();
 		return this;
 	}
 
-	public SpriteCA setColor (float r, float g, float b, float a, int layer) {
+	public SpriteCA setColor (float r, float g, float b, float a, int layer)
+	{
 		final float[] info = this.mInfo;
-		final int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16) | ((int) (255 * g) << 8) | ((int) (255 * r));
+		final int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16)
+				| ((int) (255 * g) << 8) | ((int) (255 * r));
 		idx = layer * SPRITE_SIZE;
 		info[idx + COLOR] = NumberUtils.intToFloatColor(intBits);
 		return this;
@@ -432,7 +465,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	/*************************************************************
 	 * 
 	 *************************************************************/
-	public float getCenterY () {
+	public float getCenterY ()
+	{
 		final float[] vertices = SpriteCA.this.mVertices;
 
 		float miny = vertices[Y1];
@@ -449,7 +483,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		return (miny + maxy) / 2;
 	}
 
-	public float getCenterX () {
+	public float getCenterX ()
+	{
 		final float[] vertices = SpriteCA.this.mVertices;
 
 		float minx = vertices[X1];
@@ -466,15 +501,18 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		return (minx + maxx) / 2;
 	}
 
-	public int getSize () {
+	public int getSize ()
+	{
 		return size;
 	}
 
-	public int getLength () {
+	public int getLength ()
+	{
 		return length;
 	}
 
-	public Color getColor (int layer) {
+	public Color getColor (int layer)
+	{
 		if (layer < 0 || layer >= size)
 			return null;
 
@@ -489,7 +527,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		return color;
 	}
 
-	public Rectangle getBoundingRectangle () {
+	public Rectangle getBoundingRectangle ()
+	{
 		final float[] vertices = SpriteCA.this.mVertices;
 
 		float minx = vertices[X1];
@@ -522,7 +561,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public float[] getBoundingFloatRect (float offset) {
+	public float[] getBoundingFloatRect (float offset)
+	{
 		final float[] vertices = SpriteCA.this.mVertices;
 
 		float minx = vertices[X1];
@@ -555,15 +595,18 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public float[] getVertices () {
+	public float[] getVertices ()
+	{
 		return this.mVertices;
 	}
 
-	public Circle getBoundingCircle () {
+	public Circle getBoundingCircle ()
+	{
 		return null;
 	}
 
-	public float[] getVertices (int layer) {
+	public float[] getVertices (int layer)
+	{
 		if (layer < 0 || layer >= size)
 			return null;
 
@@ -665,47 +708,56 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		return vertices;
 	}
 
-	public float getX () {
+	public float getX ()
+	{
 		return x;
 	}
 
-	public float getY () {
+	public float getY ()
+	{
 		return y;
 	}
 
-	public float getWidth () {
+	public float getWidth ()
+	{
 		return width;
 	}
 
-	public float getHeight () {
+	public float getHeight ()
+	{
 		return height;
 	}
 
 	@Override
-	public float getOriginX () {
+	public float getOriginX ()
+	{
 		return originX;
 	}
 
 	@Override
-	public float getOriginY () {
+	public float getOriginY ()
+	{
 		return originY;
 
 	}
 
 	@Override
-	public float getRotation () {
+	public float getRotation ()
+	{
 		return rotation;
 
 	}
 
 	@Override
-	public float getScaleX () {
+	public float getScaleX ()
+	{
 		return scaleX;
 
 	}
 
 	@Override
-	public float getScaleY () {
+	public float getScaleY ()
+	{
 		return scaleY;
 	}
 
@@ -713,13 +765,15 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	 * 
 	 *************************************************************/
 
-	public SpriteCA addDrawableLayer (int layer) {
+	public SpriteCA addDrawableLayer (int layer)
+	{
 		if (layer >= 0 && layer < size && !mDrawable.contains(layer))
 			mDrawable.add(layer);
 		return this;
 	}
 
-	public SpriteCA addDrawableLayer (int[] layer) {
+	public SpriteCA addDrawableLayer (int[] layer)
+	{
 		for (int i : layer) {
 			if (i >= 0 && i < size && !mDrawable.contains(i))
 				mDrawable.add(i);
@@ -727,30 +781,35 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		return this;
 	}
 
-	public SpriteCA setDrawableLayer (int... layer) {
+	public SpriteCA setDrawableLayer (int... layer)
+	{
 		mDrawable.clear();
 		addDrawableLayer(layer);
 		mDrawable.shrink();
 		return this;
 	}
 
-	public SpriteCA removeDrawableLayer (int layer) {
+	public SpriteCA removeDrawableLayer (int layer)
+	{
 		mDrawable.removeValue(layer);
 		return this;
 	}
 
-	public SpriteCA removeDrawableLayer (int[] layer) {
+	public SpriteCA removeDrawableLayer (int[] layer)
+	{
 		for (int i : layer) {
 			mDrawable.removeValue(i);
 		}
 		return this;
 	}
 
-	public int[] getDrawbleLayer () {
+	public int[] getDrawbleLayer ()
+	{
 		return mDrawable.items;
 	}
 
-	public void draw (SpriteBatch batch) {
+	public void draw (SpriteBatch batch)
+	{
 		final int[] drawable = mDrawable.items;
 		for (int i : drawable) {
 			batch.draw(mRegions.get(i)[0].getTexture(), getVertices(i), 0, 20);
@@ -758,7 +817,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void draw (SpriteBatch batch, float alpha) {
+	public void draw (SpriteBatch batch, float alpha)
+	{
 		final int[] drawable = mDrawable.items;
 		for (int i : drawable) {
 			batch.draw(mRegions.get(i)[0].getTexture(), getVertices(i), 0, 20);
@@ -768,36 +828,42 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	/*************************************************************
 	 * 
 	 *************************************************************/
-	public SpriteCA addRunnableLayer (int layer) {
+	public SpriteCA addRunnableLayer (int layer)
+	{
 		if (layer >= 0 && layer < size)
 			mRunnable.add(layer);
 		return this;
 	}
 
-	public void addRunnableLayer (int... layer) {
+	public void addRunnableLayer (int... layer)
+	{
 		for (int i : layer) {
 			if (i >= 0 && i < size)
 				mRunnable.add(i);
 		}
 	}
 
-	public void setRunnableLayer (int... layer) {
+	public void setRunnableLayer (int... layer)
+	{
 		mRunnable.clear();
 		mRunnable.shrink();
 		addRunnableLayer(layer);
 	}
 
-	public void removeRunnableLayer (int... layer) {
+	public void removeRunnableLayer (int... layer)
+	{
 		for (int i : layer) {
 			mRunnable.removeValue(i);
 		}
 	}
 
-	public int[] getRunnableLayer () {
+	public int[] getRunnableLayer ()
+	{
 		return mRunnable.items;
 	}
 
-	public void setFrameDuration (float frameDuration) {
+	public void setFrameDuration (float frameDuration)
+	{
 		final int[] runnable = this.mRunnable.items;
 		final float[] info = this.mInfo;
 
@@ -807,7 +873,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void setFrameDuration (float frameDuration, int[] layer) {
+	public void setFrameDuration (float frameDuration, int[] layer)
+	{
 		final float[] info = this.mInfo;
 
 		for (int i : layer) {
@@ -820,7 +887,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void setFrameDuration (float[] frameDurations, int[] layer) {
+	public void setFrameDuration (float[] frameDurations, int[] layer)
+	{
 		if (frameDurations.length != layer.length)
 			return;
 		int i = 0;
@@ -836,41 +904,49 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void start () {
+	public void start ()
+	{
 		RUN = true;
 	}
 
-	public void start (float frameDuration) {
-		RUN = true;
-		setFrameDuration(frameDuration);
-	}
-
-	@Override
-	public void start (float frameDuration, int playMode) {
+	public void start (float frameDuration)
+	{
 		RUN = true;
 		setFrameDuration(frameDuration);
 	}
 
 	@Override
-	public void pause () {
+	public void start (float frameDuration, int playMode)
+	{
+		RUN = true;
+		setFrameDuration(frameDuration);
+	}
+
+	@Override
+	public void pause ()
+	{
 		RUN = false;
 	}
 
 	@Override
-	public boolean isRunning () {
+	public boolean isRunning ()
+	{
 		return RUN;
 	}
 
-	public void stop () {
+	public void stop ()
+	{
 		RUN = false;
 		resetFrame();
 	}
 
-	public void switchState () {
+	public void switchState ()
+	{
 		RUN = !RUN;
 	}
 
-	public void resetFrame () {
+	public void resetFrame ()
+	{
 		final float[] info = this.mInfo;
 		for (int i = 0; i < size; i++) {
 			idx = i * SPRITE_SIZE;
@@ -879,7 +955,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void resetFrame (int[] layer) {
+	public void resetFrame (int[] layer)
+	{
 		final float[] info = this.mInfo;
 		for (int i : layer) {
 			if (i >= 0 && i < size) {
@@ -890,7 +967,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 		}
 	}
 
-	public void update (float delta) {
+	public void update (float delta)
+	{
 		if (!RUN)
 			return;
 
@@ -900,19 +978,38 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 			idx = i * SPRITE_SIZE;
 			if (info[idx + FRAME_DURATION] > 0) {
 				info[idx + STATE_TIME] += delta;
-				info[idx + FRAME_NUMBER] = (int) (info[idx + STATE_TIME] / info[idx + FRAME_DURATION]);
-				info[idx + FRAME_NUMBER] = (int) (info[idx + FRAME_NUMBER] % info[idx + FRAME_LENGTH]);
+				info[idx + FRAME_NUMBER] = (int) (info[idx + STATE_TIME] / info[idx
+						+ FRAME_DURATION]);
+				info[idx + FRAME_NUMBER] = (int) (info[idx + FRAME_NUMBER] % info[idx
+						+ FRAME_LENGTH]);
 			}
 		}
-		mUpdater.update(this, delta);
+		// ============= update updatable =============
+		for (int i = 0, n = mUpdater.size; i < n; i++) {
+			final Updateable tmp = mUpdater.get(i);
+
+			if (!tmp.isStoped())
+				tmp.update(this, delta);
+			else {
+				mUpdater.removeValue(tmp, true);
+				--i;
+				--n;
+			}
+		}
 	}
 
-	public void postUpdater (Updater updater) {
-		this.mUpdater = updater;
+	public void postUpdater (Updateable updater)
+	{
+		if (mUpdater.contains(updater, true))
+			return;
+
+		updater.start();
+		this.mUpdater.add(updater);
 	}
 
-	public void noUpdater () {
-		this.mUpdater = Updater.instance;
+	public void noUpdater ()
+	{
+		this.mUpdater.clear();
 	}
 
 	/**********************************************************
@@ -920,7 +1017,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	 **********************************************************/
 
 	@Override
-	public void dispose () {
+	public void dispose ()
+	{
 		mRegions.clear();
 		tmpRegion = null;
 		mDrawable = null;
@@ -928,7 +1026,8 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator {
 	}
 
 	@Override
-	public void reset () {
+	public void reset ()
+	{
 		int size = mVertices.length;
 		for (int i = 0; i < size; i++)
 			mVertices[i] = 0;

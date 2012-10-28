@@ -55,7 +55,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.Updater;
+import com.badlogic.gdx.utils.Updateable;
 
 /**
  * Holds the geometry, color, and texture information for drawing 2D sprites using
@@ -73,7 +73,8 @@ import com.badlogic.gdx.utils.Updater;
  * @author Nathan Sweet
  * @author Ngo Trong Trung
  */
-public class SpriteA implements Animator, SpriteBackend {
+public class SpriteA implements Animator, SpriteBackend
+{
 	TextureRegion[] keyFrames;
 
 	float mFrameDuration;
@@ -108,7 +109,7 @@ public class SpriteA implements Animator, SpriteBackend {
 
 	// ---------------------------------------------------------
 
-	private Updater mUpdater = Updater.instance;
+	private Array<Updateable> mUpdater = new Array<Updateable>(0);
 
 	/**
 	 * Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and
@@ -163,7 +164,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * 
 	 ***********************************************************/
 
-	public void set (SpriteA sprite) {
+	public void set (SpriteA sprite)
+	{
 		if (sprite == null)
 			throw new IllegalArgumentException("sprite cannot be null.");
 		System.arraycopy(sprite.vertices, 0, vertices, 0, SPRITE_SIZE);
@@ -187,7 +189,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * If origin, rotation, or scale
 	 * are changed, it is slightly more efficient to set the bounds after those operations.
 	 */
-	public void setBounds (float x, float y, float width, float height) {
+	public void setBounds (float x, float y, float width, float height)
+	{
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -222,7 +225,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * size are to be changed, it is
 	 * better to use {@link #setBounds(float, float, float, float)}.
 	 */
-	public void setSize (float width, float height) {
+	public void setSize (float width, float height)
+	{
 		this.width = width;
 		this.height = height;
 
@@ -254,7 +258,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * to set the position after those operations. If both position and size are to be changed, it
 	 * is better to use {@link #setBounds(float, float, float, float)}.
 	 */
-	public void setPosition (float x, float y) {
+	public void setPosition (float x, float y)
+	{
 		translate(x - this.x, y - this.y);
 	}
 
@@ -264,7 +269,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * to set the position after those operations. If both position and size are to be changed, it
 	 * is better to use {@link #setBounds(float, float, float, float)}.
 	 */
-	public void setX (float x) {
+	public void setX (float x)
+	{
 		translateX(x - this.x);
 	}
 
@@ -274,7 +280,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * to set the position after those operations. If both position and size are to be changed, it
 	 * is better to use {@link #setBounds(float, float, float, float)}.
 	 */
-	public void setY (float y) {
+	public void setY (float y)
+	{
 		translateY(y - this.y);
 	}
 
@@ -283,7 +290,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * origin, rotation, or scale are
 	 * changed, it is slightly more efficient to translate after those operations.
 	 */
-	public void translateX (float xAmount) {
+	public void translateX (float xAmount)
+	{
 		this.x += xAmount;
 
 		if (dirty)
@@ -301,7 +309,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * origin, rotation, or scale are
 	 * changed, it is slightly more efficient to translate after those operations.
 	 */
-	public void translateY (float yAmount) {
+	public void translateY (float yAmount)
+	{
 		y += yAmount;
 
 		if (dirty)
@@ -319,7 +328,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * rotation, or scale are
 	 * changed, it is slightly more efficient to translate after those operations.
 	 */
-	public void translate (float xAmount, float yAmount) {
+	public void translate (float xAmount, float yAmount)
+	{
 		x += xAmount;
 		y += yAmount;
 
@@ -340,7 +350,8 @@ public class SpriteA implements Animator, SpriteBackend {
 		vertices[Y4] += yAmount;
 	}
 
-	public void setColor (Color tint) {
+	public void setColor (Color tint)
+	{
 		float color = tint.toFloatBits();
 		final float[] vertices = this.vertices;
 		vertices[C1] = color;
@@ -349,7 +360,8 @@ public class SpriteA implements Animator, SpriteBackend {
 		vertices[C4] = color;
 	}
 
-	public void setColor (float r, float g, float b, float a) {
+	public void setColor (float r, float g, float b, float a)
+	{
 		final int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16)
 				| ((int) (255 * g) << 8) | ((int) (255 * r));
 		float color = NumberUtils.intToFloatColor(intBits);
@@ -361,19 +373,22 @@ public class SpriteA implements Animator, SpriteBackend {
 	}
 
 	/** Sets the origin in relation to the sprite's position for scaling and rotation. */
-	public void setOrigin (float originX, float originY) {
+	public void setOrigin (float originX, float originY)
+	{
 		this.originX = originX;
 		this.originY = originY;
 		dirty = true;
 	}
 
-	public void setRotation (float degrees) {
+	public void setRotation (float degrees)
+	{
 		this.rotation = degrees;
 		dirty = true;
 	}
 
 	/** Sets the sprite's rotation relative to the current rotation. */
-	public void rotate (float degrees) {
+	public void rotate (float degrees)
+	{
 		rotation += degrees;
 		dirty = true;
 	}
@@ -382,7 +397,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * Rotates this sprite 90 degrees in-place by rotating the texture coordinates. This rotation is
 	 * unaffected by {@link #setRotation(float)} and {@link #rotate(float)}.
 	 */
-	public void rotate90 (boolean clockwise) {
+	public void rotate90 (boolean clockwise)
+	{
 		final float[] vertices = this.vertices;
 
 		if (clockwise) {
@@ -412,20 +428,23 @@ public class SpriteA implements Animator, SpriteBackend {
 		}
 	}
 
-	public void setScale (float scaleXY) {
+	public void setScale (float scaleXY)
+	{
 		this.scaleX = scaleXY;
 		this.scaleY = scaleXY;
 		dirty = true;
 	}
 
-	public void setScale (float scaleX, float scaleY) {
+	public void setScale (float scaleX, float scaleY)
+	{
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
 		dirty = true;
 	}
 
 	/** Sets the sprite's scale relative to the current scale. */
-	public void scale (float amount) {
+	public void scale (float amount)
+	{
 		this.scaleX += amount;
 		this.scaleY += amount;
 		dirty = true;
@@ -435,15 +454,18 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * Animation Controller
 	 ***********************************************************/
 
-	public void setFrameDuration (float frameDuration) {
+	public void setFrameDuration (float frameDuration)
+	{
 		this.mFrameDuration = frameDuration;
 	}
 
-	public void setPlayMode (int playMode) {
+	public void setPlayMode (int playMode)
+	{
 		mPlayMode = playMode;
 	}
 
-	public void setLooping (boolean looping) {
+	public void setLooping (boolean looping)
+	{
 		if (looping && (mPlayMode == NORMAL || mPlayMode == REVERSED)) {
 			if (mPlayMode == NORMAL)
 				mPlayMode = LOOP;
@@ -457,17 +479,20 @@ public class SpriteA implements Animator, SpriteBackend {
 		}
 	}
 
-	private void setTexture (TextureRegion[] texture) {
+	private void setTexture (TextureRegion[] texture)
+	{
 		mCurrentTexture = texture[0].getTexture();
 	}
 
-	public void setKeyFrames (TextureRegion[] keyFrame) {
+	public void setKeyFrames (TextureRegion[] keyFrame)
+	{
 		this.keyFrames = keyFrame;
 		setRegion(keyFrames[0]);
 		setTexture(keyFrame);
 	}
 
-	public void setKeyFrames (Array keyFrame) {
+	public void setKeyFrames (Array keyFrame)
+	{
 		keyFrames = new TextureRegion[keyFrame.size];
 		for (int i = 0; i < keyFrames.length; i++)
 			keyFrames[i] = (TextureRegion) keyFrame.get(i);
@@ -475,43 +500,62 @@ public class SpriteA implements Animator, SpriteBackend {
 		setTexture(keyFrames);
 	}
 
-	public void start () {
+	public void start ()
+	{
 		RUN = true;
 	}
 
-	public void start (float frameDuration) {
+	public void start (float frameDuration)
+	{
 		RUN = true;
 		mFrameDuration = frameDuration;
 	}
 
-	public void start (float frameDuration, int playMode) {
+	public void start (float frameDuration, int playMode)
+	{
 		RUN = true;
 		mFrameDuration = frameDuration;
 		mPlayMode = playMode;
 	}
 
-	public void stop () {
+	public void stop ()
+	{
 		RUN = false;
 		mStateTime = 0;
 		setRegion(keyFrames[0]);
 	}
 
-	public void pause () {
+	public void pause ()
+	{
 		RUN = false;
 	}
 
-	public void switchState () {
+	public void switchState ()
+	{
 		RUN = !RUN;
 	}
 
-	public void resetFrame () {
+	public void resetFrame ()
+	{
 		mStateTime = 0;
 		setRegion(keyFrames[0]);
 	}
 
-	public void update (float delta) {
+	public void update (float delta)
+	{
 		if (!RUN || mFrameDuration == 0) {
-			mUpdater.update(this, delta);
+			// ============= update updatable =============
+			for (int i = 0, n = mUpdater.size; i < n; i++) {
+				final Updateable tmp = mUpdater.get(i);
+
+				if (!tmp.isStoped())
+					tmp.update(this, delta);
+				else {
+					mUpdater.removeValue(tmp, true);
+					--i;
+					--n;
+				}
+			}
 			return;
 		}
 
@@ -549,7 +593,18 @@ public class SpriteA implements Animator, SpriteBackend {
 		}
 
 		setRegion(keyFrames[frameNumber]);
-		mUpdater.update(this, delta);
+		// ============= update updatable =============
+		for (int i = 0, n = mUpdater.size; i < n; i++) {
+			final Updateable tmp = mUpdater.get(i);
+
+			if (!tmp.isStoped())
+				tmp.update(this, delta);
+			else {
+				mUpdater.removeValue(tmp, true);
+				--i;
+				--n;
+			}
+		}
 	}
 
 	/**
@@ -557,28 +612,38 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * 
 	 * @return
 	 */
-	public int getFrameNumber () {
+	public int getFrameNumber ()
+	{
 		return frameNumber;
 	}
 
-	public TextureRegion[] getKeyFrames () {
+	public TextureRegion[] getKeyFrames ()
+	{
 		return this.keyFrames;
 	}
 
-	public void postUpdater (Updater updater) {
-		this.mUpdater = updater;
+	public void postUpdater (Updateable updater)
+	{
+		if(mUpdater.contains(updater, true))
+			return;
+		
+		updater.start();
+		this.mUpdater.add(updater);
 	}
 
-	public void noUpdater () {
-		this.mUpdater = Updater.instance;
+	public void noUpdater ()
+	{
+		this.mUpdater.clear();
 	}
 
 	@Override
-	public boolean isRunning () {
+	public boolean isRunning ()
+	{
 		return RUN;
 	}
 
-	public boolean isAnimationFinished () {
+	public boolean isAnimationFinished ()
+	{
 		int frameNumber = (int) (mStateTime / mFrameDuration);
 		return keyFrames.length - 1 < frameNumber;
 	}
@@ -588,7 +653,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 ***********************************************************/
 
 	/** Returns the packed vertices, colors, and texture coordinates for this sprite. */
-	public float[] getVertices () {
+	public float[] getVertices ()
+	{
 		if (dirty) {
 			dirty = false;
 
@@ -664,7 +730,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * 
 	 * @return the bounding Rectangle
 	 */
-	public Rectangle getBoundingRectangle () {
+	public Rectangle getBoundingRectangle ()
+	{
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -697,7 +764,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	}
 
 	@Override
-	public float[] getBoundingFloatRect (float offset) {
+	public float[] getBoundingFloatRect (float offset)
+	{
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -729,15 +797,18 @@ public class SpriteA implements Animator, SpriteBackend {
 		return rect;
 	}
 
-	public Circle getBoundingCircle () {
+	public Circle getBoundingCircle ()
+	{
 		return null;
 	}
 
-	public void draw (SpriteBatch spriteBatch) {
+	public void draw (SpriteBatch spriteBatch)
+	{
 		spriteBatch.draw(mCurrentTexture, getVertices(), 0, SPRITE_SIZE);
 	}
 
-	public void draw (SpriteBatch spriteBatch, float alphaModulation) {
+	public void draw (SpriteBatch spriteBatch, float alphaModulation)
+	{
 		final Color color = getColor();
 		float oldAlpha = color.a;
 		color.a *= alphaModulation;
@@ -751,11 +822,13 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * 
 	 ***********************************************************/
 
-	public float getX () {
+	public float getX ()
+	{
 		return x;
 	}
 
-	public float getCenterX () {
+	public float getCenterX ()
+	{
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -772,11 +845,13 @@ public class SpriteA implements Animator, SpriteBackend {
 		return (minx + maxx) / 2;
 	}
 
-	public float getY () {
+	public float getY ()
+	{
 		return y;
 	}
 
-	public float getCenterY () {
+	public float getCenterY ()
+	{
 		final float[] vertices = getVertices();
 
 		float miny = vertices[Y1];
@@ -793,31 +868,38 @@ public class SpriteA implements Animator, SpriteBackend {
 		return (miny + maxy) / 2;
 	}
 
-	public float getWidth () {
+	public float getWidth ()
+	{
 		return width;
 	}
 
-	public float getHeight () {
+	public float getHeight ()
+	{
 		return height;
 	}
 
-	public float getOriginX () {
+	public float getOriginX ()
+	{
 		return originX;
 	}
 
-	public float getOriginY () {
+	public float getOriginY ()
+	{
 		return originY;
 	}
 
-	public float getRotation () {
+	public float getRotation ()
+	{
 		return rotation;
 	}
 
-	public float getScaleX () {
+	public float getScaleX ()
+	{
 		return scaleX;
 	}
 
-	public float getScaleY () {
+	public float getScaleY ()
+	{
 		return scaleY;
 	}
 
@@ -825,7 +907,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	 * Returns the color of this sprite. Changing the returned color will have no affect,
 	 * {@link #setColor(Color)} or {@link #setColor(float, float, float, float)} must be used.
 	 */
-	public Color getColor () {
+	public Color getColor ()
+	{
 		final int intBits = NumberUtils.floatToIntColor(vertices[C1]);
 		final Color color = this.color;
 		color.r = (intBits & 0xff) / 255f;
@@ -835,7 +918,8 @@ public class SpriteA implements Animator, SpriteBackend {
 		return color;
 	}
 
-	private void setRegion (TextureRegion region) {
+	private void setRegion (TextureRegion region)
+	{
 		final float u = region.getU();
 		final float v = region.getV();
 		final float u2 = region.getU2();
@@ -856,7 +940,8 @@ public class SpriteA implements Animator, SpriteBackend {
 		vertices[V4] = v2;
 	}
 
-	public void flip (boolean x, boolean y) {
+	public void flip (boolean x, boolean y)
+	{
 		for (int i = 0; i < keyFrames.length; i++)
 			keyFrames[i].flip(x, y);
 
@@ -879,7 +964,8 @@ public class SpriteA implements Animator, SpriteBackend {
 		}
 	}
 
-	public void scroll (float xAmount, float yAmount) {
+	public void scroll (float xAmount, float yAmount)
+	{
 
 		final float[] vertices = SpriteA.this.vertices;
 		if (xAmount != 0) {
@@ -900,7 +986,8 @@ public class SpriteA implements Animator, SpriteBackend {
 		}
 	}
 
-	public boolean hit (float x, float y) {
+	public boolean hit (float x, float y)
+	{
 		if (x >= getX() && x <= (getX() + getWidth()) &&
 				y >= getY() && y <= (getY() + getHeight())) {
 			return true;
@@ -909,7 +996,8 @@ public class SpriteA implements Animator, SpriteBackend {
 	}
 
 	@Override
-	public void reset () {
+	public void reset ()
+	{
 		stop();
 		setPosition(0, 0);
 		setSize(0, 0);

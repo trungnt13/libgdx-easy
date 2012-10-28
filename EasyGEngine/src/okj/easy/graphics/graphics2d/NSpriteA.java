@@ -39,7 +39,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.Updater;
+import com.badlogic.gdx.utils.Updateable;
 
 /**
  * 
@@ -53,7 +53,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 
 	private final float vertices[] = new float[E.sprite.VERTICES_SIZE];
 
-	private Updater mUpdater = Updater.instance;
+	private Array<Updateable> mUpdater = new Array<Updateable>(0);
 	private Color color;
 
 	// ========================================
@@ -544,15 +544,19 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	// processor
 
 	@Override
-	public void postUpdater (Updater updater)
+	public void postUpdater (Updateable updater)
 	{
-		this.mUpdater = updater;
+		if (mUpdater.contains(updater, true))
+			return;
+
+		updater.start();
+		this.mUpdater.add(updater);
 	}
 
 	@Override
 	public void noUpdater ()
 	{
-		this.mUpdater = Updater.instance;
+		this.mUpdater.clear();
 	}
 
 	@Override
@@ -565,7 +569,18 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 
 		// animation process
 		if (!isRunning || mFrameDuration == 0) {
-			mUpdater.update(this, delta);
+			// ============= update updatable =============
+			for (int i = 0, n = mUpdater.size; i < n; i++) {
+				final Updateable tmp = mUpdater.get(i);
+
+				if (!tmp.isStoped())
+					tmp.update(this, delta);
+				else {
+					mUpdater.removeValue(tmp, true);
+					--i;
+					--n;
+				}
+			}
 			return;
 		}
 
@@ -604,7 +619,18 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 		setRegion(keyFrames[frameNumber]);
 
 		// updater
-		mUpdater.update(this, delta);
+		// ============= update updatable =============
+		for (int i = 0, n = mUpdater.size; i < n; i++) {
+			final Updateable tmp = mUpdater.get(i);
+
+			if (!tmp.isStoped())
+				tmp.update(this, delta);
+			else {
+				mUpdater.removeValue(tmp, true);
+				--i;
+				--n;
+			}
+		}
 	}
 
 	@Override

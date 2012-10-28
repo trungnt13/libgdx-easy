@@ -5,7 +5,7 @@ import org.ege.utils.SpriteBackend;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Updater;
+import com.badlogic.gdx.utils.Updateable;
 
 /**
  * 
@@ -168,7 +168,7 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	// =================================================
 	// processor
 
-	public abstract void postUpdater (Updater updater);
+	public abstract void postUpdater (Updateable updater);
 
 	public abstract void noUpdater ();
 
