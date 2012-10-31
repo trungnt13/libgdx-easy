@@ -1,3 +1,3 @@
-﻿  x86_64-w64-mingw32-g++ -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 -I"C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine" *.cpp
-  mv *.o C:/cygwin/home/Trung/1_VisualStudio2012/Pol2DEngine/Pol2D/
+﻿  i686-w64-mingw32-g++ -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m32 -I"C:/1_VisualStudio2012/Pol2DEngine" *.cpp
+  mv *.o C:/1_VisualStudio2012/Pol2DEngine/Pol2D/
   rm -f *.o *~

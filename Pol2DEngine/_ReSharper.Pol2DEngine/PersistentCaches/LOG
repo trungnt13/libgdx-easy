@@ -1,5 +1,5 @@
-2012/10/20-12:57:56.457 f1c Recovering log #337
-2012/10/20-12:57:56.457 f1c Level-0 table #340: started
-2012/10/20-12:57:56.457 f1c Level-0 table #340: 0 bytes OK
-2012/10/20-12:57:56.462 f1c Delete type=0 #337
-2012/10/20-12:57:56.462 f1c Delete type=3 #335
+2012/10/31-14:24:44.940 13b4 Recovering log #344
+2012/10/31-14:24:44.941 13b4 Level-0 table #346: started
+2012/10/31-14:24:44.941 13b4 Level-0 table #346: 0 bytes OK
+2012/10/31-14:24:44.948 13b4 Delete type=0 #344
+2012/10/31-14:24:44.948 13b4 Delete type=3 #342
