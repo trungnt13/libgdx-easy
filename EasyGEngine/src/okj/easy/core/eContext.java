@@ -435,9 +435,9 @@ public class eContext
 		mPools.put(type, new Pool<T>(factory));
 	}
 
-	public <T> void makePool (int initCapacity, Class<T> type, Factory<T> factory)
+	public <T> void makePool (int max, Class<T> type, Factory<T> factory)
 	{
-		mPools.put(type, new Pool<T>(initCapacity, factory));
+		mPools.put(type, new Pool<T>(16, max, factory));
 	}
 
 	public <T> T newObject ()

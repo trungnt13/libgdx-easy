@@ -14,7 +14,8 @@ import com.badlogic.gdx.utils.Updateable;
  * Created on: Oct 7, 2012
  * Author: Trung
  */
-public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
+public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
+{
 	public final long address;
 
 	final NWorld world;
@@ -38,7 +39,8 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	// =======================================
 	// sprite def
 
-	public void noSpriteDef () {
+	public void noSpriteDef ()
+	{
 		if (this.def != null)
 			this.def.mSpriteCount--;
 
@@ -46,7 +48,8 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 		this.def = null;
 	}
 
-	public void setSpriteDef (NSpriteDef def) {
+	public void setSpriteDef (NSpriteDef def)
+	{
 		if (this.def != null)
 			this.def.mSpriteCount--;
 
@@ -56,7 +59,8 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 		this.def = def;
 	}
 
-	public void setSpriteDef (String spriteDefName) {
+	public void setSpriteDef (String spriteDefName)
+	{
 		if (this.def != null)
 			this.def.mSpriteCount--;
 
@@ -67,18 +71,21 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 		this.def = def;
 	}
 
-	public NSpriteDef getSpriteDef () {
+	public NSpriteDef getSpriteDef ()
+	{
 		return def;
 	}
 
 	// =======================================
 	// manager
 
-	public void setManager (NManager manager) {
+	public void setManager (NManager manager)
+	{
 		manager.manage(this);
 	}
 
-	public NManager getManager () {
+	public NManager getManager ()
+	{
 		return manager;
 	}
 
@@ -86,16 +93,19 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	// utils
 
 	/** If true manager will calculate collision for this sprite */
-	public void setCollision (boolean isCollision) {
+	public void setCollision (boolean isCollision)
+	{
 		setCollision(address, isCollision);
 	}
 
 	/** this is not safe method just for testing */
-	public float[] getTransformedBounding (int index) {
+	public float[] getTransformedBounding (int index)
+	{
 		return getTransformedBounding(address, index);
 	}
 
-	public boolean isPooled () {
+	public boolean isPooled ()
+	{
 		return isPooled;
 	}
 
@@ -187,7 +197,8 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	 * 3. dispose
 	 * 4. isPooled and isDispose = true
 	 */
-	public void dispose () {
+	public void dispose ()
+	{
 		if (isDisposed)
 			return;
 
@@ -212,7 +223,8 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 	 * 5. manager = null, def = null
 	 * 6. isPooled = true
 	 */
-	public void reset () {
+	public void reset ()
+	{
 		if (isPooled)
 			return;
 
@@ -228,7 +240,8 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable {
 		isPooled = true;
 	}
 
-	void unmanage () {
+	void unmanage ()
+	{
 		unmanage(address);
 	}
 

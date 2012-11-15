@@ -23,10 +23,24 @@ public class NManager implements Disposable
 	// sprite params
 
 	final Array<NativeSpriteBackend> mSpriteList = new Array<NativeSpriteBackend>(13);
+	// ============= for safe traverse =============
+	private static final Array<NativeSpriteBackend> CloneList = new Array<NativeSpriteBackend>(100);
 
 	NManager(long address, NWorld world) {
 		this.address = address;
 		this.world = world;
+	}
+
+	public Array<NativeSpriteBackend> CloneList ()
+	{
+		Array<NativeSpriteBackend> clone = new Array<NativeSpriteBackend>(mSpriteList.size);
+		clone.addAll(mSpriteList);
+		return clone;
+	}
+
+	public Array<NativeSpriteBackend> List ()
+	{
+		return mSpriteList;
 	}
 
 	/******************************************************
@@ -40,8 +54,11 @@ public class NManager implements Disposable
 
 	public void update (float delta)
 	{
-		for (int i = 0; i < mSpriteList.size; i++)
-			mSpriteList.get(i).update(delta);
+		CloneList.clear();
+		CloneList.addAll(mSpriteList);
+		for (NativeSpriteBackend s : CloneList) {
+			s.update(delta);
+		}
 	}
 
 	public void draw (SpriteBatch batch)

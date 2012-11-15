@@ -550,7 +550,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 			return;
 
 		updater.start();
-		this.mUpdater.add(updater);
+		mUpdater.add(updater);
 	}
 
 	@Override

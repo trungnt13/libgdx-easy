@@ -624,9 +624,9 @@ public class SpriteA implements Animator, SpriteBackend
 
 	public void postUpdater (Updateable updater)
 	{
-		if(mUpdater.contains(updater, true))
+		if (mUpdater.contains(updater, true))
 			return;
-		
+
 		updater.start();
 		this.mUpdater.add(updater);
 	}
@@ -920,6 +920,8 @@ public class SpriteA implements Animator, SpriteBackend
 
 	private void setRegion (TextureRegion region)
 	{
+		this.mCurrentTexture = region.getTexture();
+
 		final float u = region.getU();
 		final float v = region.getV();
 		final float u2 = region.getU2();
