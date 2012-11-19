@@ -1,3 +1,4 @@
+
 package okj.easy.graphics.graphics2d;
 
 import org.ege.utils.SpriteBackend;
@@ -7,13 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Updateable;
 
-/**
+/** NativeSpriteBackend.java
  * 
- * NativeSpriteBackend.java
- * 
- * Created on: Oct 7, 2012
- * Author: Trung
- */
+ * Created on: Oct 7, 2012 Author: Trung */
 public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 {
 	public final long address;
@@ -27,13 +24,14 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 	boolean isPooled = false;
 	boolean isDisposed = false;
 
-	/*****************************************************
-	 * Constructor
-	 *****************************************************/
+	/***************************************************** Constructor *****************************************************/
 
-	NativeSpriteBackend(long address, NWorld world) {
+	NativeSpriteBackend (long address, NWorld world)
+	{
 		this.address = address;
 		this.world = world;
+
+		world.mSpriteMap.put(address, this);
 	}
 
 	// =======================================
@@ -41,8 +39,7 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 
 	public void noSpriteDef ()
 	{
-		if (this.def != null)
-			this.def.mSpriteCount--;
+		if (this.def != null) this.def.mSpriteCount--;
 
 		noSpriteDef(address);
 		this.def = null;
@@ -50,8 +47,7 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 
 	public void setSpriteDef (NSpriteDef def)
 	{
-		if (this.def != null)
-			this.def.mSpriteCount--;
+		if (this.def != null) this.def.mSpriteCount--;
 
 		def.mSpriteCount++;
 		setSpriteDef(address, def.address);
@@ -61,8 +57,7 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 
 	public void setSpriteDef (String spriteDefName)
 	{
-		if (this.def != null)
-			this.def.mSpriteCount--;
+		if (this.def != null) this.def.mSpriteCount--;
 
 		NSpriteDef def = world.getSpriteDef(spriteDefName);
 		def.mSpriteCount++;
@@ -109,9 +104,7 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 		return isPooled;
 	}
 
-	/*****************************************************
-	 * SpriteBackend
-	 *****************************************************/
+	/***************************************************** SpriteBackend *****************************************************/
 
 	// =================================================
 	// setter
@@ -191,16 +184,10 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 	// ==============================================
 	// dispose
 
-	/**
-	 * 1. unmanage from manager
-	 * 2. world remove sprite
-	 * 3. dispose
-	 * 4. isPooled and isDispose = true
-	 */
+	/** 1. unmanage from manager 2. world remove sprite 3. dispose 4. isPooled and isDispose = true */
 	public void dispose ()
 	{
-		if (isDisposed)
-			return;
+		if (isDisposed) return;
 
 		manager.unmanage(this);
 		manager = null;
@@ -215,18 +202,11 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 		isPooled = true;
 	}
 
-	/**
-	 * 1. reset all vertices to zero.
-	 * 2. reset color to white, scale to 1
-	 * 3. remove from manager
-	 * 4. world pool this sprite
-	 * 5. manager = null, def = null
-	 * 6. isPooled = true
-	 */
+	/** 1. reset all vertices to zero. 2. reset color to white, scale to 1 3. remove from manager 4. world pool this sprite 5.
+	 * manager = null, def = null 6. isPooled = true */
 	public void reset ()
 	{
-		if (isPooled)
-			return;
+		if (isPooled) return;
 
 		manager.unmanage(this);
 		manager = null;
@@ -245,9 +225,7 @@ public abstract class NativeSpriteBackend implements SpriteBackend, Disposable
 		unmanage(address);
 	}
 
-	/******************************************************
-	 * Native method
-	 ******************************************************/
+	/****************************************************** Native method ******************************************************/
 
 	// ==============================================
 	// setter

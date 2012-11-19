@@ -114,7 +114,6 @@ void WorldManager::ProcessCollision(Manager *m1,Manager *m2,CollideListener *lis
 		//traverse sprite list of manager 2
 		for(int j = 0;j < m2->size();j++){
 			Sprite *s2 = m2->get(j);
-
 			// check grid
 			if(!mGrid->fastCheck(
 				s1->getCenterX(),s1->getCenterY(),
@@ -124,7 +123,7 @@ void WorldManager::ProcessCollision(Manager *m1,Manager *m2,CollideListener *lis
 			// get number of polygon in each sprite
 			nof1 = s1->getNumberOfBounding();
 			nof2 = s2->getNumberOfBounding();
-
+			
 			// process check bounding collide
 			if(nof1 == 0 || nof2 == 0){
 				//just check bounding rect

@@ -1,3 +1,4 @@
+
 package okj.easy.graphics.graphics2d;
 
 import static com.badlogic.gdx.graphics.g2d.Animation.LOOP;
@@ -41,13 +42,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.Updateable;
 
-/**
+/** NSpriteA.java
  * 
- * NSpriteA.java
- * 
- * Created on: Oct 12, 2012
- * Author: Trung
- */
+ * Created on: Oct 12, 2012 Author: Trung */
 public class NSpriteA extends NativeSpriteBackend implements Animator
 {
 
@@ -72,11 +69,10 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 
 	private boolean isRunning = false;
 
-	/************************************************************
-	 * Constructor
-	 ************************************************************/
+	/************************************************************ Constructor ************************************************************/
 
-	protected NSpriteA(long address, NWorld world) {
+	protected NSpriteA (long address, NWorld world)
+	{
 		super(address, world);
 
 		setColor(1, 1, 1, 1);
@@ -84,9 +80,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 		setOrigin(25, 25);
 	}
 
-	/***********************************************************
-	 * Animator controller
-	 ***********************************************************/
+	/*********************************************************** Animator controller ***********************************************************/
 
 	public void setFrameDuration (float frameDuration)
 	{
@@ -124,7 +118,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	{
 		keyFrames = new TextureRegion[keyFrame.size];
 		for (int i = 0; i < keyFrames.length; i++)
-			keyFrames[i] = (TextureRegion) keyFrame.get(i);
+			keyFrames[i] = (TextureRegion)keyFrame.get(i);
 		setRegion(keyFrames[0]);
 		setTexture(keyFrames);
 	}
@@ -170,11 +164,9 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 		setRegion(keyFrames[0]);
 	}
 
-	/**
-	 * Get current frame number ( unsafe method)
+	/** Get current frame number ( unsafe method)
 	 * 
-	 * @return
-	 */
+	 * @return */
 	public int getFrameNumber ()
 	{
 		return frameNumber;
@@ -191,15 +183,13 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 		return isRunning;
 	}
 
-	/************************************************************
-	 * Texture manager method
-	 ************************************************************/
+	/************************************************************ Texture manager method ************************************************************/
 
 	public void setRegions (Array region)
 	{
 		keyFrames = new TextureRegion[region.size];
 		for (int i = 0; i < keyFrames.length; i++)
-			keyFrames[i] = (TextureRegion) region.get(i);
+			keyFrames[i] = (TextureRegion)region.get(i);
 
 		setRegion(keyFrames[0]);
 		setTexture(keyFrames);
@@ -214,6 +204,8 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 
 	private void setRegion (TextureRegion region)
 	{
+		mCurrentTexture = region.getTexture();
+
 		final float u = region.getU();
 		final float v = region.getV();
 		final float u2 = region.getU2();
@@ -239,9 +231,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 		mCurrentTexture = texture[0].getTexture();
 	}
 
-	/************************************************************
-	 * Java sprite method
-	 ************************************************************/
+	/************************************************************ Java sprite method ************************************************************/
 
 	// ==============================================
 	// setter
@@ -251,8 +241,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	{
 		setBounds(address, x, y, width, height);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		float x2 = x + width;
 		float y2 = y + height;
@@ -276,8 +265,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	{
 		setSize(address, width, height);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		float x = getX();
 		float y = getY();
@@ -322,8 +310,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	{
 		translate(address, xAmount, yAmount);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		final float[] vertices = this.vertices;
 		vertices[X1] += xAmount;
@@ -344,8 +331,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	{
 		translateX(address, xAmount);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		final float[] vertices = this.vertices;
 		vertices[X1] += xAmount;
@@ -359,8 +345,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	{
 		translateY(address, yAmount);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		final float[] vertices = this.vertices;
 		vertices[Y1] += yAmount;
@@ -408,8 +393,8 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	@Override
 	public void setColor (float r, float g, float b, float a)
 	{
-		int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16) | ((int) (255 * g) << 8)
-				| ((int) (255 * r));
+		int intBits = ((int)(255 * a) << 24) | ((int)(255 * b) << 16) | ((int)(255 * g) << 8)
+			| ((int)(255 * r));
 		float color = NumberUtils.intToFloatColor(intBits);
 		final float[] vertices = this.vertices;
 		vertices[C1] = color;
@@ -522,14 +507,11 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 		return null;
 	}
 
-	/**
-	 * Returns the color of this sprite. Changing the returned color will have no affect,
-	 * {@link #setColor(Color)} or {@link #setColor(float, float, float, float)} must be used.
-	 */
+	/** Returns the color of this sprite. Changing the returned color will have no affect, {@link #setColor(Color)} or
+	 * {@link #setColor(float, float, float, float)} must be used. */
 	public Color getColor ()
 	{
-		if (color == null)
-			color = new Color();
+		if (color == null) color = new Color();
 
 		int intBits = NumberUtils.floatToIntColor(vertices[C1]);
 		Color color = this.color;
@@ -546,8 +528,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	@Override
 	public void postUpdater (Updateable updater)
 	{
-		if (mUpdater.contains(updater, true))
-			return;
+		if (mUpdater.contains(updater, true)) return;
 
 		updater.start();
 		mUpdater.add(updater);
@@ -562,8 +543,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	@Override
 	public void update (float delta)
 	{
-		if (isPooled)
-			return;
+		if (isPooled) return;
 
 		getVertices(address, vertices);
 
@@ -586,35 +566,35 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 
 		mStateTime += delta;
 
-		frameNumber = (int) (mStateTime / mFrameDuration);
+		frameNumber = (int)(mStateTime / mFrameDuration);
 
 		switch (mPlayMode) {
-			case NORMAL:
-				frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-				break;
-			case LOOP:
-				frameNumber = frameNumber % keyFrames.length;
-				break;
-			case LOOP_PINGPONG:
-				frameNumber = frameNumber % (keyFrames.length * 2);
-				if (frameNumber >= keyFrames.length)
-					frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
-				break;
-			case LOOP_RANDOM:
-				frameNumber = MathUtils.random(keyFrames.length - 1);
-				break;
-			case REVERSED:
-				frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
-				break;
-			case LOOP_REVERSED:
-				frameNumber = frameNumber % keyFrames.length;
-				frameNumber = keyFrames.length - frameNumber - 1;
-				break;
+		case NORMAL:
+			frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+			break;
+		case LOOP:
+			frameNumber = frameNumber % keyFrames.length;
+			break;
+		case LOOP_PINGPONG:
+			frameNumber = frameNumber % (keyFrames.length * 2);
+			if (frameNumber >= keyFrames.length)
+				frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
+			break;
+		case LOOP_RANDOM:
+			frameNumber = MathUtils.random(keyFrames.length - 1);
+			break;
+		case REVERSED:
+			frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
+			break;
+		case LOOP_REVERSED:
+			frameNumber = frameNumber % keyFrames.length;
+			frameNumber = keyFrames.length - frameNumber - 1;
+			break;
 
-			default:
-				// play normal otherwise
-				frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-				break;
+		default:
+			// play normal otherwise
+			frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+			break;
 		}
 		setRegion(keyFrames[frameNumber]);
 

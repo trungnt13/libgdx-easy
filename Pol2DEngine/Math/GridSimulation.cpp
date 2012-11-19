@@ -77,6 +77,9 @@ int GridAdvance::toMappingId(int column,int row){
 }
 
 bool GridAdvance::fastCheck(float x,float y,float x1,float y1){
+	//TODO
+	if(x < startX || x1 < startX || y < startY || y1 < startY)
+		return false;
 	return ( this->project(x,y) == this->project(x1,y1) );
 }
 /************************************************************************/

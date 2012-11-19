@@ -1,4 +1,4 @@
-﻿  i686-w64-mingw32-g++ -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m32 -I"C:/1_VisualStudio2012/Pol2DEngine" *.cpp
+﻿  x86_64-w64-mingw32-g++ -c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 -I"C:/1_VisualStudio2012/Pol2DEngine" *.cpp
   In file included from Pol2D.h:14:0,
                    from Pol2D.cpp:8:
   CollisionProcessor.h:18:24: warning: ΓÇÿprocess1ΓÇÖ defined but not used

@@ -418,6 +418,9 @@ void Sprite::reset(){
 
 	dirty = false;
 	isCollide = true;
+
+	defBounding[0] = -100000;
+	defBounding[1] = -100000;
 }
 
 //////////////////////////////////////////////////////////////////////////

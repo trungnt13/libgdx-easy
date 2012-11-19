@@ -1,3 +1,4 @@
+
 package okj.easy.graphics.graphics2d;
 
 import org.ege.utils.SpriteBackend;
@@ -14,12 +15,9 @@ import com.badlogic.gdx.utils.IdentityMap;
 import com.badlogic.gdx.utils.IdentityMap.Values;
 import com.badlogic.gdx.utils.Updateable;
 
-/**
- * NSpriter.java {@link NManager}
+/** NSpriter.java {@link NManager}
  * 
- * Created on: Oct 12, 2012
- * Author: Trung
- */
+ * Created on: Oct 12, 2012 Author: Trung */
 public class NSpriter extends NManager implements Animator, SpriteBackend, Disposable
 {
 
@@ -52,13 +50,11 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 
 	private Array<Updateable> mUpdater = new Array<Updateable>(0);
 
-	/**
-	 * Construct a spriter with given sprite limit ( should override this
-	 * method)
+	/** Construct a spriter with given sprite limit ( should override this method)
 	 * 
-	 * @param limit
-	 */
-	protected NSpriter(long address, NWorld world) {
+	 * @param limit */
+	protected NSpriter (long address, NWorld world)
+	{
 		super(address, world);
 
 		mScaler = new IdentityMap<NativeSpriteBackend, NSpriter.NScaler>(13);
@@ -67,53 +63,35 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		mRunnable = new Array<NativeSpriteBackend>(13);
 	}
 
-	/********************************************************
-	 * NManager method
-	 ********************************************************/
-
-	@Override
-	public void manage (NativeSpriteBackend sprite)
-	{
-		super.manage(sprite);
-	}
-
-	@Override
-	public void remove (NSprite sprite)
-	{
-		super.remove(sprite);
-	}
-
-	@Override
-	public int size ()
-	{
-		return super.size();
-	}
-
-	@Override
-	public boolean contain (NSprite sprite)
-	{
-		return super.contain(sprite);
-	}
-
-	@Override
-	void unmanage (NativeSpriteBackend sprite)
-	{
-		super.unmanage(sprite);
-	}
+	/******************************************************** NManager method ********************************************************/
 
 	@Deprecated
+	/**
+	 * This method shouldn't be call directly 
+	 */
 	public void clear ()
 	{
 		super.clear();
 	}
 
-	/********************************************************
-	 * Layer manage
-	 ********************************************************/
+	@Override
+	public void remove (NativeSpriteBackend sprite)
+	{
+		super.remove(sprite);
+		mDrawable.removeValue(sprite, true);
+		mRunnable.removeValue(sprite, true);
+	}
 
-	private NScaler calculateScaler (NativeSpriteBackend sprite, float x, float y,
-			float width,
-			float height)
+	public void removeFromDrawableRunnable (NativeSpriteBackend sprite)
+	{
+		mDrawable.removeValue(sprite, true);
+		mRunnable.removeValue(sprite, true);
+	}
+
+	/******************************************************** Layer manage ********************************************************/
+
+	private NScaler calculateScaler (NativeSpriteBackend sprite, float x, float y, float width,
+		float height)
 	{
 
 		NScaler scale = null;
@@ -187,13 +165,13 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			bindOriginLayer(sprite);
 		} else {
 			final NScaler scale = calculateScaler(sprite, sprite.getX(), sprite.getY(),
-					sprite.getWidth(), sprite.getHeight());
+				sprite.getWidth(), sprite.getHeight());
 			scale.apply();
 		}
 	}
 
 	public void bindLayer (NativeSpriteBackend sprite, int id, float x, float y, float width,
-			float height)
+		float height)
 	{
 		if (id > mSpriteList.size)
 			return;
@@ -220,8 +198,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 
 	public void apply (NativeSpriteBackend sprite, float x, float y, float width, float height)
 	{
-		if (!mSpriteList.contains(sprite, true))
-			return;
+		if (!mSpriteList.contains(sprite, true)) return;
 
 		if (sprite != mOriginSprite) {
 			NScaler scale = mScaler.get(sprite);
@@ -238,8 +215,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 
 	public void apply (NativeSpriteBackend sprite, float width, float height)
 	{
-		if (!mSpriteList.contains(sprite, true))
-			return;
+		if (!mSpriteList.contains(sprite, true)) return;
 
 		if (sprite != mOriginSprite) {
 			NScaler scale = mScaler.get(sprite);
@@ -262,9 +238,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		return mSpriteList.indexOf(sprite, true);
 	}
 
-	/********************************************************
-	 * Color method
-	 ********************************************************/
+	/******************************************************** Color method ********************************************************/
 
 	public void setColor (float r, float g, float b, float a)
 	{
@@ -314,9 +288,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		return this;
 	}
 
-	/********************************************************
-	 * Configuration
-	 ********************************************************/
+	/******************************************************** Configuration ********************************************************/
 
 	@Override
 	public void setBounds (float x, float y, float width, float height)
@@ -488,9 +460,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		mSpriteList.get(layer).scale(amount);
 	}
 
-	/********************************************************
-	 * Getter
-	 ********************************************************/
+	/******************************************************** Getter ********************************************************/
 
 	@Override
 	public float[] getVertices ()
@@ -646,18 +616,20 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		return null;
 	}
 
-	/********************************************************
-	 * Drawing method
-	 ********************************************************/
+	/******************************************************** Drawing method ********************************************************/
 
 	public NSpriter setDrawableLayer (NativeSpriteBackend... list)
 	{
 		mDrawable.clear();
 		for (NativeSpriteBackend s : list) {
-			if (mSpriteList.contains(s, true) &&
-					!mDrawable.contains(s, true))
-				mDrawable.add(s);
+			if (mSpriteList.contains(s, true) && !mDrawable.contains(s, true)) mDrawable.add(s);
 		}
+		return this;
+	}
+
+	public NSpriter addDrawableLayer (NativeSpriteBackend s)
+	{
+		if (mSpriteList.contains(s, true) && !mDrawable.contains(s, true)) mDrawable.add(s);
 		return this;
 	}
 
@@ -693,18 +665,20 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 			s.draw(batch, alpha);
 	}
 
-	/********************************************************
-	 * Animator method
-	 ********************************************************/
+	/******************************************************** Animator method ********************************************************/
 
 	public NSpriter setRunnableLayer (NativeSpriteBackend... list)
 	{
 		mRunnable.clear();
 		for (NativeSpriteBackend s : list) {
-			if (mSpriteList.contains(s, true) &&
-					!mRunnable.contains(s, true))
-				mRunnable.add(s);
+			if (mSpriteList.contains(s, true) && !mRunnable.contains(s, true)) mRunnable.add(s);
 		}
+		return this;
+	}
+
+	public NSpriter addRunnableLayer (NativeSpriteBackend s)
+	{
+		if (mSpriteList.contains(s, true) && !mRunnable.contains(s, true)) mRunnable.add(s);
 		return this;
 	}
 
@@ -728,21 +702,21 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	public void setFrameDuration (float frameDuration)
 	{
 		for (NativeSpriteBackend s : mRunnable)
-			((Animator) s).setFrameDuration(frameDuration);
+			((Animator)s).setFrameDuration(frameDuration);
 	}
 
 	public void start ()
 	{
 		RUN = true;
 		for (NativeSpriteBackend s : mRunnable)
-			((Animator) s).start();
+			((Animator)s).start();
 	}
 
 	public void start (float frameDuration)
 	{
 		RUN = true;
 		for (NativeSpriteBackend s : mRunnable)
-			((Animator) s).start(frameDuration);
+			((Animator)s).start(frameDuration);
 	}
 
 	@Override
@@ -750,7 +724,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	{
 		RUN = true;
 		for (NativeSpriteBackend s : mRunnable)
-			((Animator) s).start(frameDuration, playMode);
+			((Animator)s).start(frameDuration, playMode);
 	}
 
 	@Override
@@ -779,13 +753,13 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	public void resetFrame ()
 	{
 		for (NativeSpriteBackend s : mRunnable)
-			((Animator) s).resetFrame();
+			((Animator)s).resetFrame();
 	}
 
 	public void resetFrame (NativeSpriteBackend... layers)
 	{
 		for (NativeSpriteBackend s : layers)
-			((Animator) s).resetFrame();
+			((Animator)s).resetFrame();
 	}
 
 	public void update (float delta)
@@ -809,8 +783,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 
 	public void postUpdater (Updateable updater)
 	{
-		if (mUpdater.contains(updater, true))
-			return;
+		if (mUpdater.contains(updater, true)) return;
 
 		updater.start();
 		this.mUpdater.add(updater);
@@ -871,8 +844,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		String info ()
 		{
 			return "xRatio : " + xRatio + " " + "yRatio : " + yRatio + " " + "widthRatio : "
-					+ widthRatio + " "
-					+ "heightRatio : " + heightRatio + " ";
+				+ widthRatio + " " + "heightRatio : " + heightRatio + " ";
 		}
 	}
 
