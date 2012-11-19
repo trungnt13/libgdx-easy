@@ -430,19 +430,22 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	@Override
 	public void setScale (float scaleXY)
 	{
-		mOriginSprite.setScale(scaleXY);
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.setScale(scaleXY);
 	}
 
 	@Override
 	public void setScale (float scaleX, float scaleY)
 	{
-		mOriginSprite.setScale(scaleX, scaleY);
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.setScale(scaleX, scaleY);
 	}
 
 	@Override
 	public void scale (float amount)
 	{
-		mOriginSprite.scale(amount);
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.scale(amount);
 	}
 
 	public void setScale (int layer, float scaleXY)

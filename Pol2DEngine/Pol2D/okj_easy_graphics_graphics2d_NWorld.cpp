@@ -151,6 +151,8 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision
 	(JNIEnv *env, jobject obj, jlong manager1, jlong manager2){
 		Manager *m1 = (Manager*)manager1;
 		Manager *m2 = (Manager*)manager2;
+		if(!world->ContainManager(m1) || !world->ContainManager(m2))
+			return;
 		JniCollide listener(env,obj);
 		world->ProcessCollision(m1,m2,&listener);
 }
