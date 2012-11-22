@@ -1,3 +1,4 @@
+
 package okj.easy.core;
 
 import java.util.ArrayList;
@@ -14,12 +15,9 @@ import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.ObjectMap;
 
-/**
- * 
- * @FileName: eInput.java
+/** @FileName: eInput.java
  * @CreateOn: Sep 15, 2012 - 11:11:44 AM
- * @Author: TrungNT
- */
+ * @Author: TrungNT */
 public class eInput implements InputProcessor
 {
 
@@ -29,6 +27,8 @@ public class eInput implements InputProcessor
 
 	private final ArrayList<MotionCallBack> mMotionList = new ArrayList<MotionCallBack>();
 	private final ArrayList<KeyCallBack> mKeysList = new ArrayList<KeyCallBack>();
+
+	private final ArrayList<InputProcessor> CloneList = new ArrayList<InputProcessor>();
 
 	// ==============================================
 
@@ -42,19 +42,14 @@ public class eInput implements InputProcessor
 	private int projectedX;
 	private int projectedY;
 
-	public eInput() {
+	public eInput ()
+	{
 	}
 
-	/**
-	 * Add a new processor at a specified index( the index must in range`
-	 * [0,size]
+	/** Add a new processor at a specified index( the index must in range` [0,size]
 	 * 
-	 * @param index
-	 *            your index
-	 * @param processor
-	 *            your processor
-	 * 
-	 */
+	 * @param index your index
+	 * @param processor your processor */
 	public void addProcessor (int index, InputProcessor processor)
 	{
 		if (!mInputMap.containsKey(index)) {
@@ -66,12 +61,9 @@ public class eInput implements InputProcessor
 		}
 	}
 
-	/**
-	 * Remove a processor at specified index( The index must in range [0,size])
+	/** Remove a processor at specified index( The index must in range [0,size])
 	 * 
-	 * @param index
-	 *            your index
-	 */
+	 * @param index your index */
 	public void removeProcessor (int index)
 	{
 		InputProcessor input = mInputMap.remove(index);
@@ -88,17 +80,13 @@ public class eInput implements InputProcessor
 		mBackKeyListener = null;
 	}
 
-	/**
-	 * @return the number of mInputProcessors in this multiplexer
-	 */
+	/** @return the number of mInputProcessors in this multiplexer */
 	public int size ()
 	{
 		return mInputProcessors.size();
 	}
 
-	/**
-	 * Clear the processor list
-	 */
+	/** Clear the processor list */
 	public void clear ()
 	{
 		mInputProcessors.clear();
@@ -107,11 +95,9 @@ public class eInput implements InputProcessor
 		mKeysList.clear();
 	}
 
-	/**
-	 * Get the array list of mInputProcessors
+	/** Get the array list of mInputProcessors
 	 * 
-	 * @return Array<InputProcessor>
-	 */
+	 * @return Array<InputProcessor> */
 	ArrayList<InputProcessor> getProcessors ()
 	{
 		return mInputProcessors;
@@ -122,17 +108,12 @@ public class eInput implements InputProcessor
 		return mInputMap.get(id);
 	}
 
-	/***************************************************************
-	 * Key event handler
-	 ***************************************************************/
+	/*************************************************************** Key event handler ***************************************************************/
 
-	/**
-	 * Called when a key was pressed
+	/** Called when a key was pressed
 	 * 
-	 * @param keycode
-	 *            one of the constants in {@link Input.Keys}
-	 * @return whether the input was processed
-	 */
+	 * @param keycode one of the constants in {@link Input.Keys}
+	 * @return whether the input was processed */
 	public boolean keyDown (int keycode)
 	{
 		tmp = mInputProcessors.size();
@@ -146,13 +127,10 @@ public class eInput implements InputProcessor
 		return true;
 	}
 
-	/**
-	 * Called when a key was released
+	/** Called when a key was released
 	 * 
-	 * @param keycode
-	 *            one of the constants in {@link Input.Keys}
-	 * @return whether the input was processed
-	 */
+	 * @param keycode one of the constants in {@link Input.Keys}
+	 * @return whether the input was processed */
 	public boolean keyUp (int keycode)
 	{
 		if (mBackKeyListener != null && keycode == Keys.BACK)
@@ -169,13 +147,10 @@ public class eInput implements InputProcessor
 		return true;
 	}
 
-	/**
-	 * Called when a key was typed
+	/** Called when a key was typed
 	 * 
-	 * @param character
-	 *            The character
-	 * @return whether the input was processed
-	 */
+	 * @param character The character
+	 * @return whether the input was processed */
 	public boolean keyTyped (char character)
 	{
 		tmp = mInputProcessors.size();
@@ -189,24 +164,16 @@ public class eInput implements InputProcessor
 		return true;
 	}
 
-	/***********************************************************
-	 * Touch event handler
-	 ***********************************************************/
+	/*********************************************************** Touch event handler ***********************************************************/
 
-	/**
-	 * Called when the screen was touched or a mouse button was pressed. The
-	 * button parameter will be {@link Buttons#LEFT} on Android.
+	/** Called when the screen was touched or a mouse button was pressed. The button parameter will be {@link Buttons#LEFT} on
+	 * Android.
 	 * 
-	 * @param x
-	 *            The x coordinate, origin is in the upper left corner
-	 * @param y
-	 *            The y coordinate, origin is in the upper left corner
-	 * @param pointer
-	 *            the pointer for the event.
-	 * @param button
-	 *            the button
-	 * @return whether the input was processed
-	 */
+	 * @param x The x coordinate, origin is in the upper left corner
+	 * @param y The y coordinate, origin is in the upper left corner
+	 * @param pointer the pointer for the event.
+	 * @param button the button
+	 * @return whether the input was processed */
 	public boolean touchDown (int X, int Y, int pointer, int button)
 	{
 		mLastTouchPointer = pointer;
@@ -214,12 +181,13 @@ public class eInput implements InputProcessor
 		int y = Gdx.graphics.getHeight() - Y;
 
 		// ============= calculate projected input =============
-		projectedX = (int) (((float) X / (float) Gdx.graphics.getWidth()) * eAdmin.gameWidth());
-		projectedY = (int) (((float) y / (float) Gdx.graphics.getHeight()) * eAdmin.gameHeight());
+		projectedX = (int)(((float)X / (float)Gdx.graphics.getWidth()) * eAdmin.gameWidth());
+		projectedY = (int)(((float)y / (float)Gdx.graphics.getHeight()) * eAdmin.gameHeight());
 
-		tmp = mInputProcessors.size();
-		for (int i = 0; i < tmp; i++)
-			mInputProcessors.get(i).touchDown(X, Y, pointer, button);
+		CloneList.clear();
+		CloneList.addAll(mInputProcessors);
+		for (InputProcessor i : CloneList)
+			i.touchDown(X, Y, pointer, button);
 
 		tmp = mMotionList.size();
 		for (int i = 0; i < tmp; i++)
@@ -228,32 +196,27 @@ public class eInput implements InputProcessor
 		return true;
 	}
 
-	/**
-	 * Called when a finger was lifted or a mouse button was released. The
-	 * button parameter will be {@link Buttons#LEFT} on Android.
+	/** Called when a finger was lifted or a mouse button was released. The button parameter will be {@link Buttons#LEFT} on
+	 * Android.
 	 * 
-	 * @param x
-	 *            The x coordinate
-	 * @param y
-	 *            The y coordinate
-	 * @param pointer
-	 *            the pointer for the event.
-	 * @param button
-	 *            the button
-	 * @return whether the input was processed
-	 */
+	 * @param x The x coordinate
+	 * @param y The y coordinate
+	 * @param pointer the pointer for the event.
+	 * @param button the button
+	 * @return whether the input was processed */
 	public boolean touchUp (int X, int Y, int pointer, int button)
 	{
 
 		int y = Gdx.graphics.getHeight() - Y;
 
 		// ============= calculate projected input =============
-		projectedX = (int) (((float) X / (float) Gdx.graphics.getWidth()) * eAdmin.gameWidth());
-		projectedY = (int) (((float) y / (float) Gdx.graphics.getHeight()) * eAdmin.gameHeight());
+		projectedX = (int)(((float)X / (float)Gdx.graphics.getWidth()) * eAdmin.gameWidth());
+		projectedY = (int)(((float)y / (float)Gdx.graphics.getHeight()) * eAdmin.gameHeight());
 
-		tmp = mInputProcessors.size();
-		for (int i = 0; i < tmp; i++)
-			mInputProcessors.get(i).touchUp(X, Y, pointer, button);
+		CloneList.clear();
+		CloneList.addAll(mInputProcessors);
+		for (InputProcessor i : CloneList)
+			i.touchUp(X, Y, pointer, button);
 
 		tmp = mMotionList.size();
 		for (int i = 0; i < tmp; i++)
@@ -262,28 +225,24 @@ public class eInput implements InputProcessor
 		return true;
 	}
 
-	/**
-	 * Called when a finger or the mouse was dragged.
+	/** Called when a finger or the mouse was dragged.
 	 * 
-	 * @param x
-	 *            The x coordinate
-	 * @param y
-	 *            The y coordinate
-	 * @param pointer
-	 *            the pointer for the event.
-	 * @return whether the input was processed
-	 */
+	 * @param x The x coordinate
+	 * @param y The y coordinate
+	 * @param pointer the pointer for the event.
+	 * @return whether the input was processed */
 	public boolean touchDragged (int X, int Y, int pointer)
 	{
 		int y = Gdx.graphics.getHeight() - Y;
 
 		// ============= calculate projected input =============
-		projectedX = (int) (((float) X / (float) Gdx.graphics.getWidth()) * eAdmin.gameWidth());
-		projectedY = (int) (((float) y / (float) Gdx.graphics.getHeight()) * eAdmin.gameHeight());
+		projectedX = (int)(((float)X / (float)Gdx.graphics.getWidth()) * eAdmin.gameWidth());
+		projectedY = (int)(((float)y / (float)Gdx.graphics.getHeight()) * eAdmin.gameHeight());
 
-		tmp = mInputProcessors.size();
-		for (int i = 0; i < tmp; i++)
-			mInputProcessors.get(i).touchDragged(X, Y, pointer);
+		CloneList.clear();
+		CloneList.addAll(mInputProcessors);
+		for (InputProcessor i : CloneList)
+			i.touchDragged(X, Y, pointer);
 
 		tmp = mMotionList.size();
 		for (int i = 0; i < tmp; i++)
@@ -292,24 +251,19 @@ public class eInput implements InputProcessor
 		return true;
 	}
 
-	/**
-	 * Called when the mouse was moved without any buttons being pressed. Will
-	 * not be called on Android.
+	/** Called when the mouse was moved without any buttons being pressed. Will not be called on Android.
 	 * 
-	 * @param x
-	 *            The x coordinate
-	 * @param y
-	 *            The y coordinate
-	 * @return whether the input was processed
-	 */
+	 * @param x The x coordinate
+	 * @param y The y coordinate
+	 * @return whether the input was processed */
 	@Override
 	public boolean mouseMoved (int X, int Y)
 	{
 		int y = Gdx.graphics.getHeight() - Y;
 
 		// ============= calculate projected input =============
-		projectedX = (int) (((float) X / (float) Gdx.graphics.getWidth()) * eAdmin.gameWidth());
-		projectedY = (int) (((float) y / (float) Gdx.graphics.getHeight()) * eAdmin.gameHeight());
+		projectedX = (int)(((float)X / (float)Gdx.graphics.getWidth()) * eAdmin.gameWidth());
+		projectedY = (int)(((float)y / (float)Gdx.graphics.getHeight()) * eAdmin.gameHeight());
 
 		tmp = mInputProcessors.size();
 		for (int i = 0; i < tmp; i++)
@@ -322,14 +276,10 @@ public class eInput implements InputProcessor
 		return true;
 	}
 
-	/**
-	 * Called when the mouse wheel was scrolled. Will not be called on Android.
+	/** Called when the mouse wheel was scrolled. Will not be called on Android.
 	 * 
-	 * @param amount
-	 *            the scroll amount, -1 or 1 depending on the direction the
-	 *            wheel was scrolled.
-	 * @return whether the input was processed.
-	 */
+	 * @param amount the scroll amount, -1 or 1 depending on the direction the wheel was scrolled.
+	 * @return whether the input was processed. */
 	@Override
 	public boolean scrolled (int amount)
 	{
@@ -340,18 +290,12 @@ public class eInput implements InputProcessor
 		return true;
 	}
 
-	/***********************************************************
-	 * Input management
-	 ***********************************************************/
+	/*********************************************************** Input management ***********************************************************/
 
-	/**
-	 * find the input by the given key with is specified when you create new
-	 * Inputprocessor
+	/** find the input by the given key with is specified when you create new Inputprocessor
 	 * 
-	 * @param key
-	 *            input's key
-	 * @return
-	 */
+	 * @param key input's key
+	 * @return */
 	public InputProcessor findInputByID (int key)
 	{
 		return mInputMap.get(key);
@@ -369,25 +313,22 @@ public class eInput implements InputProcessor
 			mKeysList.add(callback);
 	}
 
-	/**
-	 * Register a new callback to listen to input event
+	/** Register a new callback to listen to input event
 	 * 
-	 * @param callback
-	 *            new Call back
-	 */
+	 * @param callback new Call back */
 	public void addCallback (Callback callback)
 	{
 		if (callback instanceof MotionCallBack && callback instanceof KeyCallBack) {
 			if (!mMotionList.contains(callback))
-				mMotionList.add((MotionCallBack) callback);
+				mMotionList.add((MotionCallBack)callback);
 			if (!mKeysList.contains(callback))
-				mKeysList.add((KeyCallBack) callback);
+				mKeysList.add((KeyCallBack)callback);
 		} else if (callback instanceof MotionCallBack) {
 			if (!mMotionList.contains(callback))
-				mMotionList.add((MotionCallBack) callback);
+				mMotionList.add((MotionCallBack)callback);
 		} else if (callback instanceof KeyCallBack) {
 			if (!mKeysList.contains(callback))
-				this.mKeysList.add((KeyCallBack) callback);
+				this.mKeysList.add((KeyCallBack)callback);
 		}
 	}
 
@@ -406,22 +347,19 @@ public class eInput implements InputProcessor
 		return mMotionList.remove(motionCallback) & mMotionList.remove(keyCallback);
 	}
 
-	/**
-	 * Unregister the callback from listener list
+	/** Unregister the callback from listener list
 	 * 
-	 * @param callback
-	 *            the callback
-	 * @return true if success remove, otherwise false
-	 */
+	 * @param callback the callback
+	 * @return true if success remove, otherwise false */
 	public boolean removeCallback (Callback callback)
 	{
 		if (callback instanceof MotionCallBack && callback instanceof KeyCallBack) {
-			return mMotionList.remove((MotionCallBack) callback)
-					& mKeysList.remove((KeyCallBack) callback);
+			return mMotionList.remove((MotionCallBack)callback)
+				& mKeysList.remove((KeyCallBack)callback);
 		} else if (callback instanceof MotionCallBack) {
-			return mMotionList.remove((MotionCallBack) callback);
+			return mMotionList.remove((MotionCallBack)callback);
 		} else if (callback instanceof KeyCallBack) {
-			return mKeysList.remove((KeyCallBack) callback);
+			return mKeysList.remove((KeyCallBack)callback);
 		}
 		return false;
 	}
@@ -436,9 +374,7 @@ public class eInput implements InputProcessor
 		return mMotionList.contains(callback);
 	}
 
-	/***************************************************************
-	 * Method from Gdx.input
-	 ***************************************************************/
+	/*************************************************************** Method from Gdx.input ***************************************************************/
 
 	public int getLastTouchPointer ()
 	{
@@ -541,7 +477,7 @@ public class eInput implements InputProcessor
 	}
 
 	public void getPlaceholderTextInput (TextInputListener listener, String title,
-			String placeholder)
+		String placeholder)
 	{
 		Gdx.input.getPlaceholderTextInput(listener, title, placeholder);
 	}
@@ -643,92 +579,61 @@ public class eInput implements InputProcessor
 	public interface MotionCallBack extends Callback
 	{
 
-		/**
-		 * Called when the screen was touched or a mouse button was pressed. The
-		 * button parameter will be {@link Buttons#LEFT} on Android.
+		/** Called when the screen was touched or a mouse button was pressed. The button parameter will be {@link Buttons#LEFT} on
+		 * Android.
 		 * 
-		 * @param x
-		 *            The x coordinate, origin is in the upper left corner
-		 * @param y
-		 *            The y coordinate, origin is in the upper left corner
-		 * @param pointer
-		 *            the pointer for the event.
-		 * @param button
-		 *            the button
-		 * @return whether the input was processed
-		 */
+		 * @param x The x coordinate, origin is in the upper left corner
+		 * @param y The y coordinate, origin is in the upper left corner
+		 * @param pointer the pointer for the event.
+		 * @param button the button
+		 * @return whether the input was processed */
 		public boolean onTouchDown (int x, int y, int pointer, int button);
 
-		/**
-		 * Called when a finger was lifted or a mouse button was released. The
-		 * button parameter will be {@link Buttons#LEFT} on Android.
+		/** Called when a finger was lifted or a mouse button was released. The button parameter will be {@link Buttons#LEFT} on
+		 * Android.
 		 * 
-		 * @param x
-		 *            The x coordinate
-		 * @param y
-		 *            The y coordinate
-		 * @param pointer
-		 *            the pointer for the event.
-		 * @param button
-		 *            the button
-		 * @return whether the input was processed
-		 */
+		 * @param x The x coordinate
+		 * @param y The y coordinate
+		 * @param pointer the pointer for the event.
+		 * @param button the button
+		 * @return whether the input was processed */
 		public boolean onTouchUp (int x, int y, int pointer, int button);
 
-		/**
-		 * Called when a finger or the mouse was dragged.
+		/** Called when a finger or the mouse was dragged.
 		 * 
-		 * @param x
-		 *            The x coordinate
-		 * @param y
-		 *            The y coordinate
-		 * @param pointer
-		 *            the pointer for the event.
-		 * @return whether the input was processed
-		 */
+		 * @param x The x coordinate
+		 * @param y The y coordinate
+		 * @param pointer the pointer for the event.
+		 * @return whether the input was processed */
 		public boolean onTouchDragged (int x, int y, int pointer);
 
-		/**
-		 * Called when the mouse was moved without any buttons being pressed.
-		 * Will not be called on Android.
+		/** Called when the mouse was moved without any buttons being pressed. Will not be called on Android.
 		 * 
-		 * @param x
-		 *            The x coordinate
-		 * @param y
-		 *            The y coordinate
-		 * @return whether the input was processed
-		 */
+		 * @param x The x coordinate
+		 * @param y The y coordinate
+		 * @return whether the input was processed */
 		public boolean onTouchMoved (int x, int y);
 	}
 
 	public interface KeyCallBack extends Callback
 	{
 
-		/**
-		 * Called when a key was pressed
+		/** Called when a key was pressed
 		 * 
-		 * @param keycode
-		 *            one of the constants in {@link Input.Keys}
-		 * @return whether the input was processed
-		 */
+		 * @param keycode one of the constants in {@link Input.Keys}
+		 * @return whether the input was processed */
 		public boolean onKeyDown (int keycode);
 
-		/**
-		 * Called when a key was released
+		/** Called when a key was released
 		 * 
-		 * @param keycode
-		 *            one of the constants in {@link Input.Keys}
-		 * @return whether the input was processed
-		 */
+		 * @param keycode one of the constants in {@link Input.Keys}
+		 * @return whether the input was processed */
 		public boolean onKeyUp (int keycode);
 
-		/**
-		 * Called when a key was typed
+		/** Called when a key was typed
 		 * 
-		 * @param character
-		 *            The character
-		 * @return whether the input was processed
-		 */
+		 * @param character The character
+		 * @return whether the input was processed */
 		public boolean onKeyTyped (char character);
 	}
 

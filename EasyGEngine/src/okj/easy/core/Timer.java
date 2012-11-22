@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package okj.easy.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
-/**
- * Executes tasks in the future on the main loop thread.
+/** Executes tasks in the future on the main loop thread.
  * 
  * @FileName: Timer.java
  * @CreateOn: Sep 15, 2012 - 11:10:47 AM
  * @Author: Nathan Sweet
- * @Author: TrungNT
- */
+ * @Author: TrungNT */
 public final class Timer
 {
 
@@ -45,16 +44,13 @@ public final class Timer
 		}
 	};
 
-	/***********************************************************
-	 * Constructor
-	 ***********************************************************/
+	/*********************************************************** Constructor ***********************************************************/
 
-	Timer() {
+	Timer ()
+	{
 	}
 
-	/***********************************************************
-	 * Methods
-	 ***********************************************************/
+	/*********************************************************** Methods ***********************************************************/
 	/** Schedules a task to occur once at the start of the next frame. */
 	void postTask (Task task)
 	{
@@ -73,19 +69,13 @@ public final class Timer
 		scheduleTask(task, delaySeconds, 0, 1);
 	}
 
-	/**
-	 * Schedules a task to occur once after the specified delay and then
-	 * repeatedly at the specified interval until cancelled.
-	 */
+	/** Schedules a task to occur once after the specified delay and then repeatedly at the specified interval until cancelled. */
 	void scheduleTask (Task task, float delaySeconds, float intervalSeconds)
 	{
 		scheduleTask(task, delaySeconds, intervalSeconds, FOREVER);
 	}
 
-	/**
-	 * Schedules a task to occur once after the specified delay and then a
-	 * number of additional times at the specified interval.
-	 */
+	/** Schedules a task to occur once after the specified delay and then a number of additional times at the specified interval. */
 	void scheduleTask (Task task, float delaySeconds, float intervalSeconds, int repeatCount)
 	{
 		if (task.repeatCount != CANCELLED) {
@@ -99,13 +89,10 @@ public final class Timer
 		postRunnable();
 	}
 
-	/**
-	 * Schedule a task base on frames per second for it
+	/** Schedule a task base on frames per second for it
 	 * 
-	 * @param fps
-	 *            the number of fps you want your task run
-	 * @param task
-	 */
+	 * @param fps the number of fps you want your task run
+	 * @param task */
 	void scheduleTask (float fps, Task task)
 	{
 		float interval = 1 / fps;
@@ -118,10 +105,7 @@ public final class Timer
 		task.repeatCount = CANCELLED;
 	}
 
-	/**
-	 * Stops the timer, tasks will not be executed and time that passes will not
-	 * be applied to the task delays.
-	 */
+	/** Stops the timer, tasks will not be executed and time that passes will not be applied to the task delays. */
 	void stop ()
 	{
 		stopped = true;
@@ -196,38 +180,27 @@ public final class Timer
 			eAdmin.egame.postRunnable(timerRunnable);
 	}
 
-	/**
-	 * Runnable with a cancel method.
+	/** Runnable with a cancel method.
 	 * 
 	 * @see Timer
-	 * @author Nathan Sweet
-	 */
+	 * @author Nathan Sweet */
 	static abstract public class Task implements Runnable
 	{
 		protected float delaySeconds;
 		protected float intervalSeconds;
 		protected int repeatCount = CANCELLED;
 
-		/**
-		 * If this is the last time the task will be ran or the task is first
-		 * cancelled, it may be scheduled again in this method.
-		 */
+		/** If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this method. */
 		abstract public void run ();
 
-		/**
-		 * Cancels the task. It will not be executed until it is scheduled
-		 * again. This method can be called at any time.
-		 */
+		/** Cancels the task. It will not be executed until it is scheduled again. This method can be called at any time. */
 		public void cancel ()
 		{
 			delaySeconds = 0;
 			repeatCount = CANCELLED;
 		}
 
-		/**
-		 * Returns true if this task is scheduled to be executed in the future
-		 * by a timer.
-		 */
+		/** Returns true if this task is scheduled to be executed in the future by a timer. */
 		public boolean isScheduled ()
 		{
 			return repeatCount != CANCELLED;
@@ -239,11 +212,13 @@ public final class Timer
 		private final Array<Task> taskList;
 		private int tmp;
 
-		public TaskGroup() {
+		public TaskGroup ()
+		{
 			taskList = new Array<Timer.Task>();
 		}
 
-		public TaskGroup(int init) {
+		public TaskGroup (int init)
+		{
 			taskList = new Array<Timer.Task>(init);
 		}
 
@@ -251,9 +226,7 @@ public final class Timer
 		 * 
 		 *****************************************************/
 
-		/**
-		 * schedule task with given information
-		 */
+		/** schedule task with given information */
 		public TaskGroup add (Task task, float delaySeconds, float intervalSeconds, int repeatCount)
 		{
 			task.delaySeconds = delaySeconds;
@@ -263,9 +236,7 @@ public final class Timer
 			return this;
 		}
 
-		/**
-		 * schedule task base on desire frames per second
-		 */
+		/** schedule task base on desire frames per second */
 		public TaskGroup add (Task task, float fps)
 		{
 			task.delaySeconds = 0;
@@ -275,9 +246,7 @@ public final class Timer
 			return this;
 		}
 
-		/**
-		 * schedule task forever with max FPS
-		 */
+		/** schedule task forever with max FPS */
 		public TaskGroup add (Task task)
 		{
 			task.delaySeconds = 0;
@@ -310,9 +279,7 @@ public final class Timer
 		 * 
 		 *****************************************************/
 
-		/**
-		 * Cancel all tasks
-		 */
+		/** Cancel all tasks */
 		public void cancel ()
 		{
 			for (Task t : taskList)

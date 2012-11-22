@@ -1,3 +1,4 @@
+
 package okj.easy.core;
 
 import okj.easy.graphics.graphics2d.NWorld;
@@ -7,13 +8,11 @@ import org.ege.widget.Layout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
-/**
- * 
- * @FileName: eAdmin.java
+/** @FileName: eAdmin.java
  * @CreateOn: Sep 15, 2012 - 11:06:31 AM
- * @Author: TrungNT
- */
+ * @Author: TrungNT */
 public class eAdmin
 {
 	public static GameCore egame;
@@ -23,7 +22,8 @@ public class eAdmin
 	public static eContext econtext;
 	public static NWorld eworld;
 
-	private eAdmin() {
+	private eAdmin ()
+	{
 
 	}
 
@@ -33,13 +33,9 @@ public class eAdmin
 		eaudio.dispose();
 	}
 
-	/***************************************************************************
-	 * GameCore method
-	 **************************************************************************/
+	/*************************************************************************** GameCore method **************************************************************************/
 
-	/***************************************************************************
-	 * GameCore method
-	 **************************************************************************/
+	/*************************************************************************** GameCore method **************************************************************************/
 
 	public static int gameWidth ()
 	{
@@ -71,9 +67,7 @@ public class eAdmin
 		return eGraphics.ui.TOAST_WIDTH;
 	}
 
-	/***************************************************************************
-	 * eGame Method
-	 **************************************************************************/
+	/*************************************************************************** eGame Method **************************************************************************/
 
 	public static void apply (SpriteCache cache)
 	{
@@ -93,8 +87,12 @@ public class eAdmin
 	{
 		layout.setViewport(uiWidth(), uiHeight(), false);
 	}
-	/***************************************************************************
-	 * Asset manager
-	 **************************************************************************/
+
+	public static void apply (Stage layout)
+	{
+		layout.setViewport(uiWidth(), uiHeight(), false);
+	}
+
+	/*************************************************************************** Asset manager **************************************************************************/
 
 }

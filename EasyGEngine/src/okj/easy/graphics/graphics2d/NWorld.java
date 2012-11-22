@@ -85,8 +85,10 @@ public final class NWorld implements Disposable
 	public void dispose ()
 	{
 		Values<NManager> val = mManagerMap.values();
-		for (NManager m : val)
-			m.dispose();
+
+		for (NManager m : val) {
+			if (m != null) m.dispose();
+		}
 		DisposeWorld();
 	}
 
