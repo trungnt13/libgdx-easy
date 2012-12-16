@@ -1,3 +1,4 @@
+
 package okj.easy.screen;
 
 import okj.easy.core.Screen;
@@ -9,24 +10,25 @@ import org.ege.widget.Layout;
 
 import com.badlogic.gdx.assets.AssetErrorListener;
 
-public abstract class LoadingScreen extends Screen implements AssetErrorListener {
+public abstract class LoadingScreen extends Screen implements AssetErrorListener
+{
 
-	protected float			progress;
-	private boolean			isDone;
-	boolean					autoChangeScreen	= true;
+	protected float progress;
+	private boolean isDone;
+	boolean autoChangeScreen = true;
 
-	/**
-	 * Flag show that this is the first time load,otherwise this is a reload
-	 */
-	boolean					mFirstTimeLoad		= true;
+	/** Flag show that this is the first time load,otherwise this is a reload */
+	boolean mFirstTimeLoad = true;
 
-	private OnChangedScreen	mNewScreen;
+	private OnChangedScreen mNewScreen;
 
-	public void setAutoChangeScreen (boolean isAuto) {
+	public void setAutoChangeScreen (boolean isAuto)
+	{
 		this.autoChangeScreen = isAuto;
 	}
 
-	public LoadingScreen setChangedScreenListener (OnChangedScreen newScreen) {
+	public LoadingScreen setChangedScreenListener (OnChangedScreen newScreen)
+	{
 		this.mNewScreen = newScreen;
 		return this;
 	}
@@ -35,7 +37,8 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	 * 
 	 **********************************************************/
 	@Override
-	public void show () {
+	public void show ()
+	{
 		progress = 0;
 		isDone = false;
 
@@ -57,10 +60,14 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 			throw new EasyGEngineRuntimeException("Can't change the next screen at onCreate()");
 		if (size != eAdmin.econtext.getQueueAssets() + eAdmin.eaudio.getQueueAssets())
 			throw new EasyGEngineRuntimeException("Can't load data at onCreate()");
+
+		if (!mFirstTimeLoad)
+			setAutoChangeScreen(true);
 	}
 
 	@Override
-	public void update (float delta) {
+	public void update (float delta)
+	{
 		super.update(delta);
 		isDone = eAdmin.econtext.update() & (eAdmin.econtext.getQueueAssets() == 0);
 		isDone = isDone & eAdmin.eaudio.update() & (eAdmin.eaudio.getQueueAssets() == 0);
@@ -75,7 +82,8 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	}
 
 	@Override
-	public void destroy (int destroyMode) {
+	public void destroy (int destroyMode)
+	{
 		eAdmin.einput.unregisterBackKeyListener();
 		batch.flush();
 		if (isLayoutCreated()) {
@@ -93,39 +101,35 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
 	 * 
 	 **********************************************************/
 
-	/**
-	 * The method setChangedScreenListener should be called at onLoadData (not
-	 * at this method)
-	 */
+	/** The method setChangedScreenListener should be called at onLoadData (not at this method) */
 	public abstract void onCreate ();
 
-	/**
-	 * You only should call ResourceContext.load() in this method .This will
-	 * help you ensure that context only load one time event when you come back
-	 * from onResume()
-	 */
+	/** You only should call ResourceContext.load() in this method .This will help you ensure that context only load one time event
+	 * when you come back from onResume() */
 	public abstract void onLoadData ();
 
 	public abstract void onDestroy ();
 
-	/**********************************************************
-	 * Loading method
-	 **********************************************************/
+	/********************************************************** Loading method **********************************************************/
 
-	public boolean isFirstTimeLoad () {
+	public boolean isFirstTimeLoad ()
+	{
 		return mFirstTimeLoad;
 	}
 
 	@Override
-	public void error (String fileName, Class type, Throwable throwable) {
+	public void error (String fileName, Class type, Throwable throwable)
+	{
 	}
 
-	public void enableBugTracker () {
+	public void enableBugTracker ()
+	{
 		eAdmin.econtext.manager.setErrorListener(this);
 		eAdmin.eaudio.manager.setErrorListener(this);
 	}
 
-	public static interface OnChangedScreen {
+	public static interface OnChangedScreen
+	{
 		public Screen screenChanged ();
 	}
 }
