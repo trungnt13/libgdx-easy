@@ -44,6 +44,7 @@ import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y3;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y4;
 
 import org.ege.utils.SpriteBackend;
+import org.ege.utils.Updater;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -55,7 +56,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.Updateable;
 
 /**
  * Holds the geometry, color, and texture information for drawing 2D sprites using
@@ -109,7 +109,7 @@ public class SpriteA implements Animator, SpriteBackend
 
 	// ---------------------------------------------------------
 
-	private Array<Updateable> mUpdater = new Array<Updateable>(0);
+	private Array<Updater> mUpdater = new Array<Updater>(0);
 
 	/**
 	 * Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and
@@ -546,7 +546,7 @@ public class SpriteA implements Animator, SpriteBackend
 		if (!RUN || mFrameDuration == 0) {
 			// ============= update updatable =============
 			for (int i = 0, n = mUpdater.size; i < n; i++) {
-				final Updateable tmp = mUpdater.get(i);
+				final Updater tmp = mUpdater.get(i);
 
 				if (!tmp.isStoped())
 					tmp.update(this, delta);
@@ -595,7 +595,7 @@ public class SpriteA implements Animator, SpriteBackend
 		setRegion(keyFrames[frameNumber]);
 		// ============= update updatable =============
 		for (int i = 0, n = mUpdater.size; i < n; i++) {
-			final Updateable tmp = mUpdater.get(i);
+			final Updater tmp = mUpdater.get(i);
 
 			if (!tmp.isStoped())
 				tmp.update(this, delta);
@@ -622,7 +622,7 @@ public class SpriteA implements Animator, SpriteBackend
 		return this.keyFrames;
 	}
 
-	public void postUpdater (Updateable updater)
+	public void postUpdater (Updater updater)
 	{
 		if (mUpdater.contains(updater, true))
 			return;

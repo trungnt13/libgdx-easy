@@ -24,6 +24,7 @@ import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y4;
 import java.util.ArrayList;
 
 import org.ege.utils.SpriteBackend;
+import org.ege.utils.Updater;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.Color;
@@ -37,7 +38,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.Updateable;
 
 /**
  * SpriteCAS : <b>SYNCHRONIZE COMPOSITE ANIMATE Sprite</b>
@@ -101,7 +101,7 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator
 
 	private final Rectangle mBound = new Rectangle();
 
-	private Array<Updateable> mUpdater = new Array<Updateable>(0);
+	private Array<Updater> mUpdater = new Array<Updater>(0);
 
 	public SpriteCA() {
 		this(13);
@@ -986,7 +986,7 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator
 		}
 		// ============= update updatable =============
 		for (int i = 0, n = mUpdater.size; i < n; i++) {
-			final Updateable tmp = mUpdater.get(i);
+			final Updater tmp = mUpdater.get(i);
 
 			if (!tmp.isStoped())
 				tmp.update(this, delta);
@@ -998,7 +998,7 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator
 		}
 	}
 
-	public void postUpdater (Updateable updater)
+	public void postUpdater (Updater updater)
 	{
 		if (mUpdater.contains(updater, true))
 			return;

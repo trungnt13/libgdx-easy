@@ -2,6 +2,7 @@
 package okj.easy.graphics.graphics2d;
 
 import org.ege.utils.SpriteBackend;
+import org.ege.utils.Updater;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.Color;
@@ -13,7 +14,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IdentityMap;
 import com.badlogic.gdx.utils.IdentityMap.Values;
-import com.badlogic.gdx.utils.Updateable;
 
 /** NSpriter.java {@link NManager}
  * 
@@ -48,7 +48,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	private float w;
 	private float h;
 
-	private Array<Updateable> mUpdater = new Array<Updateable>(0);
+	private Array<Updater> mUpdater = new Array<Updater>(0);
 
 	/** Construct a spriter with given sprite limit ( should override this method)
 	 * 
@@ -772,7 +772,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 
 		// ============= update updatable =============
 		for (int i = 0, n = mUpdater.size; i < n; i++) {
-			final Updateable tmp = mUpdater.get(i);
+			final Updater tmp = mUpdater.get(i);
 
 			if (!tmp.isStoped())
 				tmp.update(this, delta);
@@ -784,7 +784,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 		}
 	}
 
-	public void postUpdater (Updateable updater)
+	public void postUpdater (Updater updater)
 	{
 		if (mUpdater.contains(updater, true)) return;
 

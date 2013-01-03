@@ -22,6 +22,7 @@ import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y3;
 import static com.badlogic.gdx.graphics.g2d.SpriteBatch.Y4;
 
 import org.ege.utils.E;
+import org.ege.utils.Updater;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,7 +32,6 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.badlogic.gdx.utils.Updateable;
 
 /**
  * 
@@ -44,7 +44,7 @@ public class NSprite extends NativeSpriteBackend
 {
 	private final float vertices[] = new float[E.sprite.VERTICES_SIZE];
 
-	private Array<Updateable> mUpdater = new Array<Updateable>(0);
+	private Array<Updater> mUpdater = new Array<Updater>(0);
 	private Color color;
 
 	// ========================================
@@ -547,7 +547,7 @@ public class NSprite extends NativeSpriteBackend
 	// processor
 
 	@Override
-	public void postUpdater (Updateable updater)
+	public void postUpdater (Updater updater)
 	{
 		if (mUpdater.contains(updater, true))
 			return;
@@ -572,7 +572,7 @@ public class NSprite extends NativeSpriteBackend
 
 		// ============= update updatable =============
 		for (int i = 0, n = mUpdater.size; i < n; i++) {
-			final Updateable tmp = mUpdater.get(i);
+			final Updater tmp = mUpdater.get(i);
 
 			if (!tmp.isStoped())
 				tmp.update(this, delta);

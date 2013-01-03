@@ -1,12 +1,12 @@
 
 package okj.easy.graphics.graphics2d;
 
+import org.ege.utils.Updater;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Updateable;
 
 /** NManager.java
  * 
@@ -47,7 +47,7 @@ public class NManager implements Disposable
 	}
 
 	/****************************************************** manager processor ******************************************************/
-	public void postUpdater (Updateable update)
+	public void postUpdater (Updater update)
 	{
 		if (isDispose) return;
 
