@@ -10,59 +10,52 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public interface ResourceContext extends Disposable
 {
-	/**
-	 * When this mode enable , the references of data will only be store not
-	 * load
-	 * 
-	 * @param isRefStore
-	 */
-	public void setRefStoreMode (boolean isRefStore);
+    /**
+     * When this mode enable , the references of data will only be store not
+     * load
+     */
+    public void setWaitMode (boolean isRefStore);
 
-	public boolean isRefStoreMode();
-	
-	/**
-	 * Reload all resource after isTottlayUnloaded or when unload data size > 0
-	 * Make sure no untrack data
-	 */
-	public void reload ();
+    public boolean isWaitMode ();
 
-	/**
-	 * context still keep track to the data but the data was unloaded from
-	 * manager and waiting for reload
-	 */
-	public void unload ();
+    /**
+     * Reload all resource after isTottlayUnloaded or when unload data size > 0
+     * Make sure no untrack data
+     */
+    public void reload ();
 
-	/**
-	 * when all data is unloaded
-	 * 
-	 * @return is tottlay unloaded all data
-	 */
-	public boolean isTotallyUnloaded ();
+    /**
+     * context still keep track to the data but the data was unloaded from
+     * manager and waiting for reload
+     */
+    public void unload ();
 
-	/**
-	 * when all data is loaded
-	 * 
-	 * @return is tottlay loaded all data
-	 */
-	public boolean isTotallyLoaded ();
+    /**
+     * when all data is unloaded
+     * 
+     * @return is tottlay unloaded all data
+     */
+    public boolean isTotallyUnloaded ();
 
-	/**
-	 * @return the size of data this context manage
-	 */
-	public int size ();
+    /**
+     * when all data is loaded
+     * 
+     * @return is tottlay loaded all data
+     */
+    public boolean isTotallyLoaded ();
 
-	/**
-	 * call the coordinate asset manager update to load all data
-	 */
-	public boolean update ();
+    /**
+     * @return the size of data this context manage
+     */
+    public int size ();
 
-	/**
-	 * remove all data
-	 */
-	public void clear ();
+    /**
+     * call the coordinate asset manager update to load all data
+     */
+    public boolean update ();
 
-	/**
-	 * totally remove this context
-	 */
-	public void dispose ();
+    /**
+     * totally remove this context
+     */
+    public void dispose ();
 }

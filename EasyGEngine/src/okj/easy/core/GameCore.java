@@ -304,7 +304,7 @@ public abstract class GameCore implements ApplicationListener
     void setScreen (Screen screen, ResourceContext... contexts)
     {
 	final ResourcePack pack = new ResourcePack(SafeLoader.name, contexts);
-	pack.setRefStoreMode(false);
+	pack.setWaitMode(false);
 	if (pack.isTotallyLoaded()) {
 	    setScreen(screen, E.screen.RELEASE);
 	    return;
@@ -325,7 +325,7 @@ public abstract class GameCore implements ApplicationListener
 
     void setScreen (Screen screen, ResourcePack pack)
     {
-	pack.setRefStoreMode(false);
+	pack.setWaitMode(false);
 	if (pack.isTotallyLoaded()) {
 	    setScreen(screen, E.screen.RELEASE);
 	    return;

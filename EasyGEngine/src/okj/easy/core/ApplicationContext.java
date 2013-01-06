@@ -1,6 +1,8 @@
 package okj.easy.core;
 
 import okj.easy.core.Timer.Task;
+import okj.easy.core.loader.Album;
+import okj.easy.core.loader.Context;
 
 import org.ege.utils.IActivityHandler;
 import org.ege.widget.StyleAtlas;
@@ -23,128 +25,111 @@ import com.badlogic.gdx.utils.PauseableThread;
  * @CreateOn: Sep 15, 2012 - 11:06:05 AM
  * @Author: TrungNT
  */
-public interface ApplicationContext {
-	public static final GLCommon	gl		= Gdx.gl;
-	public static final GL10		gl10	= Gdx.gl10;
-	public static final GL11		gl11	= Gdx.gl11;
-	public static final GL20		gl20	= Gdx.gl20;
-	public static final GLU			glu		= Gdx.glu;
+public interface ApplicationContext
+{
+    public static final GLCommon gl = Gdx.gl;
+    public static final GL10 gl10 = Gdx.gl10;
+    public static final GL11 gl11 = Gdx.gl11;
+    public static final GL20 gl20 = Gdx.gl20;
+    public static final GLU glu = Gdx.glu;
 
-	/***************************************************************************
-	 * eInput Method
-	 **************************************************************************/
+    /***************************************************************************
+     * eInput Method
+     **************************************************************************/
 
-	public InputProcessor findInputById (int id);
+    public InputProcessor findInputById (int id);
 
-	/***************************************************************************
-	 * eContext Method
-	 **************************************************************************/
+    /***************************************************************************
+     * eContext Method
+     **************************************************************************/
 
-	public StyleAtlas styleQuery (String name);
+    public StyleAtlas styleQuery (String name);
 
-	public <T> T getStyle (String styleName, Class<T> type);
+    public <T> T getStyle (String styleName, Class<T> type);
 
-	public <T> T optional (String resourceName, Class<T> type);
+    public <T> T optional (String resourceName, Class<T> type);
 
-	public StyleAtlas getStyleAtlas (String name);
+    public StyleAtlas getStyleAtlas (String name);
 
-	public void stopStyleQuery ();
+    public void stopStyleQuery ();
 
-	/* ================================================ */
+    /* ================================================ */
 
-	public Context findContextByName (String name);
+    public Context findContextByName (String name);
 
-	public <T> T findDataByName (String linkName, Class<T> clazz);
+    public <T> T findDataByName (String linkName, Class<T> clazz);
 
-	public void unloadContext (String artName);
+    /* ================================================ */
 
-	public void clearContext (String artName);
+    public TextureAtlas atlasQuery (String name);
 
-	public void removeContext (String artName);
+    public TextureRegion findGRegionByName (String name);
 
-	public void reloadContext (String artName);
+    public TextureRegion findGRegionByName (String name, int index);
 
-	/* ================================================ */
+    public TextureRegion[] findGRegionsByName (String name);
 
-	public TextureAtlas atlasQuery (String name);
+    /* ================================================ */
 
-	public TextureRegion findGRegionByName (String name);
+    public <T> void load (String linkName, Class<T> clazz);
 
-	public TextureRegion findGRegionByName (String name, int index);
+    public <T> void load (String linkName, Class<T> clazz, AssetLoaderParameters<T> param);
 
-	public TextureRegion[] findGRegionsByName (String name);
+    public <T> T get (String fileName, Class<T> clazz);
 
-	/* ================================================ */
+    public boolean isLoaded (String linkName, Class<?> clazz);
 
-	public <T> void load (String linkName, Class<T> clazz);
+    public <T> void unload (String linkName);
 
-	public <T> void load (String linkName, Class<T> clazz, AssetLoaderParameters<T> param);
+    public int totalGData ();
 
-	public <T> T get (String fileName, Class<T> clazz);
+    /***************************************************************************
+     * eAudio Method
+     **************************************************************************/
 
-	public boolean isLoaded (String linkName, Class<?> clazz);
+    public Album findAlbumByName (String name);
 
-	public <T> void unload (String linkName);
+    public int totalAData ();
 
-	public int totalGData ();
+    /***************************************************************************
+     * Quick GL Method
+     **************************************************************************/
 
-	/***************************************************************************
-	 * eAudio Method
-	 **************************************************************************/
+    public void glClear (int glmask);
 
-	public Album findAlbumByName (String name);
+    public void glClearColor (float r, float g, float b, float a);
 
-	public int totalAData ();
+    /***************************************************************************
+     * GameCore method
+     **************************************************************************/
 
-	public void addAlbum (Album album);
+    public IActivityHandler getActivity ();
 
-	public void unloadAlbum (String albumName);
+    public void post (Task task);
 
-	public void removeAlbum (String albumName);
+    public void schedule (Task task);
 
-	public void reloadAlbum (String albumName);
+    public void schedule (int fps, Task task);
 
-	public void clearAlbum (String albumName);
+    public void schedule (Task task, float delaySeconds);
 
-	/***************************************************************************
-	 * Quick GL Method
-	 **************************************************************************/
+    public void schedule (Task task, float delaySeconds, float intervalSeconds);
 
-	public void glClear (int glmask);
+    public void schedule (Task task, float delaySeconds, float intervalSeconds, int repeatCount);
 
-	public void glClearColor (float r, float g, float b, float a);
+    public int newThreadId (Runnable runnable);
 
-	/***************************************************************************
-	 * GameCore method
-	 **************************************************************************/
+    public PauseableThread newThread (Runnable runnable);
 
-	public IActivityHandler getActivity ();
+    public boolean startThread (int id);
 
-	public void post (Task task);
+    public boolean stopThread (int id);
 
-	public void schedule (Task task);
+    public boolean pauseThread (int id);
 
-	public void schedule (int fps, Task task);
+    public boolean resumeThread (int id);
 
-	public void schedule (Task task, float delaySeconds);
+    public boolean containThread (int id);
 
-	public void schedule (Task task, float delaySeconds, float intervalSeconds);
-
-	public void schedule (Task task, float delaySeconds, float intervalSeconds, int repeatCount);
-
-	public int newThreadId (Runnable runnable);
-
-	public PauseableThread newThread (Runnable runnable);
-
-	public boolean startThread (int id);
-
-	public boolean stopThread (int id);
-
-	public boolean pauseThread (int id);
-
-	public boolean resumeThread (int id);
-
-	public boolean containThread (int id);
-
-	public boolean containThread (PauseableThread thread);
+    public boolean containThread (PauseableThread thread);
 }
