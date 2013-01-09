@@ -11,18 +11,10 @@ import com.badlogic.gdx.utils.Disposable;
 public interface ResourceContext extends Disposable
 {
     /**
-     * When this mode enable , the references of data will only be store not
-     * load
-     */
-    public void setWaitMode (boolean isRefStore);
-
-    public boolean isWaitMode ();
-
-    /**
      * Reload all resource after isTottlayUnloaded or when unload data size > 0
      * Make sure no untrack data
      */
-    public void reload ();
+    public void load ();
 
     /**
      * context still keep track to the data but the data was unloaded from

@@ -26,11 +26,6 @@ public class Context implements ResourceContext
     final ObjectMap<String, Data> mDataMap = new ObjectMap<String, Data>();
     final ArrayDeque<String> mUnloadedData = new ArrayDeque<String>();
 
-    /**
-     * When this mode is enable , the load function just push to references not
-     * load the data until you calll reload
-     */
-    boolean isWaitMode = false;
     boolean isDisposed = false;
     protected final AssetManager assets;
 
@@ -41,30 +36,6 @@ public class Context implements ResourceContext
 
 	if (assets == eAdmin.econtext.manager)
 	    eAdmin.econtext.addContext(this);
-    }
-
-    /**
-     * When this mode enable , the references of data will only be store not
-     * load
-     */
-    public Context(String name, AssetManager assets, boolean isWaitStore)
-    {
-	this(name, assets);
-	this.isWaitMode = isWaitStore;
-    }
-
-    public void setWaitMode (boolean isRefStore)
-    {
-	this.isWaitMode = isRefStore;
-	if (isRefStore)
-	    unload();
-	else
-	    reload();
-    }
-
-    public boolean isWaitMode ()
-    {
-	return isWaitMode;
     }
 
     /*************************************************************
@@ -79,13 +50,8 @@ public class Context implements ResourceContext
      */
     public <T> void load (String linkName, Class<T> clazz)
     {
-	if (!isWaitMode) {
-	    mDataMap.put(linkName, new Data<T>(clazz, null));
-	    assets.load(linkName, clazz);
-	} else {
-	    mDataMap.put(linkName, new Data<T>(clazz, null));
-	    mUnloadedData.add(linkName);
-	}
+	mDataMap.put(linkName, new Data<T>(clazz, null));
+	mUnloadedData.add(linkName);
     }
 
     /**
@@ -96,19 +62,15 @@ public class Context implements ResourceContext
      */
     public <T> void load (String linkName, Class<T> clazz, AssetLoaderParameters<T> param)
     {
-	if (!isWaitMode) {
-	    mDataMap.put(linkName, new Data<T>(clazz, param));
-	    assets.load(linkName, clazz, param);
-	} else {
-	    mDataMap.put(linkName, new Data<T>(clazz, null));
-	    mUnloadedData.add(linkName);
-	}
+	mDataMap.put(linkName, new Data<T>(clazz, param));
+	mUnloadedData.add(linkName);
     }
 
-    public void reload ()
+    /**
+     * Make sure all resource associate with this context is loaded
+     */
+    public void load ()
     {
-	isWaitMode = false;
-
 	String tmp = null;
 	while (mUnloadedData.size() > 0) {
 	    tmp = mUnloadedData.poll();
@@ -149,6 +111,9 @@ public class Context implements ResourceContext
 	}
     }
 
+    /**
+     * unmanage given data
+     */
     public void remove (String... listName)
     {
 	for (String linkName : listName) {
@@ -207,9 +172,6 @@ public class Context implements ResourceContext
      */
     public boolean isTotallyLoaded ()
     {
-	if (isWaitMode)
-	    return true;
-
 	for (Entry<String, Data> entries : mDataMap.entries()) {
 	    if (!assets.isLoaded(entries.key, entries.value.clazz))
 		return false;

@@ -576,8 +576,6 @@ public class NSprite extends NativeSpriteBackend
 	if (isPooled)
 	    return;
 
-	getVertices(address, vertices);
-
 	// ============= update updatable =============
 	for (int i = 0, n = mUpdater.size; i < n; i++) {
 	    final Updater tmp = mUpdater.get(i);
@@ -595,6 +593,7 @@ public class NSprite extends NativeSpriteBackend
     @Override
     public void draw (SpriteBatch batch)
     {
+	getVertices(address, vertices);
 	batch.draw(texture, vertices, 0, E.sprite.VERTICES_SIZE);
     }
 

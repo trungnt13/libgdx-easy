@@ -45,10 +45,10 @@ public class ResourcePack implements ResourceContext
     }
 
     @Override
-    public void reload ()
+    public void load ()
     {
 	for (ResourceContext context : mManageContext)
-	    context.reload();
+	    context.load();
     }
 
     @Override
@@ -102,13 +102,6 @@ public class ResourcePack implements ResourceContext
 	for (ResourceContext context : mManageContext)
 	    context.dispose();
 	mManageContext.clear();
-    }
-
-    public void setWaitMode (boolean isRefStore)
-    {
-	for (ResourceContext context : mManageContext) {
-	    context.setWaitMode(isRefStore);
-	}
     }
 
     public boolean isWaitMode ()

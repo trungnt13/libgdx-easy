@@ -563,8 +563,6 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	if (isPooled)
 	    return;
 
-	getVertices(address, vertices);
-
 	// animation process
 	if (!isRunning || mFrameDuration == 0) {
 	    // ============= update updatable =============
@@ -634,6 +632,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
     @Override
     public void draw (SpriteBatch batch)
     {
+	getVertices(address, vertices);
 	batch.draw(mCurrentTexture, vertices, 0, E.sprite.VERTICES_SIZE);
     }
 

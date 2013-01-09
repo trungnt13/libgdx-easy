@@ -1,7 +1,5 @@
 package okj.easy.core.loader;
 
-import java.util.Iterator;
-
 import okj.easy.core.eAdmin;
 
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -34,16 +32,6 @@ public final class Album extends Context
 	this.unloaded = eAdmin.eaudio;
     }
 
-    /**
-     * When this mode enable , the references of data will only be store not
-     * load
-     */
-    public Album(String name, boolean isWaitStore)
-    {
-	this(name);
-	setWaitMode(isWaitMode);
-    }
-
     @Override
     public <T> void load (String linkName, Class<T> clazz)
     {
@@ -54,11 +42,7 @@ public final class Album extends Context
 	    data = new Data<T>(clazz, MusicParam);
 
 	mDataMap.put(linkName, data);
-
-	if (!isWaitMode)
-	    assets.load(linkName, clazz, data.param);
-	else
-	    mUnloadedData.add(linkName);
+	mUnloadedData.add(linkName);
     }
 
     @Override

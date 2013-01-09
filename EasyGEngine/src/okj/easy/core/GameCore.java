@@ -1,6 +1,7 @@
 package okj.easy.core;
 
 import okj.easy.core.Timer.Task;
+import okj.easy.core.loader.SafeLoader;
 import okj.easy.core.utils.Bridge;
 import okj.easy.core.utils.BridgePool;
 import okj.easy.graphics.graphics2d.NWorld;
@@ -281,9 +282,9 @@ public abstract class GameCore implements ApplicationListener
     void setScreen (Screen screen, int destroyMode)
     {
 	/*
-	 * check if the current screen is the loading screen , if is the loading screen the show of
-	 * next screen method only call for
-	 * the first time load
+	 * check if the current screen is the loading screen ,
+	 * if is the loading screen, the show method of next screen
+	 * only call for the first time load
 	 */
 	isLoading = (this.screen instanceof LoadingScreen);
 	if (isLoading)
@@ -304,7 +305,6 @@ public abstract class GameCore implements ApplicationListener
     void setScreen (Screen screen, ResourceContext... contexts)
     {
 	final ResourcePack pack = new ResourcePack(SafeLoader.name, contexts);
-	pack.setWaitMode(false);
 	if (pack.isTotallyLoaded()) {
 	    setScreen(screen, E.screen.RELEASE);
 	    return;
@@ -314,7 +314,7 @@ public abstract class GameCore implements ApplicationListener
 	SafeLoader loader;
 	try {
 	    loader = mDefaultLoader.newInstance();
-	    loader.enableSafeMode(screen, pack);
+	    loader.setLoaderInfo(screen, pack);
 	    setScreen(loader, E.screen.RELEASE);
 	} catch (InstantiationException e) {
 	    e.printStackTrace();
@@ -325,7 +325,6 @@ public abstract class GameCore implements ApplicationListener
 
     void setScreen (Screen screen, ResourcePack pack)
     {
-	pack.setWaitMode(false);
 	if (pack.isTotallyLoaded()) {
 	    setScreen(screen, E.screen.RELEASE);
 	    return;
@@ -335,7 +334,7 @@ public abstract class GameCore implements ApplicationListener
 	SafeLoader loader;
 	try {
 	    loader = mDefaultLoader.newInstance();
-	    loader.enableSafeMode(screen, pack);
+	    loader.setLoaderInfo(screen, pack);
 	    setScreen(loader, E.screen.RELEASE);
 	} catch (InstantiationException e) {
 	    e.printStackTrace();

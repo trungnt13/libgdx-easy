@@ -28,9 +28,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 
     // ========================================
     // Config
-
     private final Array<NativeSpriteBackend> mDrawable;
-
     private final Array<NativeSpriteBackend> mRunnable;
 
     // =======================================
