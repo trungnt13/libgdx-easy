@@ -8,10 +8,10 @@
 #include "okj_easy_graphics_graphics2d_NWorld.h"
 using namespace Entity2D;
 
-WorldManager *world = 0;
+static WorldManager *world = 0;
 
-jclass worldClass = 0;
-jmethodID collideID = 0;
+static jclass worldClass = 0;
+static jmethodID collideID = 0;
 
 class JniCollide:public CollideListener{
 private:
@@ -40,8 +40,12 @@ JNIEXPORT jlong JNICALL Java_okj_easy_graphics_graphics2d_NWorld_CreateWorld
 			collideID = env->GetMethodID(worldClass,"collide","(JJ)V");
 		}
 
-		world =new WorldManager();
-
+		if(!world)
+			world =new WorldManager();
+		else{
+			delete world;
+			world = new WorldManager();
+		}
 		return (jlong)world;
 }
 
@@ -147,6 +151,8 @@ JNIEXPORT void JNICALL Java_okj_easy_graphics_graphics2d_NWorld_processCollision
 	(JNIEnv *env, jobject obj, jlong manager1, jlong manager2){
 		Manager *m1 = (Manager*)manager1;
 		Manager *m2 = (Manager*)manager2;
+		if(!world->ContainManager(m1) || !world->ContainManager(m2))
+			return;
 		JniCollide listener(env,obj);
 		world->ProcessCollision(m1,m2,&listener);
 }

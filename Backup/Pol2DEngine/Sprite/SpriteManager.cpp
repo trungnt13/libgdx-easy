@@ -58,7 +58,7 @@ void WorldManager::DeleteManager(Manager* manager){
 	unsigned long index = mManagerList.getIndexOf(manager);
 	if(index == NaN)
 		return;
-	
+
 	mManagerList.del(index);
 	delete manager;
 }
