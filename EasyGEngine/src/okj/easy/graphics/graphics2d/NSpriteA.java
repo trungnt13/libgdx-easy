@@ -560,6 +560,8 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
     @Override
     public void update (float delta)
     {
+	getVertices(address, vertices);
+
 	if (isPooled)
 	    return;
 
@@ -585,32 +587,32 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	frameNumber = (int) (mStateTime / mFrameDuration);
 
 	switch (mPlayMode) {
-	case NORMAL:
-	    frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-	    break;
-	case LOOP:
-	    frameNumber = frameNumber % keyFrames.length;
-	    break;
-	case LOOP_PINGPONG:
-	    frameNumber = frameNumber % (keyFrames.length * 2);
-	    if (frameNumber >= keyFrames.length)
-		frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
-	    break;
-	case LOOP_RANDOM:
-	    frameNumber = MathUtils.random(keyFrames.length - 1);
-	    break;
-	case REVERSED:
-	    frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
-	    break;
-	case LOOP_REVERSED:
-	    frameNumber = frameNumber % keyFrames.length;
-	    frameNumber = keyFrames.length - frameNumber - 1;
-	    break;
+	    case NORMAL:
+		frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+		break;
+	    case LOOP:
+		frameNumber = frameNumber % keyFrames.length;
+		break;
+	    case LOOP_PINGPONG:
+		frameNumber = frameNumber % (keyFrames.length * 2);
+		if (frameNumber >= keyFrames.length)
+		    frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
+		break;
+	    case LOOP_RANDOM:
+		frameNumber = MathUtils.random(keyFrames.length - 1);
+		break;
+	    case REVERSED:
+		frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
+		break;
+	    case LOOP_REVERSED:
+		frameNumber = frameNumber % keyFrames.length;
+		frameNumber = keyFrames.length - frameNumber - 1;
+		break;
 
-	default:
-	    // play normal otherwise
-	    frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-	    break;
+	    default:
+		// play normal otherwise
+		frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+		break;
 	}
 	setRegion(keyFrames[frameNumber]);
 
@@ -632,7 +634,6 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
     @Override
     public void draw (SpriteBatch batch)
     {
-	getVertices(address, vertices);
 	batch.draw(mCurrentTexture, vertices, 0, E.sprite.VERTICES_SIZE);
     }
 

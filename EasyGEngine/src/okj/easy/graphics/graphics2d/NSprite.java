@@ -573,6 +573,8 @@ public class NSprite extends NativeSpriteBackend
     @Override
     public void update (float delta)
     {
+	getVertices(address, vertices);
+
 	if (isPooled)
 	    return;
 
@@ -593,7 +595,6 @@ public class NSprite extends NativeSpriteBackend
     @Override
     public void draw (SpriteBatch batch)
     {
-	getVertices(address, vertices);
 	batch.draw(texture, vertices, 0, E.sprite.VERTICES_SIZE);
     }
 
