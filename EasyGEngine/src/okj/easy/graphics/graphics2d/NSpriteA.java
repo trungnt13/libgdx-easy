@@ -175,7 +175,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	return frameNumber;
     }
 
-    public TextureRegion[] getKeyFrames ()
+    public TextureRegion[] getFrames ()
     {
 	return this.keyFrames;
     }
@@ -552,6 +552,12 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
     }
 
     @Override
+    public void removeUpdater (Updater updater)
+    {
+	mUpdater.removeValue(updater, true);
+    }
+
+    @Override
     public void noUpdater ()
     {
 	this.mUpdater.clear();
@@ -634,7 +640,8 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
     @Override
     public void draw (SpriteBatch batch)
     {
-	batch.draw(mCurrentTexture, vertices, 0, E.sprite.VERTICES_SIZE);
+	if (mCurrentTexture != null)
+	    batch.draw(mCurrentTexture, vertices, 0, E.sprite.VERTICES_SIZE);
     }
 
     @Override
@@ -669,5 +676,4 @@ public class NSpriteA extends NativeSpriteBackend implements Animator
 	stop();
 	noUpdater();
     }
-
 }

@@ -568,32 +568,32 @@ public class SpriteA implements Animator, SpriteBackend
 	frameNumber = (int) (mStateTime / mFrameDuration);
 
 	switch (mPlayMode) {
-	case NORMAL:
-	    frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-	    break;
-	case LOOP:
-	    frameNumber = frameNumber % keyFrames.length;
-	    break;
-	case LOOP_PINGPONG:
-	    frameNumber = frameNumber % (keyFrames.length * 2);
-	    if (frameNumber >= keyFrames.length)
-		frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
-	    break;
-	case LOOP_RANDOM:
-	    frameNumber = MathUtils.random(keyFrames.length - 1);
-	    break;
-	case REVERSED:
-	    frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
-	    break;
-	case LOOP_REVERSED:
-	    frameNumber = frameNumber % keyFrames.length;
-	    frameNumber = keyFrames.length - frameNumber - 1;
-	    break;
+	    case NORMAL:
+		frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+		break;
+	    case LOOP:
+		frameNumber = frameNumber % keyFrames.length;
+		break;
+	    case LOOP_PINGPONG:
+		frameNumber = frameNumber % (keyFrames.length * 2);
+		if (frameNumber >= keyFrames.length)
+		    frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
+		break;
+	    case LOOP_RANDOM:
+		frameNumber = MathUtils.random(keyFrames.length - 1);
+		break;
+	    case REVERSED:
+		frameNumber = Math.max(keyFrames.length - frameNumber - 1, 0);
+		break;
+	    case LOOP_REVERSED:
+		frameNumber = frameNumber % keyFrames.length;
+		frameNumber = keyFrames.length - frameNumber - 1;
+		break;
 
-	default:
-	    // play normal otherwise
-	    frameNumber = Math.min(keyFrames.length - 1, frameNumber);
-	    break;
+	    default:
+		// play normal otherwise
+		frameNumber = Math.min(keyFrames.length - 1, frameNumber);
+		break;
 	}
 
 	setRegion(keyFrames[frameNumber]);
@@ -621,7 +621,7 @@ public class SpriteA implements Animator, SpriteBackend
 	return frameNumber;
     }
 
-    public TextureRegion[] getKeyFrames ()
+    public TextureRegion[] getFrames ()
     {
 	return this.keyFrames;
     }
@@ -638,6 +638,12 @@ public class SpriteA implements Animator, SpriteBackend
     public int sizeUpdater ()
     {
 	return mUpdater.size;
+    }
+
+    @Override
+    public void removeUpdater (Updater updater)
+    {
+	mUpdater.removeValue(updater, true);
     }
 
     public void noUpdater ()
@@ -1018,5 +1024,7 @@ public class SpriteA implements Animator, SpriteBackend
 	scaleY = 1;
 	dirty = false;
 	setColor(1, 1, 1, 1);
+
+	noUpdater();
     }
 }

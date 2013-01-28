@@ -45,7 +45,7 @@ public class NSprite extends NativeSpriteBackend
     private final float vertices[] = new float[E.sprite.VERTICES_SIZE];
 
     private Array<Updater> mUpdater = new Array<Updater>(0);
-    private Color color;
+    private final Color color = new Color();
 
     // ========================================
     // texture region params
@@ -534,9 +534,6 @@ public class NSprite extends NativeSpriteBackend
      */
     public Color getColor ()
     {
-	if (color == null)
-	    color = new Color();
-
 	int intBits = NumberUtils.floatToIntColor(vertices[C1]);
 	Color color = this.color;
 	color.r = (intBits & 0xff) / 255f;
@@ -562,6 +559,12 @@ public class NSprite extends NativeSpriteBackend
     public int sizeUpdater ()
     {
 	return mUpdater.size;
+    }
+
+    @Override
+    public void removeUpdater (Updater updater)
+    {
+	mUpdater.removeValue(updater, true);
     }
 
     @Override
@@ -595,7 +598,8 @@ public class NSprite extends NativeSpriteBackend
     @Override
     public void draw (SpriteBatch batch)
     {
-	batch.draw(texture, vertices, 0, E.sprite.VERTICES_SIZE);
+	if (texture != null)
+	    batch.draw(texture, vertices, 0, E.sprite.VERTICES_SIZE);
     }
 
     @Override

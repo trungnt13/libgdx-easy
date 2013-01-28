@@ -45,15 +45,6 @@ public class Pool<T>
     }
 
     /**
-     * Returns an object from this pool. The object may be new (from {@link #newObject()}) or reused
-     * (previously {@link #free(Object) freed}).
-     */
-    public T obtain (Object... objects)
-    {
-	return freeObjects.size == 0 ? mFactory.newObject(objects) : freeObjects.pop();
-    }
-
-    /**
      * Puts the specified object in the pool, making it eligible to be returned
      * by {@link #obtain()}. If the pool already contains {@link #max} free
      * objects, the specified object is ignored.
@@ -148,9 +139,11 @@ public class Pool<T>
     public void clear ()
     {
 	final int size = freeObjects.size;
-	for (int i = 0; i < size; i++)
-	    if (freeObjects instanceof Disposable)
-		((Disposable) freeObjects.get(i)).dispose();
+	for (int i = 0; i < size; i++) {
+	    T t = freeObjects.get(i);
+	    if (t instanceof Disposable)
+		((Disposable) t).dispose();
+	}
 	freeObjects.clear();
     }
 }

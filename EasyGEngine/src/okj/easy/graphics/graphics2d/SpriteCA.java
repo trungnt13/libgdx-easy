@@ -1014,6 +1014,12 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator
 	return mUpdater.size;
     }
 
+    @Override
+    public void removeUpdater (Updater updater)
+    {
+	mUpdater.removeValue(updater, true);
+    }
+
     public void noUpdater ()
     {
 	this.mUpdater.clear();
@@ -1051,4 +1057,15 @@ public class SpriteCA implements SpriteBackend, Disposable, Animator
 	setColor(1, 1, 1, 1);
     }
 
+    @Deprecated
+    public int getFrameNumber ()
+    {
+	return 0;
+    }
+
+    @Deprecated
+    public TextureRegion[] getFrames ()
+    {
+	return null;
+    }
 }

@@ -157,7 +157,6 @@ public class NManager implements Disposable
 
     public boolean contain (NSprite sprite)
     {
-
 	return mSpriteList.contains(sprite, true);
     }
 

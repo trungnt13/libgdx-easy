@@ -20,7 +20,7 @@ public final class Album extends Context
 {
     private static final AssetLoaderParameters MusicParam = new MusicParameter();
     private static final AssetLoaderParameters SoundParam = new SoundParameter();
-    private final UnloadedCallback unloaded;
+    private static UnloadedCallback unloaded;
 
     public Album(String name)
     {
@@ -29,7 +29,7 @@ public final class Album extends Context
 
 	MusicParam.loadedCallback = eAdmin.eaudio;
 	SoundParam.loadedCallback = eAdmin.eaudio;
-	this.unloaded = eAdmin.eaudio;
+	unloaded = eAdmin.eaudio;
     }
 
     @Override

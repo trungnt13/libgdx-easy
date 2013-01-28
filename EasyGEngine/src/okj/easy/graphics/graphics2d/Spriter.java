@@ -6,6 +6,7 @@ import org.ege.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
@@ -986,6 +987,12 @@ public class Spriter implements SpriteBackend, Disposable, Animator
 	return mUpdater.size;
     }
 
+    @Override
+    public void removeUpdater (Updater updater)
+    {
+	mUpdater.removeValue(updater, true);
+    }
+
     public void noUpdater ()
     {
 	this.mUpdater.clear();
@@ -1044,5 +1051,17 @@ public class Spriter implements SpriteBackend, Disposable, Animator
 		    + widthRatio + " "
 		    + "heightRatio : " + heightRatio + " ";
 	}
+    }
+
+    @Deprecated
+    public int getFrameNumber ()
+    {
+	return 0;
+    }
+
+    @Deprecated
+    public TextureRegion[] getFrames ()
+    {
+	return null;
     }
 }

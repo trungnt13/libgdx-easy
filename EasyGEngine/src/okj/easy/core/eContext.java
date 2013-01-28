@@ -368,19 +368,9 @@ public class eContext
 	return (T) mCurrentPool.obtain();
     }
 
-    public <T> T newObject (Object... objects)
-    {
-	return (T) mCurrentPool.obtain(objects);
-    }
-
     public <T> T newObject (Class<T> type)
     {
 	return (T) mPools.get(type).obtain();
-    }
-
-    public <T> T newObject (Class<T> type, Object... objects)
-    {
-	return (T) mPools.get(type).obtain(objects);
     }
 
     public <T> void free (T obj)

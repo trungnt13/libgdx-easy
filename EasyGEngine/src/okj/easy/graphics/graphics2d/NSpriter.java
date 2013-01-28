@@ -6,6 +6,7 @@ import org.ege.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Animator;
@@ -805,6 +806,12 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	return mUpdater.size;
     }
 
+    @Override
+    public void removeUpdater (Updater updater)
+    {
+	mUpdater.removeValue(updater, true);
+    }
+
     public void noUpdater ()
     {
 	this.mUpdater.clear();
@@ -864,4 +871,16 @@ public class NSpriter extends NManager implements Animator, SpriteBackend, Dispo
 	}
     }
 
+    /******************** deprecated ********************/
+    @Deprecated
+    public int getFrameNumber ()
+    {
+	return 0;
+    }
+
+    @Deprecated
+    public TextureRegion[] getFrames ()
+    {
+	return null;
+    }
 }
