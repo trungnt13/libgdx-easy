@@ -54,13 +54,21 @@ public final class Album extends Context
     @Override
     public void unload ()
     {
-	super.unload();
-
 	// ============= unload all data =============
-	Entries<String, Data> entries = mDataMap.entries();
-	for (Entry<String, Data> entry : entries) {
-	    unloaded.unloaded(entry.key, entry.value.clazz);
+	Entries<String, Data> es = mDataMap.entries();
+	for (Entry<String, Data> e : es) {
+	    if (e.value.clazz.equals(Sound.class))
+		eAdmin.eaudio.stopSound(e.key);
+	    else if (e.value.clazz.equals(Music.class))
+		eAdmin.eaudio.stopMusic(e.key);
+	    assets.unload(e.key);
+	    unloaded.unloaded(e.key, e.value.clazz);
 	}
+
+	// ============= put to unloaded list =============
+	for (String s : mDataMap.keys())
+	    if (!mUnloadedData.contains(s))
+		mUnloadedData.add(s);
     }
 
     @Override

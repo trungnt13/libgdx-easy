@@ -140,6 +140,7 @@ public abstract class GameCore implements ApplicationListener
     {
 	if (isPause)
 	    return;
+	delta = Gdx.graphics.getDeltaTime();
 
 	// ============= Start schedule =============
 	synchronized (runnables) {
@@ -157,7 +158,6 @@ public abstract class GameCore implements ApplicationListener
 	}
 
 	// ============= Update screen =============
-	delta = Gdx.graphics.getDeltaTime();
 	if (screen != null) {
 	    screen.onRender(delta);
 	    screen.update(delta);
@@ -220,10 +220,12 @@ public abstract class GameCore implements ApplicationListener
 
 	onGameDestroy();
 
+	// ------ clear all list ------
 	this.bridgePool.clear();
 	runnables.clear();
 	executedRunnables.clear();
 
+	// ------ dispose native ------
 	eAdmin.eworld.dispose();
     }
 

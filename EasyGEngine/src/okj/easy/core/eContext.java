@@ -395,6 +395,9 @@ public class eContext
 
     public int poolSize ()
     {
+	if (mCurrentPool == null)
+	    return -1;
+
 	return mCurrentPool.size();
     }
 
@@ -405,6 +408,8 @@ public class eContext
 
     public void clearPool ()
     {
+	if (mCurrentPool == null)
+	    return;
 	mCurrentPool.clear();
     }
 

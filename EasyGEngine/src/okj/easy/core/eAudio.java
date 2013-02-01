@@ -29,9 +29,6 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     static final ObjectMap<String, Sound> mSoundPool = new ObjectMap<String, Sound>();
     static final ObjectMap<String, Music> mMusicPool = new ObjectMap<String, Music>();
 
-    private float mMusicVolume = 1f;
-    private float mSoundVolume = 1f;
-
     final MusicParameter mMusicParam = new MusicParameter();
     final SoundParameter mSoundParam = new SoundParameter();
 
@@ -162,16 +159,10 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
 	 *************************************************************/
     public void setMusicVolume (float volume)
     {
-	mMusicVolume = volume;
 	Iterator<Music> musics = mMusicPool.values();
 	while (musics.hasNext()) {
 	    musics.next().setVolume(volume);
 	}
-    }
-
-    public void setSoundVolume (float volume)
-    {
-	mSoundVolume = volume;
     }
 
     /********************************************************
@@ -182,7 +173,20 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     public void playMusic (String audioName)
     {
 	Music music = mMusicPool.get(audioName);
-	music.setVolume(mMusicVolume);
+	if (music == null)
+	    return;
+	music.setVolume(1);
+	music.play();
+    }
+
+    @Override
+    public void playMusic (String audioName, float volume, boolean looping)
+    {
+	Music music = mMusicPool.get(audioName);
+	if (music == null)
+	    return;
+	music.setVolume(volume);
+	music.setLooping(looping);
 	music.play();
     }
 
@@ -190,7 +194,10 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     public void playMusic (String audioName, boolean looping)
     {
 	Music music = mMusicPool.get(audioName);
-	music.setVolume(mMusicVolume);
+	if (music == null)
+	    return;
+
+	music.setVolume(1);
 	music.setLooping(looping);
 	music.play();
     }
@@ -198,43 +205,60 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     public void playMusic (String audioName, float volume)
     {
 	Music music = mMusicPool.get(audioName);
-	music.setVolume(mMusicVolume);
+	if (music == null)
+	    return;
+
+	music.setVolume(1);
 	music.play();
     }
 
     @Override
     public void pause (String audioName)
     {
-	mMusicPool.get(audioName).pause();
+	Music m = mMusicPool.get(audioName);
+	if (m != null)
+	    m.pause();
     }
 
     public void stopMusic (String musicName)
     {
-	mMusicPool.get(musicName).stop();
+	Music m = mMusicPool.get(musicName);
+	if (m != null)
+	    m.stop();
     }
 
     @Override
     public boolean isPlaying (String audioName)
     {
-	return mMusicPool.get(audioName).isPlaying();
+	Music m = mMusicPool.get(audioName);
+	if (m == null)
+	    return false;
+	return m.isPlaying();
     }
 
     @Override
     public void setLooping (String audioName, boolean isLooping)
     {
-	mMusicPool.get(audioName).setLooping(isLooping);
+	Music m = mMusicPool.get(audioName);
+	if (m != null)
+	    m.setLooping(isLooping);
     }
 
     @Override
     public boolean isLooping (String audioName)
     {
-	return mMusicPool.get(audioName).isLooping();
+	Music m = mMusicPool.get(audioName);
+	if (m == null)
+	    return false;
+	return m.isLooping();
     }
 
     @Override
     public void setMusicVolume (String musicName, float volume)
     {
-	mMusicPool.get(musicName).setVolume(volume);
+	Music m = mMusicPool.get(musicName);
+	if (m != null)
+	    m.setVolume(volume);
     }
 
     /********************************************************
@@ -245,6 +269,8 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     public long playLoopingSound (String audioName)
     {
 	Sound sound = mSoundPool.get(audioName);
+	if (sound == null)
+	    return 0;
 	return sound.loop();
     }
 
@@ -252,23 +278,33 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     public long playLoopingSound (String audioName, float volume)
     {
 	Sound sound = mSoundPool.get(audioName);
+	if (sound == null)
+	    return 0;
 	return sound.loop(volume);
 
     }
 
     public long playSound (String soundName)
     {
-	return mSoundPool.get(soundName).play(mSoundVolume);
+	Sound s = mSoundPool.get(soundName);
+	if (s == null)
+	    return 0;
+	return s.play(1);
     }
 
     public long playSound (String soundName, float volume)
     {
-	return mSoundPool.get(soundName).play(volume);
+	Sound s = mSoundPool.get(soundName);
+	if (s == null)
+	    return 0;
+	return s.play(volume);
     }
 
     public long playSound (String soundName, float pitch, float pan)
     {
 	Sound tmp = mSoundPool.get(soundName);
+	if (tmp == null)
+	    return 0;
 	long id = tmp.play();
 	tmp.setPitch(id, pitch);
 	tmp.setPan(id, pan, 1);
@@ -278,6 +314,8 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     public long playSound (String soundName, float volume, float pitch, float pan)
     {
 	Sound tmp = mSoundPool.get(soundName);
+	if (tmp == null)
+	    return 0;
 	long id = tmp.play();
 	tmp.setPitch(id, pitch);
 	tmp.setPan(id, pan, volume);
@@ -288,41 +326,56 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     public long playLoopingSound (String soundName, float volume, float pitch, float pan)
     {
 	Sound sound = mSoundPool.get(soundName);
-	return sound.loop(volume, pitch, pan);
+	if (sound != null)
+	    return sound.loop(volume, pitch, pan);
+	else
+	    return 0;
     }
 
     @Override
     public void stopSound (String audioName)
     {
-	mSoundPool.get(audioName).stop();
+	Sound s = mSoundPool.get(audioName);
+	if (s != null)
+	    s.stop();
     }
 
     public void stopSound (String soundName, long ID)
     {
-	mSoundPool.get(soundName).stop(ID);
+	Sound s = mSoundPool.get(soundName);
+	if (s != null)
+	    s.stop(ID);
     }
 
     @Override
     public void setPan (String soundName, long ID, float volume, float pan)
     {
-	mSoundPool.get(soundName).setPan(ID, pan, volume);
+	Sound s = mSoundPool.get(soundName);
+	if (s != null)
+	    s.setPan(ID, pan, volume);
     }
 
     @Override
     public void setPitch (String soundName, long ID, float pitch)
     {
-	mSoundPool.get(soundName).setPitch(ID, pitch);
+	Sound s = mSoundPool.get(soundName);
+	if (s != null)
+	    s.setPitch(ID, pitch);
     }
 
     @Override
     public void setLooping (String soundName, long ID, boolean isLooping)
     {
-	mSoundPool.get(soundName).setLooping(ID, isLooping);
+	Sound s = mSoundPool.get(soundName);
+	if (s != null)
+	    s.setLooping(ID, isLooping);
     }
 
     public void setSoundVolume (String soundName, long ID, float volume)
     {
-	mSoundPool.get(soundName).setVolume(ID, volume);
+	Sound s = mSoundPool.get(soundName);
+	if (s != null)
+	    s.setVolume(ID, volume);
     }
 
     /*************************************************************
@@ -341,12 +394,9 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
     @Override
     public void unloaded (String name, Class type)
     {
-	if (type.equals(Sound.class)) {
-	    stopSound(name);
+	if (type.equals(Sound.class))
 	    mSoundPool.remove(name);
-	} else if (type.equals(Music.class)) {
-	    stopMusic(name);
+	else if (type.equals(Music.class))
 	    mMusicPool.remove(name);
-	}
     }
 }

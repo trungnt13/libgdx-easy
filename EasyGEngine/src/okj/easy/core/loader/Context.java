@@ -216,6 +216,18 @@ public class Context implements ResourceContext
 	return isDisposed;
     }
 
+    public void clear ()
+    {
+	// ============= unload all data =============
+	Iterator<String> dataName = mDataMap.keys();
+	while (dataName.hasNext())
+	    assets.unload(dataName.next());
+
+	// ============= clear data list =============
+	mUnloadedData.clear();
+	mDataMap.clear();
+    }
+
     /**
      * delete all data
      */
