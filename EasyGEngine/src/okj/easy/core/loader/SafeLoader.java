@@ -17,6 +17,8 @@ public abstract class SafeLoader extends Screen
 
     private boolean isAutoChangeScreen = true;
 
+    private Runnable mNewScreen;
+
     @Override
     public void show ()
     {
@@ -36,8 +38,11 @@ public abstract class SafeLoader extends Screen
 	super.update(delta);
 	eAdmin.econtext.update();
 	eAdmin.eaudio.update();
-	if (resources.isTotallyLoaded() && isAutoChangeScreen)
+	if (resources.isTotallyLoaded() && isAutoChangeScreen) {
+	    if (mNewScreen != null)
+		mNewScreen.run();
 	    setScreen(mDstScreen, E.screen.RELEASE);
+	}
 	progress = (eAdmin.econtext.getProgress() + eAdmin.eaudio.getProgress()) / 2;
     }
 
@@ -68,5 +73,10 @@ public abstract class SafeLoader extends Screen
     public void setAutoChangeScreen (boolean isAuto)
     {
 	this.isAutoChangeScreen = isAuto;
+    }
+
+    public void setLoadCompleteListener (Runnable run)
+    {
+	this.mNewScreen = run;
     }
 }
