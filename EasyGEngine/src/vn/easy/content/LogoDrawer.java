@@ -142,7 +142,7 @@ public class LogoDrawer
     {
 	if (i <= 0)
 	    return;
-	renderer.begin(ShapeType.FilledRectangle);
+	renderer.begin(ShapeType.Filled);
 	renderer.setColor(color[0], color[1], color[2], 1);
 	if (rd == 0) {
 	    for (int q = 1; q <= 35 - (11 - i) * 3; q++) {
@@ -150,7 +150,7 @@ public class LogoDrawer
 		    if (qpLogo[p - 1][q - 1] == 1) {
 			left = q * mPixelDistance + x;
 			top = p * mPixelDistance + y;
-			renderer.filledRect(left, top, mPixelSize, mPixelSize);
+			renderer.rect(left, top, mPixelSize, mPixelSize);
 		    }
 		}
 	    }
@@ -161,7 +161,7 @@ public class LogoDrawer
 		    if (qpLogo[p - 1][q - 1] == 1) {
 			left = q * mPixelDistance + x;
 			top = p * mPixelDistance + y;
-			renderer.filledRect(left, top, mPixelSize, mPixelSize);
+			renderer.rect(left, top, mPixelSize, mPixelSize);
 		    }
 		}
 	    }
@@ -171,7 +171,7 @@ public class LogoDrawer
 		    if (qpLogo[p - 1][q - 1] == 1) {
 			left = q * mPixelDistance + x;
 			top = p * mPixelDistance + y;
-			renderer.filledRect(left, top, mPixelSize, mPixelSize);
+			renderer.rect(left, top, mPixelSize, mPixelSize);
 		    }
 		}
 	    }

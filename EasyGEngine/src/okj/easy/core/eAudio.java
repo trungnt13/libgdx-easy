@@ -12,6 +12,7 @@ import com.badlogic.gdx.assets.loaders.MusicLoader.MusicParameter;
 import com.badlogic.gdx.assets.loaders.SoundLoader.SoundParameter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 /**
@@ -28,6 +29,9 @@ public class eAudio implements LoadedCallback, DeeJayBackend, UnloadedCallback
 
     static final ObjectMap<String, Sound> mSoundPool = new ObjectMap<String, Sound>();
     static final ObjectMap<String, Music> mMusicPool = new ObjectMap<String, Music>();
+
+    static final Array<Sound> LoopingSoundList = new Array<Sound>(6);
+    static final Array<Music> LoopingMusicList = new Array<Music>(3);
 
     final MusicParameter mMusicParam = new MusicParameter();
     final SoundParameter mSoundParam = new SoundParameter();
