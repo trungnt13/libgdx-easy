@@ -6,9 +6,10 @@ import okj.easy.core.loader.Context;
 import okj.easy.core.utils.Bridge;
 
 import org.ege.utils.E;
-import org.ege.utils.IActivityHandler;
 import org.ege.widget.Layout;
 import org.ege.widget.StyleAtlas;
+
+import vn.sunnet.gdx.backends.IActivityHandler;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
