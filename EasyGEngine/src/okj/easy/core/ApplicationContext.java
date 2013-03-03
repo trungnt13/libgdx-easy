@@ -4,8 +4,9 @@ import okj.easy.core.Timer.Task;
 import okj.easy.core.loader.Album;
 import okj.easy.core.loader.Context;
 
-import org.ege.utils.IActivityHandler;
 import org.ege.widget.StyleAtlas;
+
+import vn.sunnet.gdx.backends.IActivityHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;

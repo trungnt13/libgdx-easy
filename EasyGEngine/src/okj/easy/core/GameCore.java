@@ -9,10 +9,10 @@ import okj.easy.screen.LoadingScreen;
 
 import org.ege.utils.E;
 import org.ege.utils.EasyNativeLoader;
-import org.ege.utils.IActivityHandler;
-import org.ege.utils.IDesktopHandler;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 import org.ege.widget.Dialog;
+
+import vn.sunnet.gdx.backends.IActivityHandler;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -79,7 +79,7 @@ public abstract class GameCore implements ApplicationListener
 
     public GameCore()
     {
-	this(new IDesktopHandler());
+	this(new DesktopHandler());
     }
 
     // ============= default loader method =============
