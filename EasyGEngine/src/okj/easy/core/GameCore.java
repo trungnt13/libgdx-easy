@@ -27,7 +27,6 @@ import com.badlogic.gdx.utils.PauseableThread;
  */
 public abstract class GameCore implements ApplicationListener
 {
-
     // ============= Screen mangage =============
 
     /** This screen is the main screen which is visible all time */
