@@ -223,8 +223,8 @@ public class LogoDrawer
 
     public void postCompleteAction (Runnable runnable)
     {
-	if (isRunning)
-	    throw new GdxRuntimeException("You can not config the LogoDrawer while it is drawing");
+	// if (isRunning)
+	// throw new GdxRuntimeException("You can not config the LogoDrawer while it is drawing");
 	this.mCompleteListener = runnable;
     }
 

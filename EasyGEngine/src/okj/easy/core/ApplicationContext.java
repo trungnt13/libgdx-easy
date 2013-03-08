@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL11;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GLCommon;
-import com.badlogic.gdx.graphics.GLU;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.PauseableThread;
@@ -32,7 +31,6 @@ public interface ApplicationContext
     public static final GL10 gl10 = Gdx.gl10;
     public static final GL11 gl11 = Gdx.gl11;
     public static final GL20 gl20 = Gdx.gl20;
-    public static final GLU glu = Gdx.glu;
 
     /***************************************************************************
      * eInput Method
