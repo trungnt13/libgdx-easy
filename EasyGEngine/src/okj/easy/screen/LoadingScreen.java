@@ -7,6 +7,7 @@ import org.ege.utils.E;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 import org.ege.widget.Layout;
 
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 
 public abstract class LoadingScreen extends Screen implements AssetErrorListener
@@ -66,7 +67,8 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
     public void update (float delta)
     {
 	super.update(delta);
-	isDone = eAdmin.econtext.update() & (eAdmin.econtext.getQueueAssets() == 0);
+		isDone = eAdmin.econtext.update()
+				& (eAdmin.econtext.getQueueAssets() == 0);
 	isDone = isDone & eAdmin.eaudio.update() & (eAdmin.eaudio.getQueueAssets() == 0);
 
 	progress = (eAdmin.econtext.getProgress() + eAdmin.eaudio.getProgress()) / 2;
@@ -118,11 +120,11 @@ public abstract class LoadingScreen extends Screen implements AssetErrorListener
     }
 
     @Override
-    public void error (String fileName, Class type, Throwable throwable)
-    {
-    }
+	public void error(AssetDescriptor asset, Throwable throwable) {
+		
+	}
 
-    public void enableBugTracker ()
+	public void enableBugTracker ()
     {
 	eAdmin.econtext.manager.setErrorListener(this);
 	eAdmin.eaudio.manager.setErrorListener(this);

@@ -1,5 +1,7 @@
 package okj.easy.graphics.graphics2d;
 
+import okj.easy.math.ePolygon;
+
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.Gdx;
@@ -10,8 +12,7 @@ import com.badlogic.gdx.utils.Disposable;
  * 
  * NSpriteDef.java
  * 
- * Created on: Oct 6, 2012
- * Author: Trung
+ * Created on: Oct 6, 2012 Author: Trung
  */
 public class NSpriteDef implements Disposable {
 	public final String name;
@@ -30,7 +31,7 @@ public class NSpriteDef implements Disposable {
 		this.world = world;
 	}
 
-	public int getSpriteCount () {
+	public int getSpriteCount() {
 		return mSpriteCount;
 	}
 
@@ -42,7 +43,7 @@ public class NSpriteDef implements Disposable {
 	 * add new polygon to sprite def, this polygon won't added to list if it
 	 * local vertices are the same with existed polygon in list
 	 */
-	public void addPolygon (Polygon polygon) {
+	public void addPolygon(ePolygon polygon) {
 		if (isDisposed)
 			return;
 
@@ -55,12 +56,13 @@ public class NSpriteDef implements Disposable {
 	 * add new polygon to sprite def, this polygon won't added to list if it
 	 * local vertices are the same with existed polygon in list
 	 */
-	public void addPolygon (float[] vertices) {
+	public void addPolygon(float[] vertices) {
 		if (isDisposed)
 			return;
 
 		if (vertices.length < 6 || vertices.length % 2 != 0)
-			throw new EasyGEngineRuntimeException("Vertices of your polygon have wrong length");
+			throw new EasyGEngineRuntimeException(
+					"Vertices of your polygon have wrong length");
 
 		addBounding(address, vertices, vertices.length, null, 0);
 	}
@@ -69,15 +71,16 @@ public class NSpriteDef implements Disposable {
 	 * add new polygon to sprite def, this polygon won't added to list if it
 	 * local vertices are the same with existed polygon in list
 	 */
-	public void addPolygon (float[] vertices, int noIndex[]) {
+	public void addPolygon(float[] vertices, int noIndex[]) {
 		if (vertices.length < 6 || vertices.length % 2 != 0)
-			throw new EasyGEngineRuntimeException("Vertices of your polygon have wrong length");
+			throw new EasyGEngineRuntimeException(
+					"Vertices of your polygon have wrong length");
 
 		addBounding(address, vertices, vertices.length, noIndex, noIndex.length);
 	}
 
 	/** remove the given polygon with specify index position in polygon list */
-	public void removePolygon (int index) {
+	public void removePolygon(int index) {
 		removeBounding(address, index);
 	}
 
@@ -85,41 +88,42 @@ public class NSpriteDef implements Disposable {
 	 * Clear all polygon in this sprite def ,for reuse sprite def with given
 	 * name
 	 */
-	public void clearBounding () {
+	public void clearBounding() {
 		clearBounding(address);
 	}
 
 	/** Returns the number of polygon in this sprite def */
-	public int size () {
+	public int size() {
 		return size(address);
 	}
 
 	/** Compare two spritedef */
-	public boolean equal (NSpriteDef def) {
+	public boolean equal(NSpriteDef def) {
 		return equal(address, def.address);
 	}
 
-	public void dispose () {
+	public void dispose() {
 		if (mSpriteCount == 0) {
 			world.deleteSpriteDef(name);
 			isDisposed = true;
 		} else
-			Gdx.app.log("EasyGameEngine  ", "You can't delete NSpriteDef with name : " + name
-					+ "  because still have NSprite associate with it");
+			Gdx.app.log("EasyGameEngine  ",
+					"You can't delete NSpriteDef with name : " + name
+							+ "  because still have NSprite associate with it");
 	}
 
 	// =====================================
 	// native method
 
-	private final native boolean equal (long thisAddress, long spriteDefAddress);
+	private final native boolean equal(long thisAddress, long spriteDefAddress);
 
-	private final native void addBounding (long address, float vertices[], int verticesSize,
-			int noIndex[], int noIndexSize);
+	private final native void addBounding(long address, float vertices[],
+			int verticesSize, int noIndex[], int noIndexSize);
 
-	private final native void removeBounding (long address, int indexOfBounding);
+	private final native void removeBounding(long address, int indexOfBounding);
 
-	private final native int size (long address);
+	private final native int size(long address);
 
-	private final native void clearBounding (long address);
+	private final native void clearBounding(long address);
 
 }

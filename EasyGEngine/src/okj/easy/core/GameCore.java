@@ -159,7 +159,7 @@ public abstract class GameCore implements ApplicationListener
 	// ============= Update screen =============
 	if (screen != null) {
 	    screen.onRender(delta);
-	    screen.update(delta);
+			screen.update(delta);
 	}
 	onGameRender(delta);
     }

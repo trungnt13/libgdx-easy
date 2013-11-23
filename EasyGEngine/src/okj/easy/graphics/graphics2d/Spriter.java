@@ -1,6 +1,6 @@
 package okj.easy.graphics.graphics2d;
 
-import org.ege.utils.SpriteBackend;
+import org.ege.utils.Animator;
 import org.ege.utils.Updater;
 import org.ege.utils.exception.EasyGEngineRuntimeException;
 
@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Animator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.FloatArray;

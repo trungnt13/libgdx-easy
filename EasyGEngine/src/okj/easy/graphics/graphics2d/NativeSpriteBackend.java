@@ -1,6 +1,5 @@
 package okj.easy.graphics.graphics2d;
 
-import org.ege.utils.SpriteBackend;
 import org.ege.utils.Updater;
 
 import com.badlogic.gdx.graphics.Color;
