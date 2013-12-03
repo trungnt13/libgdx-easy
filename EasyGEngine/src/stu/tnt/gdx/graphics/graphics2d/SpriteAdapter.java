@@ -3,7 +3,7 @@ package stu.tnt.gdx.graphics.graphics2d;
 import stu.tnt.gdx.utils.Updater;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -200,12 +200,12 @@ public class SpriteAdapter implements SpriteBackend {
 	}
 
 	@Override
-	public void draw(SpriteBatch batch) {
+	public void draw(Batch batch) {
 
 	}
 
 	@Override
-	public void draw(SpriteBatch batch, float alpha) {
+	public void draw(Batch batch, float alpha) {
 
 	}
 

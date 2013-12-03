@@ -5,7 +5,7 @@ import stu.tnt.gdx.utils.Updater;
 import stu.tnt.gdx.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
@@ -591,14 +591,14 @@ public class NSpriter extends NManager implements Animator, SpriteBackend,
 		mDrawable.clear();
 	}
 
-	public void draw(SpriteBatch batch) {
+	public void draw(Batch batch) {
 		for (NativeSpriteBackend s : mDrawable) {
 			s.draw(batch);
 		}
 	}
 
 	@Override
-	public void draw(SpriteBatch batch, float alpha) {
+	public void draw(Batch batch, float alpha) {
 		for (NativeSpriteBackend s : mDrawable)
 			s.draw(batch, alpha);
 	}

@@ -4,5 +4,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/gdx"/>
 	<classpathentry kind="lib" path="libs/vn.sunnet.util.20130302.jar"/>
+	<classpathentry kind="lib" path="libs/2p.jar" sourcepath="libs/2p-source.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Users/trungnt13/libs/2p-2.7.2.zip%20Folder/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

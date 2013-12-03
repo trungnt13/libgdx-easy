@@ -24,6 +24,7 @@ import stu.tnt.gdx.utils.Updater;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
@@ -587,11 +588,11 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		return rect;
 	}
 
-	public void draw(SpriteBatch spriteBatch) {
+	public void draw(Batch spriteBatch) {
 		spriteBatch.draw(texture, getVertices(), 0, SPRITE_SIZE);
 	}
 
-	public void draw(SpriteBatch spriteBatch, float alphaModulation) {
+	public void draw(Batch spriteBatch, float alphaModulation) {
 		Color color = getColor();
 		float oldAlpha = color.a;
 		color.a *= alphaModulation;
