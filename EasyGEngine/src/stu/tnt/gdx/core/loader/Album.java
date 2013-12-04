@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ObjectMap.Entries;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 /**
+ * Cached audio assets path before its loaded
  * 
  * @FileName: Album.java
  * @CreateOn: Sep 15, 2012 - 11:05:58 AM

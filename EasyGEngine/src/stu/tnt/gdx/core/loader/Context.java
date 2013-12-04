@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 /**
+ * Cached data path before its loaded
  * 
  * @FileName: Context.java
  * @CreateOn: Sep 15, 2012 - 11:06:15 AM

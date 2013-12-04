@@ -8,7 +8,7 @@ import stu.tnt.gdx.utils.E;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -212,7 +212,7 @@ public class NumberDrawer {
 
 	// ---------------------------------------------------------
 
-	public void draw(SpriteBatch batch) {
+	public void draw(Batch batch) {
 		if (orientation == E.orientation.HORIZONTAL) {
 			float startX = getX();
 			for (int i = 0; i < number.size(); i++) {
@@ -232,7 +232,7 @@ public class NumberDrawer {
 		}
 	}
 
-	public void draw(SpriteBatch batch, int yourNumber) {
+	public void draw(Batch batch, int yourNumber) {
 		setDrawingNumber(yourNumber);
 		// ============= save old color =============
 		Color tmp = batch.getColor();
