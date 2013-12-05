@@ -3,7 +3,7 @@ package stu.tnt.gdx.graphics.graphics2d;
 import stu.tnt.gdx.utils.Updater;
 import stu.tnt.gdx.utils.exception.EasyGEngineRuntimeException;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -12,201 +12,185 @@ import com.badlogic.gdx.utils.Disposable;
  * 
  * Created on: Oct 7, 2012 Author: Trung
  */
-public class NManager implements Disposable
-{
-    public final long address;
-    protected final NWorld world;
-    private boolean isDispose;
+public class NManager implements Disposable {
+	public final long address;
+	protected final NWorld world;
+	private boolean isDispose;
 
-    // =========================================
-    // sprite params
+	// =========================================
+	// sprite params
 
-    final Array<NativeSpriteBackend> mSpriteList = new Array<NativeSpriteBackend>(13);
-    // ============= for safe traverse =============
-    private static final Array<NativeSpriteBackend> CloneList = new Array<NativeSpriteBackend>(100);
+	final Array<NativeSpriteBackend> mSpriteList = new Array<NativeSpriteBackend>(
+			13);
+	// ============= for safe traverse =============
+	private static final Array<NativeSpriteBackend> CloneList = new Array<NativeSpriteBackend>(
+			100);
 
-    NManager(long address, NWorld world)
-    {
-	this.address = address;
-	this.world = world;
-    }
-
-    public Array<NativeSpriteBackend> CloneList ()
-    {
-	if (isDispose)
-	    return null;
-
-	Array<NativeSpriteBackend> clone = new Array<NativeSpriteBackend>(mSpriteList.size);
-	clone.addAll(mSpriteList);
-	return clone;
-    }
-
-    public Array<NativeSpriteBackend> List ()
-    {
-	if (isDispose)
-	    return null;
-
-	return mSpriteList;
-    }
-
-    /****************************************************** manager processor ******************************************************/
-    public void postUpdater (Updater update)
-    {
-	if (isDispose)
-	    return;
-
-	for (NativeSpriteBackend sprite : mSpriteList)
-	    sprite.postUpdater(update);
-    }
-
-    public void update (float delta)
-    {
-	if (isDispose)
-	    return;
-
-	CloneList.clear();
-	CloneList.addAll(mSpriteList);
-	for (NativeSpriteBackend s : CloneList) {
-	    s.update(delta);
+	NManager(long address, NWorld world) {
+		this.address = address;
+		this.world = world;
 	}
-    }
 
-    public void draw (SpriteBatch batch)
-    {
-	if (isDispose)
-	    return;
+	public Array<NativeSpriteBackend> CloneList() {
+		if (isDispose)
+			return null;
 
-	for (NativeSpriteBackend s : mSpriteList)
-	    s.draw(batch);
-    }
+		Array<NativeSpriteBackend> clone = new Array<NativeSpriteBackend>(
+				mSpriteList.size);
+		clone.addAll(mSpriteList);
+		return clone;
+	}
 
-    /****************************************************** sprite manager ******************************************************/
+	public Array<NativeSpriteBackend> List() {
+		if (isDispose)
+			return null;
 
-    /** Create new sprite which is manage by this manager */
-    public NSprite newSprite ()
-    {
-	if (isDispose)
-	    return null;
+		return mSpriteList;
+	}
 
-	return world.newSprite(this);
-    }
+	/****************************************************** manager processor ******************************************************/
+	public void postUpdater(Updater update) {
+		if (isDispose)
+			return;
 
-    /** Create new sprite which is manage by this manager */
-    public NSpriteA newSpriteA ()
-    {
-	return world.newSpriteA(this);
-    }
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.postUpdater(update);
+	}
 
-    public <T extends NSprite> T newSprite (Class<T> type)
-    {
-	if (isDispose)
-	    return null;
+	public void update(float delta) {
+		if (isDispose)
+			return;
 
-	return world.newSprite(type, this);
-    }
+		CloneList.clear();
+		CloneList.addAll(mSpriteList);
+		for (NativeSpriteBackend s : CloneList) {
+			s.update(delta);
+		}
+	}
 
-    public <T extends NSpriteA> T newSpriteA (Class<T> type)
-    {
-	if (isDispose)
-	    return null;
+	public void draw(Batch batch) {
+		if (isDispose)
+			return;
 
-	return world.newSpriteA(type, this);
-    }
+		for (NativeSpriteBackend s : mSpriteList)
+			s.draw(batch);
+	}
 
-    /**
-     * 1. Check sprite is pooled ,or alread contained 2. unmanage sprite from its manager 3. manage
-     * it
-     */
-    public void manage (NativeSpriteBackend sprite)
-    {
-	if (isDispose)
-	    return;
+	/****************************************************** sprite manager ******************************************************/
 
-	if (sprite.isPooled || mSpriteList.contains(sprite, true))
-	    return;
+	/** Create new sprite which is manage by this manager */
+	public NSprite newSprite() {
+		if (isDispose)
+			return null;
 
-	if (sprite.manager != null)
-	    sprite.manager.unmanage(sprite);
+		return world.newSprite(this);
+	}
 
-	sprite.manager = this;
-	mSpriteList.add(sprite);
-	manage(address, sprite.address);
-    }
+	/** Create new sprite which is manage by this manager */
+	public NSpriteA newSpriteA() {
+		return world.newSpriteA(this);
+	}
 
-    /**
-     * {@link NWorld}
-     * 
-     * @param sprite
-     */
-    public void remove (NativeSpriteBackend sprite)
-    {
-	if (isDispose)
-	    return;
+	public <T extends NSprite> T newSprite(Class<T> type) {
+		if (isDispose)
+			return null;
 
-	sprite.reset();
-    }
+		return world.newSprite(type, this);
+	}
 
-    public int size ()
-    {
-	final int size = size(address);
-	if (mSpriteList.size != size)
-	    throw new EasyGEngineRuntimeException("Size sync between native : " + size
-		    + " and java : " + mSpriteList.size + " is wrong");
-	return size;
-    }
+	public <T extends NSpriteA> T newSpriteA(Class<T> type) {
+		if (isDispose)
+			return null;
 
-    public boolean contain (NSprite sprite)
-    {
-	return mSpriteList.contains(sprite, true);
-    }
+		return world.newSpriteA(type, this);
+	}
 
-    /** remove from java list and native list */
-    void unmanage (NativeSpriteBackend sprite)
-    {
-	if (isDispose)
-	    return;
+	/**
+	 * 1. Check sprite is pooled ,or alread contained 2. unmanage sprite from
+	 * its manager 3. manage it
+	 */
+	public void manage(NativeSpriteBackend sprite) {
+		if (isDispose)
+			return;
 
-	mSpriteList.removeValue(sprite, true);
-	sprite.unmanage();
-    }
+		if (sprite.isPooled || mSpriteList.contains(sprite, true))
+			return;
 
-    /****************************************************** manager self method ******************************************************/
+		if (sprite.manager != null)
+			sprite.manager.unmanage(sprite);
 
-    public void clear ()
-    {
-	if (isDispose)
-	    return;
+		sprite.manager = this;
+		mSpriteList.add(sprite);
+		manage(address, sprite.address);
+	}
 
-	for (NativeSpriteBackend sprite : mSpriteList)
-	    sprite.reset();
-	mSpriteList.clear();
-	clear(address);
-    }
+	/**
+	 * {@link NWorld}
+	 * 
+	 * @param sprite
+	 */
+	public void remove(NativeSpriteBackend sprite) {
+		if (isDispose)
+			return;
 
-    public void dispose ()
-    {
-	if (isDispose)
-	    return;
+		sprite.reset();
+	}
 
-	isDispose = true;
-	for (NativeSpriteBackend sprite : mSpriteList)
-	    sprite.dispose();
+	public int size() {
+		final int size = size(address);
+		if (mSpriteList.size != size)
+			throw new EasyGEngineRuntimeException("Size sync between native : "
+					+ size + " and java : " + mSpriteList.size + " is wrong");
+		return size;
+	}
 
-	mSpriteList.clear();
-	world.mManagerMap.remove(address);
-	world.DisposeManager(address);
-    }
+	public boolean contain(NSprite sprite) {
+		return mSpriteList.contains(sprite, true);
+	}
 
-    public boolean isDisposed ()
-    {
-	return isDispose;
-    }
+	/** remove from java list and native list */
+	void unmanage(NativeSpriteBackend sprite) {
+		if (isDispose)
+			return;
 
-    /****************************************************** Native method ******************************************************/
+		mSpriteList.removeValue(sprite, true);
+		sprite.unmanage();
+	}
 
-    private native int size (long address);
+	/****************************************************** manager self method ******************************************************/
 
-    private native void manage (long managerAddress, long spriteAddress);
+	public void clear() {
+		if (isDispose)
+			return;
 
-    private native void clear (long managerAddress);
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.reset();
+		mSpriteList.clear();
+		clear(address);
+	}
+
+	public void dispose() {
+		if (isDispose)
+			return;
+
+		isDispose = true;
+		for (NativeSpriteBackend sprite : mSpriteList)
+			sprite.dispose();
+
+		mSpriteList.clear();
+		world.mManagerMap.remove(address);
+		world.DisposeManager(address);
+	}
+
+	public boolean isDisposed() {
+		return isDispose;
+	}
+
+	/****************************************************** Native method ******************************************************/
+
+	private native int size(long address);
+
+	private native void manage(long managerAddress, long spriteAddress);
+
+	private native void clear(long managerAddress);
 }
