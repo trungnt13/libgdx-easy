@@ -1,5 +1,6 @@
 package stu.tnt.gdx.graphics.graphics2d;
 
+import stu.tnt.Updateable;
 import stu.tnt.gdx.utils.Updater;
 
 import com.badlogic.gdx.graphics.Color;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
  * @CreateOn: Sep 23, 2012 - 2:49:59 PM
  * @Author: TrungNT
  */
-public interface SpriteBackend extends Poolable, Boundable {
+public interface SpriteBackend extends Poolable, Boundable, Updateable {
 	// =================================================
 	// setter
 
@@ -86,8 +87,6 @@ public interface SpriteBackend extends Poolable, Boundable {
 	public int sizeUpdater();
 
 	public void removeUpdater(Updater updater);
-
-	public void update(float delta);
 
 	public void draw(Batch batch);
 

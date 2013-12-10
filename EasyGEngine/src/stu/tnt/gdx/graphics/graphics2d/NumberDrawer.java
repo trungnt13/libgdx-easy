@@ -2,8 +2,8 @@ package stu.tnt.gdx.graphics.graphics2d;
 
 import java.util.ArrayList;
 
+import stu.tnt.CharUtils;
 import stu.tnt.gdx.core.eGraphics;
-import stu.tnt.gdx.utils.CharUtils;
 import stu.tnt.gdx.utils.E;
 
 import com.badlogic.gdx.graphics.Color;
