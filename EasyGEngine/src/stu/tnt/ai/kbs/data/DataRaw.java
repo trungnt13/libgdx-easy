@@ -82,7 +82,7 @@ public abstract class DataRaw<T> implements Updateable {
 	// ///////////////////////////////////////////////////////////////
 	// recording methods
 	// ///////////////////////////////////////////////////////////////
-	public void copy(T raw) {
+	public void set(T raw) {
 		if (!isRecording)
 			return;
 
@@ -104,7 +104,7 @@ public abstract class DataRaw<T> implements Updateable {
 	// ///////////////////////////////////////////////////////////////
 
 	public void copy(DataRaw<T> data) {
-		copy(data.data());
+		set(data.data());
 	}
 
 	public T data() {

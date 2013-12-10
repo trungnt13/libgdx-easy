@@ -98,7 +98,9 @@ public class KnowledgeBase implements Updateable {
 			throw new RuntimeException("Data is only created once");
 		isCreateData = true;
 		for (DataPacking dataPacking : dataPackings) {
-			mDataSet.createNewRecord(dataPacking.type, dataPacking.name);
+			DataRaw data = mDataSet.createNewRecord(dataPacking.type,
+					dataPacking.name);
+			data.setRecording(true, dataPacking.freg, dataPacking.param);
 		}
 		return infoCreator;
 	}
@@ -313,7 +315,7 @@ public class KnowledgeBase implements Updateable {
 		}
 	}
 
-	public static final class InfoPacking {
+	public static class InfoPacking {
 		private String message;
 		private InfoApplicable information;
 
