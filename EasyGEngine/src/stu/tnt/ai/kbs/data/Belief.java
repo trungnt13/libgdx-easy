@@ -59,4 +59,13 @@ public class Belief extends Valueable {
 		}
 		return true;
 	}
+
+	public String toString() {
+		StringBuilder tmp = new StringBuilder();
+		tmp.append("Name: " + getMessage() + "\n");
+		for (Entry<Information, Boolean> e : mExpectedValue.entrySet()) {
+			tmp.append(e.getKey().getMessage() + " " + e.getValue() + "\n");
+		}
+		return tmp.toString();
+	}
 }

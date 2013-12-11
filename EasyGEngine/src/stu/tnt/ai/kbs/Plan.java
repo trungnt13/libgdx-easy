@@ -11,7 +11,7 @@ import stu.tnt.gdx.utils.ArrayDeque;
  * Execute Step in Plan step by step
  */
 public class Plan implements Updateable, ActionCompleted {
-	private ArrayList<Step> mSteps = new ArrayList<Step>();
+	private final ArrayList<Step> mSteps = new ArrayList<Step>();
 	private final ArrayDeque<Step> mProcessingSteps = new ArrayDeque<Step>();
 
 	/**
@@ -24,8 +24,11 @@ public class Plan implements Updateable, ActionCompleted {
 	private boolean isProcessing;
 
 	private boolean isCurrentActionCompleted = false;
+	private Step lastStep = null;
 
 	private Goal mGoal;
+	private PlanCompleted mListener;
+
 	private final KnowledgeBase kbs;
 
 	Plan(KnowledgeBase kbs, String planName, int priority, String... stepName) {
@@ -35,7 +38,7 @@ public class Plan implements Updateable, ActionCompleted {
 
 	private final void bind(String planName, int priority, String... stepName) {
 		isProcessing = false;
-		mSteps = null;
+		mSteps.clear();
 		mProcessingSteps.clear();
 		mPriority = 0;
 
@@ -63,6 +66,10 @@ public class Plan implements Updateable, ActionCompleted {
 		this.mGoal = mGoal;
 	}
 
+	public void setCompletedListener(PlanCompleted listener) {
+		this.mListener = listener;
+	}
+
 	public boolean isProcessing() {
 		return isProcessing;
 	}
@@ -77,8 +84,8 @@ public class Plan implements Updateable, ActionCompleted {
 
 	public boolean isApplicable() {
 		if (!isProcessing) {
-			Step first = mProcessingSteps.getFirst();
-			if (first.isTrue())
+			Step first = mProcessingSteps.peekFirst();
+			if (first != null && first.isTrue())
 				return true;
 		}
 		return false;
@@ -100,7 +107,7 @@ public class Plan implements Updateable, ActionCompleted {
 			// contain new step
 			if (cur != null) {
 				if (cur.isTrue()) {
-					mProcessingSteps.pollFirst();
+					lastStep = mProcessingSteps.pollFirst();
 					Action action = cur.action();
 					action.setActionCallback(this);
 					if (mGoal != null)
@@ -108,20 +115,56 @@ public class Plan implements Updateable, ActionCompleted {
 					isCurrentActionCompleted = false;
 				}
 			}
-			// end of steps
+			// end of steps (completed)
 			else {
-				mProcessingSteps.clear();
-				for (Step s : mSteps) {
-					mProcessingSteps.addLast(s);
-				}
-				isProcessing = false;
-				isCurrentActionCompleted = false;
+				resetPlan();
 			}
 		}
+
+		// check out condition
+		if (lastStep != null) {
+			if (lastStep.isOut()) {
+				resetPlan();
+			}
+		}
+	}
+
+	private final void resetPlan() {
+		mProcessingSteps.clear();
+		for (Step s : mSteps) {
+			mProcessingSteps.addLast(s);
+		}
+		isProcessing = false;
+		isCurrentActionCompleted = false;
+		mListener.planCompleted(this);
 	}
 
 	@Override
 	public void actionCompleted() {
 		isCurrentActionCompleted = true;
+	}
+
+	public String toString() {
+		StringBuilder tmp = new StringBuilder();
+		tmp.append("Name:" + getPlanName() + "  Priority:" + mPriority
+				+ "  IsProcess:" + isProcessing + "  IsCurrentAction:"
+				+ isCurrentActionCompleted + "  Goal:" + mGoal.getGoalName());
+
+		for (Step s : mSteps) {
+			tmp.append(s.getMessage() + " - ");
+		}
+		tmp.append("\n");
+		for (Step s : mProcessingSteps) {
+			tmp.append(s.getMessage() + " - ");
+		}
+
+		return tmp.toString();
+	}
+
+	// ///////////////////////////////////////////////////////////////
+	// interaction interface
+	// ///////////////////////////////////////////////////////////////
+	static interface PlanCompleted {
+		public void planCompleted(Plan plan);
 	}
 }

@@ -45,4 +45,8 @@ public class Information extends Valueable {
 	protected boolean isTrueInternal() {
 		return checker.isApplicable(kbs);
 	}
+
+	public String toString() {
+		return getMessage() + " " + isTrue() + " " + checker;
+	}
 }

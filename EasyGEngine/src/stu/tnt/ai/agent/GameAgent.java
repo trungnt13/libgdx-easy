@@ -1,9 +1,8 @@
 package stu.tnt.ai.agent;
 
-import stu.tnt.Updateable;
 import stu.tnt.ai.kbs.KnowledgeBase;
 
-public class GameAgent implements Updateable {
+public class GameAgent {
 	private final KnowledgeBase kbs;
 	private static GameAgent mGameAgent = null;
 
@@ -11,12 +10,7 @@ public class GameAgent implements Updateable {
 		kbs = new KnowledgeBase();
 	}
 
-	public static final KnowledgeBase kbs() {
-		return mGameAgent.kbs;
-	}
-
-	@Override
-	public void update(float delta) {
+	private void update(float delta) {
 		kbs.update(delta);
 	}
 
@@ -28,6 +22,15 @@ public class GameAgent implements Updateable {
 		if (mGameAgent == null)
 			mGameAgent = new GameAgent();
 		return mGameAgent;
+	}
+
+	public static final void dispose() {
+		mGameAgent.kbs.clear();
+		mGameAgent = null;
+	}
+
+	public static final KnowledgeBase kbs() {
+		return mGameAgent.kbs;
 	}
 
 	public static final void updateAgent(float delta) {

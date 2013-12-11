@@ -8,8 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import stu.tnt.Updateable;
+import stu.tnt.ai.agent.AgentDebuger;
+import stu.tnt.ai.kbs.Plan.PlanCompleted;
 
-public class Goal implements Updateable {
+public class Goal implements Updateable, PlanCompleted {
 	private static final ExecutorService mThreadPool = Executors
 			.newFixedThreadPool(1);
 
@@ -22,12 +24,21 @@ public class Goal implements Updateable {
 	 * higher is better
 	 */
 	private int mPriority = 0;
+	private float mDelay = 0;
+	private int maxSimultaneousPlan = 1;
 
 	private String mGoalName;
 
-	Goal(KnowledgeBase kbs, String name, String... planNames) {
+	private float countDown = 0;
+	private int executingPlan = 0;
+
+	Goal(KnowledgeBase kbs, String name, int priority, int sumultaneous,
+			float delay, String... planNames) {
 		this.kbs = kbs;
 		this.mGoalName = name;
+		this.mPriority = priority;
+		this.maxSimultaneousPlan = sumultaneous;
+		this.mDelay = delay;
 		bind(planNames);
 	}
 
@@ -35,6 +46,7 @@ public class Goal implements Updateable {
 		for (String string : planNames) {
 			Plan p = kbs.findPlan(string);
 			p.setGoal(this);
+			p.setCompletedListener(this);
 			mPlanMap.put(string, p);
 		}
 	}
@@ -42,6 +54,10 @@ public class Goal implements Updateable {
 	public KnowledgeBase kbs() {
 		return kbs;
 	}
+
+	// ///////////////////////////////////////////////////////////////
+	// control methods
+	// ///////////////////////////////////////////////////////////////
 
 	void executeAction(Action action) {
 		action.setGoal(this);
@@ -51,12 +67,16 @@ public class Goal implements Updateable {
 			action.run();
 	}
 
-	public void executePlan(int numbOfPlans) {
+	private void executePlan(int numbOfPlans) {
 		Collections.sort(mReadyPlan, kbs.conflictResolution().planComparator());
 		for (int i = 0; i < numbOfPlans; i++) {
-			mReadyPlan.get(i).startPlan();
+			final Plan p = mReadyPlan.get(i);
+			AgentDebuger.log("Start Plan:" + p.getPlanName() + "  from goal:"
+					+ p.getGoalName() + "  in total:" + numbOfPlans);
+			p.startPlan();
 		}
 		mReadyPlan.clear();
+		executingPlan = numbOfPlans;
 	}
 
 	// ///////////////////////////////////////////////////////////////
@@ -64,6 +84,14 @@ public class Goal implements Updateable {
 	// ///////////////////////////////////////////////////////////////
 	public int getPriority() {
 		return mPriority;
+	}
+
+	public float getDelay() {
+		return mDelay;
+	}
+
+	public float getSimultaneousPlan() {
+		return maxSimultaneousPlan;
 	}
 
 	public int getNumbOfPlan() {
@@ -80,15 +108,49 @@ public class Goal implements Updateable {
 
 	@Override
 	public void update(float delta) {
+
+		// update plan
 		final Collection<Plan> set = mPlanMap.values();
 		for (Plan p : set) {
 			p.update(delta);
 		}
 
+		// pick ready plan
 		for (Plan plan : set) {
 			if (plan.isApplicable() && !mReadyPlan.contains(plan)) {
+				AgentDebuger.log("New Ready Plan:" + plan.getPlanName()
+						+ "  from goal+" + plan.getGoalName());
 				mReadyPlan.add(plan);
 			}
 		}
+
+		countDown += delta;
+		// start execuse
+		if (countDown >= mDelay) {
+			if (executingPlan < maxSimultaneousPlan) {
+				executePlan(maxSimultaneousPlan - executingPlan);
+			}
+		}
+	}
+
+	@Override
+	public void planCompleted(Plan plan) {
+		--executingPlan;
+	}
+
+	public String toString() {
+		StringBuilder tmp = new StringBuilder();
+		tmp.append("Name:" + getGoalName() + "  Priority:" + mPriority
+				+ "  Delay:" + mDelay + "  Max:" + maxSimultaneousPlan
+				+ "  Executing:" + executingPlan + "\n");
+
+		for (Plan p : mPlanMap.values()) {
+			tmp.append(p.getPlanName() + " ");
+		}
+		tmp.append("\n");
+		for (Plan p : mReadyPlan) {
+			tmp.append(p.getPlanName() + " ");
+		}
+		return tmp.toString();
 	}
 }

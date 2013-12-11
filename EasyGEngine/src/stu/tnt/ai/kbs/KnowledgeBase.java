@@ -1,6 +1,7 @@
 package stu.tnt.ai.kbs;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import stu.tnt.Updateable;
@@ -26,7 +27,9 @@ public class KnowledgeBase implements Updateable {
 	/*-------- rule base info --------*/
 	private final HashMap<String, Step> mStepMap = new HashMap<String, Step>();
 	private final HashMap<String, Plan> mPlanMap = new HashMap<String, Plan>();
+
 	private final HashMap<String, Goal> mGoalMap = new HashMap<String, Goal>();
+	private final ArrayList<Goal> mGoalList = new ArrayList<Goal>();
 
 	/*-------- action --------*/
 	private final HashMap<String, Action> mActionMap = new HashMap<String, Action>();
@@ -86,8 +89,35 @@ public class KnowledgeBase implements Updateable {
 	/*-------- constructor --------*/
 	private boolean isCreateData = false;
 	private boolean isCreateKnowledge = false;
+	private boolean isStart = true;
 
 	public KnowledgeBase() {
+	}
+
+	public void clear() {
+		mDataSet.clear();
+
+		mInfoMap.clear();
+		mInfoPool.clear();
+
+		mBeliefMap.clear();
+		mBeliefPool.clear();
+
+		mStepMap.clear();
+		mStepPool.clear();
+
+		mPlanMap.clear();
+
+		mGoalList.clear();
+		mGoalMap.clear();
+	}
+
+	public boolean isStart() {
+		return isStart;
+	}
+
+	public void setStart(boolean isStart) {
+		this.isStart = isStart;
 	}
 
 	// ///////////////////////////////////////////////////////////////
@@ -108,8 +138,9 @@ public class KnowledgeBase implements Updateable {
 	public StepCreator createActions(Action... actions) {
 		if (!isCreateData)
 			throw new RuntimeException("Data must be created first");
-		if (!isCreateKnowledge)
+		if (isCreateKnowledge)
 			throw new RuntimeException("Knowledge only created once");
+		isCreateKnowledge = true;
 
 		for (Action action : actions) {
 			mActionMap.put(action.Name, action);
@@ -180,8 +211,9 @@ public class KnowledgeBase implements Updateable {
 	public void update(float delta) {
 		mDataSet.update(delta);
 
-		final Collection<Goal> goalList = mGoalMap.values();
-		for (Goal g : goalList) {
+		if (!isStart)
+			return;
+		for (Goal g : mGoalList) {
 			g.update(delta);
 		}
 	}
@@ -200,7 +232,7 @@ public class KnowledgeBase implements Updateable {
 		public PlanCreator createSteps(StepPacking... packings) {
 			for (StepPacking stepPacking : packings) {
 				Step s = KnowledgeBase.this.mStepPool.obtain();
-				s.bind(stepPacking.name, stepPacking.action,
+				s.bind(stepPacking.name, stepPacking.action, stepPacking.out,
 						stepPacking.valuealbe);
 				KnowledgeBase.this.mStepMap.put(s.getMessage(), s);
 			}
@@ -211,13 +243,24 @@ public class KnowledgeBase implements Updateable {
 	public static class StepPacking {
 		private String name;
 		private String action;
+		private String[] out;
 		private String[] valuealbe;
+
+		public StepPacking(String name, String action, String[] out,
+				String... strings) {
+			this.name = name;
+			this.action = action;
+			this.out = out;
+			this.valuealbe = strings;
+		}
 
 		public StepPacking(String name, String action, String... strings) {
 			this.name = name;
 			this.action = action;
+			this.out = null;
 			this.valuealbe = strings;
 		}
+
 	}
 
 	/*-------- plan --------*/
@@ -257,19 +300,29 @@ public class KnowledgeBase implements Updateable {
 
 		public KnowledgeBase createGoal(GoalPacking... packings) {
 			for (GoalPacking g : packings) {
-				Goal goal = new Goal(KnowledgeBase.this, g.name, g.planName);
+				Goal goal = new Goal(KnowledgeBase.this, g.name, g.priority,
+						g.simultaneous, g.delay, g.planName);
 				KnowledgeBase.this.mGoalMap.put(goal.getGoalName(), goal);
+				KnowledgeBase.this.mGoalList.add(goal);
 			}
+			Collections.sort(mGoalList, conflictResolution().goalComparator());
 			return KnowledgeBase.this;
 		}
 	}
 
 	public static class GoalPacking {
 		private String name;
+		private int priority;
+		private int simultaneous;
+		private float delay;
 		private String[] planName;
 
-		public GoalPacking(String name, String... strings) {
+		public GoalPacking(String name, int priority, int simultaneous,
+				float delay, String... strings) {
 			this.name = name;
+			this.priority = priority;
+			this.simultaneous = simultaneous;
+			this.delay = delay;
 			this.planName = strings;
 		}
 	}
@@ -353,5 +406,42 @@ public class KnowledgeBase implements Updateable {
 			informations = infos;
 			values = vals;
 		}
+	}
+
+	// ///////////////////////////////////////////////////////////////
+	// debug method
+	// ///////////////////////////////////////////////////////////////
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(mDataSet.toString());
+
+		builder.append("\n *********** Information ***********\n");
+		for (Information info : mInfoMap.values()) {
+			builder.append(info.toString() + "\n");
+		}
+
+		builder.append("\n *********** Belief ***********\n");
+		for (Belief b : mBeliefMap.values()) {
+			builder.append(b.toString() + "\n");
+		}
+
+		builder.append("\n *********** Step ***********\n");
+		for (Step b : mStepMap.values()) {
+			builder.append(b.toString() + "\n");
+		}
+
+		builder.append("\n *********** Plan ***********\n");
+		for (Plan b : mPlanMap.values()) {
+			builder.append(b.toString() + "\n");
+		}
+
+		builder.append("\n *********** Goal ***********\n");
+		for (Goal b : mGoalMap.values()) {
+			builder.append(b.toString() + "\n");
+		}
+
+		return builder.toString();
 	}
 }

@@ -10,7 +10,11 @@ import stu.tnt.ai.kbs.data.Valueable;
  */
 public class Step extends Valueable {
 	private final ArrayList<Valueable> mValueables = new ArrayList<Valueable>();
-	private int trueCount = 0;
+
+	/**
+	 * this list indicates when step can be stopped
+	 */
+	private final ArrayList<Valueable> mOutValueables = new ArrayList<Valueable>();
 
 	private final KnowledgeBase kbs;
 
@@ -20,8 +24,17 @@ public class Step extends Valueable {
 		this.kbs = kbs;
 	}
 
-	public void bind(String stepName, String actionName,
+	public void bind(String stepName, String actionName, String[] outValuabe,
 			String... valueableName) {
+
+		if (outValuabe != null)
+			for (String string : outValuabe) {
+				final Valueable val = kbs().findValueable(string);
+				if (val.isBinded()) {
+					mOutValueables.add(val);
+				}
+			}
+
 		for (String string : valueableName) {
 			final Valueable val = kbs().findValueable(string);
 			if (val.isBinded()) {
@@ -41,13 +54,28 @@ public class Step extends Valueable {
 		return mAction;
 	}
 
+	public boolean isOut() {
+		if (mOutValueables.size() == 0)
+			return false;
+
+		int trueCount = 0;
+		for (Valueable val : mOutValueables) {
+			if (val.isTrue())
+				++trueCount;
+		}
+
+		if (trueCount == mOutValueables.size()) {
+			return true;
+		}
+		return false;
+	}
+
 	// ///////////////////////////////////////////////////////////////
 	// override methods
 	// ///////////////////////////////////////////////////////////////
 
 	@Override
 	protected void resetInternal() {
-		trueCount = 0;
 		mAction = null;
 		mValueables.clear();
 	}
@@ -59,7 +87,7 @@ public class Step extends Valueable {
 
 	@Override
 	protected boolean isTrueInternal() {
-		trueCount = 0;
+		int trueCount = 0;
 		for (Valueable val : mValueables) {
 			if (val.isTrue())
 				++trueCount;
@@ -69,5 +97,14 @@ public class Step extends Valueable {
 			return true;
 		}
 		return false;
+	}
+
+	public String toString() {
+		StringBuilder tmp = new StringBuilder();
+		tmp.append("Name: " + getMessage() + "\n");
+		for (Valueable val : mValueables) {
+			tmp.append(val.getMessage() + "\n");
+		}
+		return tmp.toString();
 	}
 }

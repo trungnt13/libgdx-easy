@@ -11,6 +11,10 @@ public class DataSet implements Updateable {
 	public DataSet() {
 	}
 
+	public void clear() {
+		mDataMap.clear();
+	}
+
 	@Override
 	public void update(float delta) {
 		Collection<DataRaw> set = mDataMap.values();
@@ -52,5 +56,15 @@ public class DataSet implements Updateable {
 	private final void checkNameCondition(String name) {
 		if (name == null)
 			throw new RuntimeException("All Data Record must have name");
+	}
+
+	public String toString() {
+		StringBuilder buidler = new StringBuilder();
+		buidler.append("\n************* DataRaw *************\n");
+		for (DataRaw d : mDataMap.values()) {
+			buidler.append(d.Name + "  " + d.getClass() + " " + d.data());
+			buidler.append("\n");
+		}
+		return buidler.toString();
 	}
 }

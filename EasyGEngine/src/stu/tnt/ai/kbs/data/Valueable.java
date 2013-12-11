@@ -46,7 +46,7 @@ public abstract class Valueable implements Poolable {
 	 * Check whether the message is setted and this Valueable take effect
 	 */
 	public boolean isBinded() {
-		return mMessage == null;
+		return mMessage != null;
 	}
 
 }

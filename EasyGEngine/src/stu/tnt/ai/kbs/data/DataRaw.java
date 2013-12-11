@@ -20,9 +20,9 @@ public abstract class DataRaw<T> implements Updateable {
 	protected T lastValue;
 
 	protected DataRaw(String name) {
-		if (name.contains(prefix()))
-			throw new RuntimeException("The Data name must contain prefix: "
-					+ prefix());
+		if (!name.contains(prefix()))
+			throw new RuntimeException("The Data name: " + name
+					+ "  must contain prefix: " + prefix());
 
 		Name = name;
 		currValue = defData();
