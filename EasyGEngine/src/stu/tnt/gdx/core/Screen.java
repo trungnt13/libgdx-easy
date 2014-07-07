@@ -14,7 +14,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -281,12 +280,12 @@ public abstract class Screen implements ApplicationContext {
 	}
 
 	public final void disableBlend() {
-		Gdx.gl.glDisable(GL10.GL_BLEND);
+		Gdx.gl.glDisable(GL11.GL_BLEND);
 	}
 
 	public final void enableBlend() {
-		Gdx.gl.glEnable(GL10.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glEnable(GL11.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	/***************************************************************************

@@ -59,7 +59,7 @@ public class Goal implements Updateable, PlanCompleted {
 	// control methods
 	// ///////////////////////////////////////////////////////////////
 
-	void executeAction(Action action) {
+	void executeAction(final Action action) {
 		action.setGoal(this);
 		if (action.isUseThread()) {
 			mThreadPool.execute(action);
@@ -68,15 +68,22 @@ public class Goal implements Updateable, PlanCompleted {
 	}
 
 	private void executePlan(int numbOfPlans) {
+		if (mReadyPlan.size() == 0)
+			return;
+
 		Collections.sort(mReadyPlan, kbs.conflictResolution().planComparator());
-		for (int i = 0; i < numbOfPlans; i++) {
+		for (int i = 0; i < mReadyPlan.size(); i++) {
+			if (i > numbOfPlans)
+				continue;
+
 			final Plan p = mReadyPlan.get(i);
 			AgentDebuger.log("Start Plan:" + p.getPlanName() + "  from goal:"
-					+ p.getGoalName() + "  in total:" + numbOfPlans);
+					+ p.getGoalName() + "  in total:" + numbOfPlans
+					+ " current:" + executingPlan);
 			p.startPlan();
 		}
 		mReadyPlan.clear();
-		executingPlan = numbOfPlans;
+		executingPlan = maxSimultaneousPlan;
 	}
 
 	// ///////////////////////////////////////////////////////////////
@@ -130,12 +137,16 @@ public class Goal implements Updateable, PlanCompleted {
 			if (executingPlan < maxSimultaneousPlan) {
 				executePlan(maxSimultaneousPlan - executingPlan);
 			}
+			countDown = 0;
 		}
 	}
 
 	@Override
 	public void planCompleted(Plan plan) {
 		--executingPlan;
+		AgentDebuger.log("Plan completed: " + plan.getPlanName()
+				+ "  from goal:" + getGoalName() + "  executing:"
+				+ executingPlan);
 	}
 
 	public String toString() {

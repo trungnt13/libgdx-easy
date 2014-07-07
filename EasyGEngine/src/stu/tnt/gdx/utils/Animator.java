@@ -1,5 +1,6 @@
 package stu.tnt.gdx.utils;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -14,7 +15,7 @@ public interface Animator {
 
 	public void start(float frameDuration);
 
-	public void start(float frameDuration, int playMode);
+	public void start(float frameDuration, Animation.PlayMode playMode);
 
 	public void stop();
 

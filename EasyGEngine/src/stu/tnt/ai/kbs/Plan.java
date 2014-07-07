@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import stu.tnt.Updateable;
 import stu.tnt.ai.AIConst;
+import stu.tnt.ai.agent.AgentDebuger;
 import stu.tnt.ai.kbs.Action.ActionCompleted;
 import stu.tnt.gdx.utils.ArrayDeque;
 
@@ -13,6 +14,7 @@ import stu.tnt.gdx.utils.ArrayDeque;
 public class Plan implements Updateable, ActionCompleted {
 	private final ArrayList<Step> mSteps = new ArrayList<Step>();
 	private final ArrayDeque<Step> mProcessingSteps = new ArrayDeque<Step>();
+	private static final float DELAY_FOR_GIVE_UP_STEP = 10f;
 
 	/**
 	 * higher is better
@@ -30,6 +32,8 @@ public class Plan implements Updateable, ActionCompleted {
 	private PlanCompleted mListener;
 
 	private final KnowledgeBase kbs;
+
+	private float countDown = -1;
 
 	Plan(KnowledgeBase kbs, String planName, int priority, String... stepName) {
 		this.kbs = kbs;
@@ -105,15 +109,18 @@ public class Plan implements Updateable, ActionCompleted {
 		if (isProcessing && isCurrentActionCompleted) {
 			Step cur = mProcessingSteps.getFirst();
 			// contain new step
-			if (cur != null) {
-				if (cur.isTrue()) {
-					lastStep = mProcessingSteps.pollFirst();
-					Action action = cur.action();
-					action.setActionCallback(this);
-					if (mGoal != null)
-						mGoal.executeAction(cur.action());
-					isCurrentActionCompleted = false;
-				}
+			if (cur != null && cur.isTrue()) {
+				lastStep = mProcessingSteps.pollFirst();
+				countDown = 0;
+				Action action = cur.action();
+				action.setActionCallback(this);
+				isCurrentActionCompleted = false;
+
+				AgentDebuger.log("Execute Step:" + lastStep.getMessage()
+						+ "  Action:" + action.Name + " from plan:"
+						+ getPlanName());
+				if (mGoal != null)
+					mGoal.executeAction(cur.action());
 			}
 			// end of steps (completed)
 			else {
@@ -124,6 +131,20 @@ public class Plan implements Updateable, ActionCompleted {
 		// check out condition
 		if (lastStep != null) {
 			if (lastStep.isOut()) {
+				AgentDebuger.log("Plan is out:" + lastStep.getMessage()
+						+ " from plan:" + getPlanName());
+
+				resetPlan();
+			}
+		}
+
+		if (countDown >= 0) {
+			countDown += delta;
+			if (countDown > DELAY_FOR_GIVE_UP_STEP) {
+				AgentDebuger.log("Plan is coundown:" + lastStep.getMessage()
+						+ " from plan:" + getPlanName() + "  is process:"
+						+ isProcessing + "  is action complete:"
+						+ isCurrentActionCompleted);
 				resetPlan();
 			}
 		}
@@ -134,7 +155,9 @@ public class Plan implements Updateable, ActionCompleted {
 		for (Step s : mSteps) {
 			mProcessingSteps.addLast(s);
 		}
+		lastStep = null;
 		isProcessing = false;
+		countDown = -1;
 		isCurrentActionCompleted = false;
 		mListener.planCompleted(this);
 	}

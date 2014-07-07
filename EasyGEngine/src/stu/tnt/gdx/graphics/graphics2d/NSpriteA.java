@@ -1,11 +1,6 @@
+
 package stu.tnt.gdx.graphics.graphics2d;
 
-import static com.badlogic.gdx.graphics.g2d.Animation.LOOP;
-import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_PINGPONG;
-import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_RANDOM;
-import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_REVERSED;
-import static com.badlogic.gdx.graphics.g2d.Animation.NORMAL;
-import static com.badlogic.gdx.graphics.g2d.Animation.REVERSED;
 import static com.badlogic.gdx.graphics.g2d.Batch.C1;
 import static com.badlogic.gdx.graphics.g2d.Batch.C2;
 import static com.badlogic.gdx.graphics.g2d.Batch.C3;
@@ -32,6 +27,8 @@ import stu.tnt.gdx.utils.Updater;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
@@ -40,11 +37,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
 
-/**
- * NSpriteA.java
+/** NSpriteA.java
  * 
- * Created on: Oct 12, 2012 Author: Trung
- */
+ * Created on: Oct 12, 2012 Author: Trung */
 public class NSpriteA extends NativeSpriteBackend implements Animator {
 
 	private final float vertices[] = new float[E.sprite.VERTICES_SIZE];
@@ -62,7 +57,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 
 	private int frameNumber;
 
-	private int mPlayMode = NORMAL;
+	private Animation.PlayMode mPlayMode = PlayMode.NORMAL;
 
 	private Texture mCurrentTexture;
 
@@ -70,7 +65,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 
 	/************************************************************ Constructor ************************************************************/
 
-	protected NSpriteA(long address, NWorld world) {
+	protected NSpriteA (long address, NWorld world) {
 		super(address, world);
 
 		setColor(1, 1, 1, 1);
@@ -80,112 +75,110 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 
 	/*********************************************************** Animator controller ***********************************************************/
 
-	public void setFrameDuration(float frameDuration) {
+	public void setFrameDuration (float frameDuration) {
 		this.mFrameDuration = frameDuration;
 	}
 
-	public void setPlayMode(int playMode) {
+	public void setPlayMode (Animation.PlayMode playMode) {
 		mPlayMode = playMode;
 	}
 
-	public void setLooping(boolean looping) {
-		if (looping && (mPlayMode == NORMAL || mPlayMode == REVERSED)) {
-			if (mPlayMode == NORMAL)
-				mPlayMode = LOOP;
+	public void setLooping (boolean looping) {
+		if (looping && (mPlayMode == Animation.PlayMode.NORMAL || mPlayMode == Animation.PlayMode.REVERSED)) {
+			if (mPlayMode == Animation.PlayMode.NORMAL)
+				mPlayMode = Animation.PlayMode.LOOP;
 			else
-				mPlayMode = LOOP_REVERSED;
-		} else if (!looping && !(mPlayMode == NORMAL || mPlayMode == REVERSED)) {
-			if (mPlayMode == LOOP_REVERSED)
-				mPlayMode = REVERSED;
+				mPlayMode = Animation.PlayMode.LOOP_REVERSED;
+		} else if (!looping && !(mPlayMode == Animation.PlayMode.NORMAL || mPlayMode == Animation.PlayMode.REVERSED)) {
+			if (mPlayMode == Animation.PlayMode.LOOP_REVERSED)
+				mPlayMode = Animation.PlayMode.REVERSED;
 			else
-				mPlayMode = LOOP;
+				mPlayMode = Animation.PlayMode.LOOP;
 		}
 	}
 
-	public void setKeyFrames(TextureRegion[] keyFrame) {
+	public void setKeyFrames (TextureRegion[] keyFrame) {
 		this.keyFrames = keyFrame;
 		setRegion(keyFrames[0]);
 		setTexture(keyFrame);
 	}
 
-	public void setKeyFrames(Array keyFrame) {
+	public void setKeyFrames (Array keyFrame) {
 		keyFrames = new TextureRegion[keyFrame.size];
 		for (int i = 0; i < keyFrames.length; i++)
-			keyFrames[i] = (TextureRegion) keyFrame.get(i);
+			keyFrames[i] = (TextureRegion)keyFrame.get(i);
 		setRegion(keyFrames[0]);
 		setTexture(keyFrames);
 	}
 
-	public void start() {
+	public void start () {
 		isRunning = true;
 	}
 
-	public void start(float frameDuration) {
+	public void start (float frameDuration) {
 		isRunning = true;
 		mFrameDuration = frameDuration;
 	}
 
-	public void start(float frameDuration, int playMode) {
+	public void start (float frameDuration, Animation.PlayMode playMode) {
 		isRunning = true;
 		mFrameDuration = frameDuration;
 		mPlayMode = playMode;
 	}
 
-	public void stop() {
+	public void stop () {
 		isRunning = false;
 		mStateTime = 0;
 		setRegion(keyFrames[0]);
 	}
 
-	public void pause() {
+	public void pause () {
 		isRunning = false;
 	}
 
-	public void switchState() {
+	public void switchState () {
 		isRunning = !isRunning;
 	}
 
-	public void resetFrame() {
+	public void resetFrame () {
 		mStateTime = 0;
 		setRegion(keyFrames[0]);
 	}
 
-	/**
-	 * Get current frame number ( unsafe method)
+	/** Get current frame number ( unsafe method)
 	 * 
-	 * @return
-	 */
-	public int getFrameNumber() {
+	 * @return */
+	public int getFrameNumber () {
 		return frameNumber;
 	}
 
-	public TextureRegion[] getFrames() {
+	public TextureRegion[] getFrames () {
 		return this.keyFrames;
 	}
 
 	@Override
-	public boolean isRunning() {
+	public boolean isRunning () {
 		return isRunning;
 	}
 
 	/************************************************************ Texture manager method ************************************************************/
 
-	public void setRegions(Array region) {
+	public void setRegions (Array region) {
 		keyFrames = new TextureRegion[region.size];
 		for (int i = 0; i < keyFrames.length; i++)
-			keyFrames[i] = (TextureRegion) region.get(i);
+			keyFrames[i] = (TextureRegion)region.get(i);
 
 		setRegion(keyFrames[0]);
 		setTexture(keyFrames);
 	}
 
-	public void setRegions(TextureRegion[] region) {
+	public void setRegions (TextureRegion[] region) {
 		keyFrames = region;
 		setRegion(region[0]);
 		setTexture(keyFrames);
 	}
 
-	private void setRegion(TextureRegion region) {
+	private void setRegion (TextureRegion region) {
 		mCurrentTexture = region.getTexture();
 
 		final float u = region.getU();
@@ -208,7 +201,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 		vertices[V4] = v2;
 	}
 
-	private void setTexture(TextureRegion[] texture) {
+	private void setTexture (TextureRegion[] texture) {
 		mCurrentTexture = texture[0].getTexture();
 	}
 
@@ -218,11 +211,10 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	// setter
 
 	@Override
-	public void setBounds(float x, float y, float width, float height) {
+	public void setBounds (float x, float y, float width, float height) {
 		setBounds(address, x, y, width, height);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		float x2 = x + width;
 		float y2 = y + height;
@@ -242,11 +234,10 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	}
 
 	@Override
-	public void setSize(float width, float height) {
+	public void setSize (float width, float height) {
 		setSize(address, width, height);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		float x = getX();
 		float y = getY();
@@ -269,26 +260,25 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	}
 
 	@Override
-	public void setPosition(float x, float y) {
+	public void setPosition (float x, float y) {
 		translate(x - getX(), y - getY());
 	}
 
 	@Override
-	public void setX(float x) {
+	public void setX (float x) {
 		translateX(x - getX());
 	}
 
 	@Override
-	public void setY(float y) {
+	public void setY (float y) {
 		translateY(y - getY());
 	}
 
 	@Override
-	public void translate(float xAmount, float yAmount) {
+	public void translate (float xAmount, float yAmount) {
 		translate(address, xAmount, yAmount);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		final float[] vertices = this.vertices;
 		vertices[X1] += xAmount;
@@ -305,11 +295,10 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	}
 
 	@Override
-	public void translateX(float xAmount) {
+	public void translateX (float xAmount) {
 		translateX(address, xAmount);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		final float[] vertices = this.vertices;
 		vertices[X1] += xAmount;
@@ -319,11 +308,10 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	}
 
 	@Override
-	public void translateY(float yAmount) {
+	public void translateY (float yAmount) {
 		translateY(address, yAmount);
 
-		if (isDirty(address))
-			return;
+		if (isDirty(address)) return;
 
 		final float[] vertices = this.vertices;
 		vertices[Y1] += yAmount;
@@ -333,39 +321,38 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	}
 
 	@Override
-	public void setOrigin(float originX, float originY) {
+	public void setOrigin (float originX, float originY) {
 		setOrigin(address, originX, originY);
 	}
 
 	@Override
-	public void setRotation(float degree) {
+	public void setRotation (float degree) {
 		setRotation(address, degree);
 	}
 
 	@Override
-	public void rotate(float degree) {
+	public void rotate (float degree) {
 		rotate(address, degree);
 	}
 
 	@Override
-	public void setScale(float scaleXY) {
+	public void setScale (float scaleXY) {
 		setScale(address, scaleXY);
 	}
 
 	@Override
-	public void setScale(float scaleX, float scaleY) {
+	public void setScale (float scaleX, float scaleY) {
 		setScale(address, scaleX, scaleY);
 	}
 
 	@Override
-	public void scale(float amount) {
+	public void scale (float amount) {
 		scale(address, amount);
 	}
 
 	@Override
-	public void setColor(float r, float g, float b, float a) {
-		int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16)
-				| ((int) (255 * g) << 8) | ((int) (255 * r));
+	public void setColor (float r, float g, float b, float a) {
+		int intBits = ((int)(255 * a) << 24) | ((int)(255 * b) << 16) | ((int)(255 * g) << 8) | ((int)(255 * r));
 		float color = NumberUtils.intToFloatColor(intBits);
 		final float[] vertices = this.vertices;
 		vertices[C1] = color;
@@ -375,7 +362,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	}
 
 	@Override
-	public void setColor(Color tint) {
+	public void setColor (Color tint) {
 		float color = tint.toFloatBits();
 		final float[] vertices = this.vertices;
 		vertices[C1] = color;
@@ -388,88 +375,84 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	// getter
 
 	@Override
-	public float[] getVertices() {
+	public float[] getVertices () {
 		return vertices;
 	}
 
 	@Override
-	public float getX() {
+	public float getX () {
 		return getX(address);
 	}
 
 	@Override
-	public float getCenterX() {
+	public float getCenterX () {
 		return getCenterX(address);
 	}
 
 	@Override
-	public float getY() {
+	public float getY () {
 		return getY(address);
 	}
 
 	@Override
-	public float getCenterY() {
+	public float getCenterY () {
 		return getCenterY(address);
 	}
 
 	@Override
-	public float getWidth() {
+	public float getWidth () {
 		return getWidth(address);
 	}
 
 	@Override
-	public float getHeight() {
+	public float getHeight () {
 		return getHeight(address);
 	}
 
 	@Override
-	public float getOriginX() {
+	public float getOriginX () {
 		return getOriginX(address);
 	}
 
 	@Override
-	public float getOriginY() {
+	public float getOriginY () {
 		return getOriginY(address);
 	}
 
 	@Override
-	public float getRotation() {
+	public float getRotation () {
 		return getRotation(address);
 	}
 
 	@Override
-	public float getScaleX() {
+	public float getScaleX () {
 		return getScaleX(address);
 	}
 
 	@Override
-	public float getScaleY() {
+	public float getScaleY () {
 		return getScaleY(address);
 	}
 
 	@Deprecated
-	public Rectangle getBoundingRectangle() {
+	public Rectangle getBoundingRectangle () {
 		return null;
 	}
 
 	@Deprecated
-	public float[] getBoundingFloatRect(float offset) {
+	public float[] getBoundingFloatRect (float offset) {
 		return null;
 	}
 
 	@Deprecated
-	public Circle getBoundingCircle() {
+	public Circle getBoundingCircle () {
 		return null;
 	}
 
-	/**
-	 * Returns the color of this sprite. Changing the returned color will have
-	 * no affect, {@link #setColor(Color)} or
-	 * {@link #setColor(float, float, float, float)} must be used.
-	 */
-	public Color getColor() {
-		if (color == null)
-			color = new Color();
+	/** Returns the color of this sprite. Changing the returned color will have no affect, {@link #setColor(Color)} or
+	 * {@link #setColor(float, float, float, float)} must be used. */
+	public Color getColor () {
+		if (color == null) color = new Color();
 
 		int intBits = NumberUtils.floatToIntColor(vertices[C1]);
 		Color color = this.color;
@@ -484,34 +467,32 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	// processor
 
 	@Override
-	public void postUpdater(Updater updater) {
-		if (mUpdater.contains(updater, true))
-			return;
+	public void postUpdater (Updater updater) {
+		if (mUpdater.contains(updater, true)) return;
 
 		updater.start();
 		mUpdater.add(updater);
 	}
 
-	public int sizeUpdater() {
+	public int sizeUpdater () {
 		return mUpdater.size;
 	}
 
 	@Override
-	public void removeUpdater(Updater updater) {
+	public void removeUpdater (Updater updater) {
 		mUpdater.removeValue(updater, true);
 	}
 
 	@Override
-	public void noUpdater() {
+	public void noUpdater () {
 		this.mUpdater.clear();
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update (float delta) {
 		getVertices(address, vertices);
 
-		if (isPooled)
-			return;
+		if (isPooled) return;
 
 		// animation process
 		if (!isRunning || mFrameDuration == 0) {
@@ -532,7 +513,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 
 		mStateTime += delta;
 
-		frameNumber = (int) (mStateTime / mFrameDuration);
+		frameNumber = (int)(mStateTime / mFrameDuration);
 
 		switch (mPlayMode) {
 		case NORMAL:
@@ -543,9 +524,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 			break;
 		case LOOP_PINGPONG:
 			frameNumber = frameNumber % (keyFrames.length * 2);
-			if (frameNumber >= keyFrames.length)
-				frameNumber = keyFrames.length - 1
-						- (frameNumber - keyFrames.length);
+			if (frameNumber >= keyFrames.length) frameNumber = keyFrames.length - 1 - (frameNumber - keyFrames.length);
 			break;
 		case LOOP_RANDOM:
 			frameNumber = MathUtils.random(keyFrames.length - 1);
@@ -581,13 +560,12 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	}
 
 	@Override
-	public void draw(Batch batch) {
-		if (mCurrentTexture != null)
-			batch.draw(mCurrentTexture, vertices, 0, E.sprite.VERTICES_SIZE);
+	public void draw (Batch batch) {
+		if (mCurrentTexture != null) batch.draw(mCurrentTexture, vertices, 0, E.sprite.VERTICES_SIZE);
 	}
 
 	@Override
-	public void draw(Batch batch, float alpha) {
+	public void draw (Batch batch, float alpha) {
 		final Color color = getColor();
 		float oldAlpha = color.a;
 		color.a *= alpha;
@@ -598,7 +576,7 @@ public class NSpriteA extends NativeSpriteBackend implements Animator {
 	}
 
 	@Override
-	public void reset() {
+	public void reset () {
 		super.reset();
 
 		vertices[X1] = 0;

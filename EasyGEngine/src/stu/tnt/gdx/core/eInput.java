@@ -18,8 +18,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 /** @FileName: eInput.java
  * @CreateOn: Sep 15, 2012 - 11:11:44 AM
  * @Author: TrungNT */
-public class eInput implements InputProcessor
-{
+public class eInput implements InputProcessor {
 
 	// ============= Storage =============
 	private final ArrayList<InputProcessor> mInputProcessors = new ArrayList<InputProcessor>();
@@ -42,16 +41,14 @@ public class eInput implements InputProcessor
 	private int projectedX;
 	private int projectedY;
 
-	public eInput ()
-	{
+	public eInput () {
 	}
 
 	/** Add a new processor at a specified index( the index must in range` [0,size]
 	 * 
 	 * @param index your index
 	 * @param processor your processor */
-	public void addProcessor (int index, InputProcessor processor)
-	{
+	public void addProcessor (int index, InputProcessor processor) {
 		if (!mInputMap.containsKey(index)) {
 			mInputProcessors.add(processor);
 			mInputMap.put(index, processor);
@@ -64,31 +61,26 @@ public class eInput implements InputProcessor
 	/** Remove a processor at specified index( The index must in range [0,size])
 	 * 
 	 * @param index your index */
-	public void removeProcessor (int index)
-	{
+	public void removeProcessor (int index) {
 		InputProcessor input = mInputMap.remove(index);
 		mInputProcessors.remove(input);
 	}
 
-	public final void registerBackKeyListener (OnBackKeyListener listener)
-	{
+	public final void registerBackKeyListener (OnBackKeyListener listener) {
 		mBackKeyListener = listener;
 	}
 
-	public void unregisterBackKeyListener ()
-	{
+	public void unregisterBackKeyListener () {
 		mBackKeyListener = null;
 	}
 
 	/** @return the number of mInputProcessors in this multiplexer */
-	public int size ()
-	{
+	public int size () {
 		return mInputProcessors.size();
 	}
 
 	/** Clear the processor list */
-	public void clear ()
-	{
+	public void clear () {
 		mInputProcessors.clear();
 		mInputMap.clear();
 		mMotionList.clear();
@@ -98,13 +90,11 @@ public class eInput implements InputProcessor
 	/** Get the array list of mInputProcessors
 	 * 
 	 * @return Array<InputProcessor> */
-	ArrayList<InputProcessor> getProcessors ()
-	{
+	ArrayList<InputProcessor> getProcessors () {
 		return mInputProcessors;
 	}
 
-	public InputProcessor findInputById (int id)
-	{
+	public InputProcessor findInputById (int id) {
 		return mInputMap.get(id);
 	}
 
@@ -114,8 +104,7 @@ public class eInput implements InputProcessor
 	 * 
 	 * @param keycode one of the constants in {@link Input.Keys}
 	 * @return whether the input was processed */
-	public boolean keyDown (int keycode)
-	{
+	public boolean keyDown (int keycode) {
 		tmp = mInputProcessors.size();
 		for (int i = 0; i < tmp; i++)
 			mInputProcessors.get(i).keyDown(keycode);
@@ -131,10 +120,8 @@ public class eInput implements InputProcessor
 	 * 
 	 * @param keycode one of the constants in {@link Input.Keys}
 	 * @return whether the input was processed */
-	public boolean keyUp (int keycode)
-	{
-		if (mBackKeyListener != null && keycode == Keys.BACK)
-			return mBackKeyListener.BackKeyPressed();
+	public boolean keyUp (int keycode) {
+		if (mBackKeyListener != null && keycode == Keys.BACK) return mBackKeyListener.BackKeyPressed();
 
 		tmp = mInputProcessors.size();
 		for (int i = 0; i < tmp; i++)
@@ -151,8 +138,7 @@ public class eInput implements InputProcessor
 	 * 
 	 * @param character The character
 	 * @return whether the input was processed */
-	public boolean keyTyped (char character)
-	{
+	public boolean keyTyped (char character) {
 		tmp = mInputProcessors.size();
 		for (int i = 0; i < tmp; i++)
 			mInputProcessors.get(i).keyTyped(character);
@@ -174,8 +160,7 @@ public class eInput implements InputProcessor
 	 * @param pointer the pointer for the event.
 	 * @param button the button
 	 * @return whether the input was processed */
-	public boolean touchDown (int X, int Y, int pointer, int button)
-	{
+	public boolean touchDown (int X, int Y, int pointer, int button) {
 		mLastTouchPointer = pointer;
 
 		int y = Gdx.graphics.getHeight() - Y;
@@ -204,8 +189,7 @@ public class eInput implements InputProcessor
 	 * @param pointer the pointer for the event.
 	 * @param button the button
 	 * @return whether the input was processed */
-	public boolean touchUp (int X, int Y, int pointer, int button)
-	{
+	public boolean touchUp (int X, int Y, int pointer, int button) {
 
 		int y = Gdx.graphics.getHeight() - Y;
 
@@ -231,8 +215,7 @@ public class eInput implements InputProcessor
 	 * @param y The y coordinate
 	 * @param pointer the pointer for the event.
 	 * @return whether the input was processed */
-	public boolean touchDragged (int X, int Y, int pointer)
-	{
+	public boolean touchDragged (int X, int Y, int pointer) {
 		int y = Gdx.graphics.getHeight() - Y;
 
 		// ============= calculate projected input =============
@@ -257,8 +240,7 @@ public class eInput implements InputProcessor
 	 * @param y The y coordinate
 	 * @return whether the input was processed */
 	@Override
-	public boolean mouseMoved (int X, int Y)
-	{
+	public boolean mouseMoved (int X, int Y) {
 		int y = Gdx.graphics.getHeight() - Y;
 
 		// ============= calculate projected input =============
@@ -281,8 +263,7 @@ public class eInput implements InputProcessor
 	 * @param amount the scroll amount, -1 or 1 depending on the direction the wheel was scrolled.
 	 * @return whether the input was processed. */
 	@Override
-	public boolean scrolled (int amount)
-	{
+	public boolean scrolled (int amount) {
 		tmp = mInputProcessors.size();
 		for (int i = 0; i < tmp; i++)
 			mInputProcessors.get(i).scrolled(amount);
@@ -296,54 +277,41 @@ public class eInput implements InputProcessor
 	 * 
 	 * @param key input's key
 	 * @return */
-	public InputProcessor findInputByID (int key)
-	{
+	public InputProcessor findInputByID (int key) {
 		return mInputMap.get(key);
 	}
 
-	public void addMotionCallback (MotionCallBack callback)
-	{
-		if (!mMotionList.contains(callback))
-			mMotionList.add(callback);
+	public void addMotionCallback (MotionCallBack callback) {
+		if (!mMotionList.contains(callback)) mMotionList.add(callback);
 	}
 
-	public void addKeyCallback (KeyCallBack callback)
-	{
-		if (!mKeysList.contains(callback))
-			mKeysList.add(callback);
+	public void addKeyCallback (KeyCallBack callback) {
+		if (!mKeysList.contains(callback)) mKeysList.add(callback);
 	}
 
 	/** Register a new callback to listen to input event
 	 * 
 	 * @param callback new Call back */
-	public void addCallback (Callback callback)
-	{
+	public void addCallback (Callback callback) {
 		if (callback instanceof MotionCallBack && callback instanceof KeyCallBack) {
-			if (!mMotionList.contains(callback))
-				mMotionList.add((MotionCallBack)callback);
-			if (!mKeysList.contains(callback))
-				mKeysList.add((KeyCallBack)callback);
+			if (!mMotionList.contains(callback)) mMotionList.add((MotionCallBack)callback);
+			if (!mKeysList.contains(callback)) mKeysList.add((KeyCallBack)callback);
 		} else if (callback instanceof MotionCallBack) {
-			if (!mMotionList.contains(callback))
-				mMotionList.add((MotionCallBack)callback);
+			if (!mMotionList.contains(callback)) mMotionList.add((MotionCallBack)callback);
 		} else if (callback instanceof KeyCallBack) {
-			if (!mKeysList.contains(callback))
-				this.mKeysList.add((KeyCallBack)callback);
+			if (!mKeysList.contains(callback)) this.mKeysList.add((KeyCallBack)callback);
 		}
 	}
 
-	public boolean removeMotionCallback (MotionCallBack callback)
-	{
+	public boolean removeMotionCallback (MotionCallBack callback) {
 		return mMotionList.remove(callback);
 	}
 
-	public boolean removeKeyCallback (KeyCallBack callback)
-	{
+	public boolean removeKeyCallback (KeyCallBack callback) {
 		return mKeysList.remove(callback);
 	}
 
-	public boolean removeCallback (MotionCallBack motionCallback, KeyCallBack keyCallback)
-	{
+	public boolean removeCallback (MotionCallBack motionCallback, KeyCallBack keyCallback) {
 		return mMotionList.remove(motionCallback) & mMotionList.remove(keyCallback);
 	}
 
@@ -351,11 +319,9 @@ public class eInput implements InputProcessor
 	 * 
 	 * @param callback the callback
 	 * @return true if success remove, otherwise false */
-	public boolean removeCallback (Callback callback)
-	{
+	public boolean removeCallback (Callback callback) {
 		if (callback instanceof MotionCallBack && callback instanceof KeyCallBack) {
-			return mMotionList.remove((MotionCallBack)callback)
-				& mKeysList.remove((KeyCallBack)callback);
+			return mMotionList.remove((MotionCallBack)callback) & mKeysList.remove((KeyCallBack)callback);
 		} else if (callback instanceof MotionCallBack) {
 			return mMotionList.remove((MotionCallBack)callback);
 		} else if (callback instanceof KeyCallBack) {
@@ -364,206 +330,165 @@ public class eInput implements InputProcessor
 		return false;
 	}
 
-	public boolean containKeyCallback (KeyCallBack callback)
-	{
+	public boolean containKeyCallback (KeyCallBack callback) {
 		return mKeysList.contains(callback);
 	}
 
-	public boolean containMotionCallback (MotionCallBack callback)
-	{
+	public boolean containMotionCallback (MotionCallBack callback) {
 		return mMotionList.contains(callback);
 	}
 
 	/*************************************************************** Method from Gdx.input ***************************************************************/
 
-	public int getLastTouchPointer ()
-	{
+	public int getLastTouchPointer () {
 		return mLastTouchPointer;
 	}
 
-	public float getAccelerometerX ()
-	{
+	public float getAccelerometerX () {
 		return Gdx.input.getAccelerometerX();
 	}
 
-	public float getAccelerometerY ()
-	{
+	public float getAccelerometerY () {
 		return Gdx.input.getAccelerometerY();
 	}
 
-	public float getAccelerometerZ ()
-	{
+	public float getAccelerometerZ () {
 		return Gdx.input.getAccelerometerZ();
 	}
 
-	public int getX ()
-	{
+	public int getX () {
 		return Gdx.input.getX();
 	}
 
-	public float getProjectedX ()
-	{
+	public float getProjectedX () {
 		return projectedX;
 	}
 
-	public float getProjectedY ()
-	{
+	public float getProjectedY () {
 		return projectedY;
 	}
 
-	public int getX (int pointer)
-	{
+	public int getX (int pointer) {
 		return Gdx.input.getX(pointer);
 	}
 
-	public int getDeltaX ()
-	{
+	public int getDeltaX () {
 		return Gdx.input.getDeltaX();
 	}
 
-	public int getDeltaX (int pointer)
-	{
+	public int getDeltaX (int pointer) {
 		return Gdx.input.getDeltaX(pointer);
 	}
 
-	public int getY ()
-	{
+	public int getY () {
 		return Gdx.graphics.getHeight() - Gdx.input.getY();
 	}
 
-	public int getY (int pointer)
-	{
+	public int getY (int pointer) {
 		return Gdx.graphics.getHeight() - Gdx.input.getY(pointer);
 	}
 
-	public int getDeltaY ()
-	{
+	public int getDeltaY () {
 		return -Gdx.input.getDeltaY();
 	}
 
-	public int getDeltaY (int pointer)
-	{
+	public int getDeltaY (int pointer) {
 		return -Gdx.input.getDeltaY(pointer);
 	}
 
-	public boolean isTouched ()
-	{
+	public boolean isTouched () {
 		return Gdx.input.isTouched();
 	}
 
-	public boolean justTouched ()
-	{
+	public boolean justTouched () {
 		return Gdx.input.justTouched();
 	}
 
-	public boolean isTouched (int pointer)
-	{
+	public boolean isTouched (int pointer) {
 		return Gdx.input.isTouched(pointer);
 	}
 
-	public boolean isButtonPressed (int button)
-	{
+	public boolean isButtonPressed (int button) {
 		return Gdx.input.isButtonPressed(button);
 	}
 
-	public boolean isKeyPressed (int key)
-	{
+	public boolean isKeyPressed (int key) {
 		return Gdx.input.isKeyPressed(key);
 	}
 
-	public void getTextInput (TextInputListener listener, String title, String text)
-	{
+	public void getTextInput (TextInputListener listener, String title, String text) {
 		Gdx.input.getTextInput(listener, title, text);
 	}
 
-	public void getPlaceholderTextInput (TextInputListener listener, String title,
-		String placeholder)
-	{
+	public void getPlaceholderTextInput (TextInputListener listener, String title, String placeholder) {
 		Gdx.input.getPlaceholderTextInput(listener, title, placeholder);
 	}
 
-	public void setOnscreenKeyboardVisible (boolean visible)
-	{
+	public void setOnscreenKeyboardVisible (boolean visible) {
 		Gdx.input.setOnscreenKeyboardVisible(visible);
 	}
 
-	public void vibrate (int milliseconds)
-	{
+	public void vibrate (int milliseconds) {
 		Gdx.input.vibrate(milliseconds);
 	}
 
-	public void vibrate (long[] pattern, int repeat)
-	{
+	public void vibrate (long[] pattern, int repeat) {
 		Gdx.input.vibrate(pattern, repeat);
 	}
 
-	public void cancelVibrate ()
-	{
+	public void cancelVibrate () {
 		Gdx.input.cancelVibrate();
 	}
 
-	public float getAzimuth ()
-	{
+	public float getAzimuth () {
 		return Gdx.input.getAzimuth();
 	}
 
-	public float getPitch ()
-	{
+	public float getPitch () {
 		return Gdx.input.getPitch();
 	}
 
-	public float getRoll ()
-	{
+	public float getRoll () {
 		return Gdx.input.getRoll();
 	}
 
-	public void getRotationMatrix (float[] matrix)
-	{
+	public void getRotationMatrix (float[] matrix) {
 		Gdx.input.getRotationMatrix(matrix);
 	}
 
-	public long getCurrentEventTime ()
-	{
+	public long getCurrentEventTime () {
 		return Gdx.input.getCurrentEventTime();
 	}
 
-	public void setCatchBackKey (boolean catchBack)
-	{
+	public void setCatchBackKey (boolean catchBack) {
 		Gdx.input.setCatchBackKey(catchBack);
 	}
 
-	public void setCatchMenuKey (boolean catchMenu)
-	{
+	public void setCatchMenuKey (boolean catchMenu) {
 		Gdx.input.setCatchMenuKey(catchMenu);
 	}
 
-	public boolean isPeripheralAvailable (Peripheral peripheral)
-	{
+	public boolean isPeripheralAvailable (Peripheral peripheral) {
 		return Gdx.input.isPeripheralAvailable(peripheral);
 	}
 
-	public int getRotation ()
-	{
+	public int getRotation () {
 		return Gdx.input.getRotation();
 	}
 
-	public Orientation getNativeOrientation ()
-	{
+	public Orientation getNativeOrientation () {
 		return Gdx.input.getNativeOrientation();
 	}
 
-	public void setCursorCatched (boolean catched)
-	{
+	public void setCursorCatched (boolean catched) {
 		Gdx.input.setCursorCatched(catched);
 	}
 
-	public boolean isCursorCatched ()
-	{
+	public boolean isCursorCatched () {
 		return Gdx.input.isCursorCatched();
 	}
 
-	public void setCursorPosition (int x, int y)
-	{
+	public void setCursorPosition (int x, int y) {
 		Gdx.input.setCursorPosition(x, y);
 	}
 
@@ -571,13 +496,11 @@ public class eInput implements InputProcessor
 	 * 
 	 ***************************************************************/
 
-	public interface Callback
-	{
+	public interface Callback {
 
 	}
 
-	public interface MotionCallBack extends Callback
-	{
+	public interface MotionCallBack extends Callback {
 
 		/** Called when the screen was touched or a mouse button was pressed. The button parameter will be {@link Buttons#LEFT} on
 		 * Android.
@@ -615,8 +538,7 @@ public class eInput implements InputProcessor
 		public boolean onTouchMoved (int x, int y);
 	}
 
-	public interface KeyCallBack extends Callback
-	{
+	public interface KeyCallBack extends Callback {
 
 		/** Called when a key was pressed
 		 * 

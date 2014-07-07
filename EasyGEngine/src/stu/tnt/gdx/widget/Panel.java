@@ -1,3 +1,4 @@
+
 package stu.tnt.gdx.widget;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -7,10 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 
 public class Panel extends Group {
-	final Image	mBackground;
-	PanelStyle	mStyle;
+	final Image mBackground;
+	PanelStyle mStyle;
 
-	boolean		isStarting;
+	boolean isStarting;
 
 	public Panel () {
 		super();
@@ -108,6 +109,6 @@ public class Panel extends Group {
 	 **********************************************************/
 
 	public static class PanelStyle {
-		public Drawable	background;
+		public Drawable background;
 	}
 }

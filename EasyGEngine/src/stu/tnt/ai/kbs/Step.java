@@ -30,16 +30,14 @@ public class Step extends Valueable {
 		if (outValuabe != null)
 			for (String string : outValuabe) {
 				final Valueable val = kbs().findValueable(string);
-				if (val.isBinded()) {
+				if (val != null && val.isBinded())
 					mOutValueables.add(val);
-				}
 			}
 
 		for (String string : valueableName) {
 			final Valueable val = kbs().findValueable(string);
-			if (val.isBinded()) {
+			if (val != null && val.isBinded())
 				mValueables.add(val);
-			}
 		}
 
 		mAction = kbs().findAction(actionName);
