@@ -1,3 +1,4 @@
+
 package stu.tnt.gdx.graphics.graphics2d;
 
 import static com.badlogic.gdx.graphics.g2d.Batch.C1;
@@ -34,15 +35,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
 
 /**
- * Holds the geometry, color, and texture information for drawing 2D sprites
- * using {@link SpriteBatch}. A Sprite has a position and a size given as width
- * and height. The position is relative to the origin of the coordinate system
- * specified via {@link SpriteBatch#begin()} and the respective matrices. A
- * Sprite is always rectangular and its position (x, y) are located in the
- * bottom left corner of that rectangle. A Sprite also has an origin around
- * which rotations and scaling are performed (that is, the origin is not
- * modified by rotation and scaling). The origin is given relative to the bottom
- * left corner of the Sprite, its position.
+ * Holds the geometry, color, and texture information for drawing 2D sprites using {@link SpriteBatch}. A Sprite has a position
+ * and a size given as width and height. The position is relative to the origin of the coordinate system specified via
+ * {@link SpriteBatch#begin()} and the respective matrices. A Sprite is always rectangular and its position (x, y) are located in
+ * the bottom left corner of that rectangle. A Sprite also has an origin around which rotations and scaling are performed (that
+ * is, the origin is not modified by rotation and scaling). The origin is given relative to the bottom left corner of the Sprite,
+ * its position.
  * 
  * @author mzechner
  * @author Nathan Sweet
@@ -70,49 +68,39 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	private Array<Updater> mUpdater = new Array<Updater>();
 
 	/**
-	 * Creates an uninitialized sprite. The sprite will need a texture region
-	 * and bounds set before it can be drawn.
+	 * Creates an uninitialized sprite. The sprite will need a texture region and bounds set before it can be drawn.
 	 */
-	public eSprite() {
+	public eSprite () {
 		setColor(1, 1, 1, 1);
 	}
 
 	/**
-	 * Creates a sprite with width, height, and texture region equal to the size
-	 * of the texture.
+	 * Creates a sprite with width, height, and texture region equal to the size of the texture.
 	 */
-	public eSprite(Texture texture) {
+	public eSprite (Texture texture) {
 		this(texture, 0, 0, texture.getWidth(), texture.getHeight());
 	}
 
 	/**
-	 * Creates a sprite with width, height, and texture region equal to the
-	 * specified size. The texture region's upper left corner will be 0,0. * @param
-	 * srcWidth The width of the texture region. May be negative to flip the
-	 * sprite when drawn.
+	 * Creates a sprite with width, height, and texture region equal to the specified size. The texture region's upper left corner
+	 * will be 0,0. * @param srcWidth The width of the texture region. May be negative to flip the sprite when drawn.
 	 * 
-	 * @param srcHeight
-	 *            The height of the texture region. May be negative to flip the
-	 *            sprite when drawn.
+	 * @param srcHeight The height of the texture region. May be negative to flip the sprite when drawn.
 	 */
-	public eSprite(Texture texture, int srcWidth, int srcHeight) {
+	public eSprite (Texture texture, int srcWidth, int srcHeight) {
 		this(texture, 0, 0, srcWidth, srcHeight);
 	}
 
 	/**
-	 * Creates a sprite with width, height, and texture region equal to the
-	 * specified size. * @param srcWidth The width of the texture region. May be
-	 * negative to flip the sprite when drawn.
+	 * Creates a sprite with width, height, and texture region equal to the specified size. * @param srcWidth The width of the
+	 * texture region. May be negative to flip the sprite when drawn.
 	 * 
-	 * @param srcHeight
-	 *            The height of the texture region. May be negative to flip the
-	 *            sprite when drawn.
+	 * @param srcHeight The height of the texture region. May be negative to flip the sprite when drawn.
 	 */
-	public eSprite(Texture texture, int srcX, int srcY, int srcWidth,
-			int srcHeight) {
-		if (texture == null)
-			throw new IllegalArgumentException("texture cannot be null.");
-		this.texture = texture;
+	public eSprite (Texture texture, int srcX, int srcY, int srcWidth, int srcHeight) {
+		super(texture);
+
+		if (texture == null) throw new IllegalArgumentException("texture cannot be null.");
 		setRegion(srcX, srcY, srcWidth, srcHeight);
 		setColor(1, 1, 1, 1);
 		setSize(Math.abs(srcWidth), Math.abs(srcHeight));
@@ -120,7 +108,7 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	}
 
 	// Note the region is copied.
-	public eSprite(TextureRegion region) {
+	public eSprite (TextureRegion region) {
 		setRegion(region);
 		setColor(1, 1, 1, 1);
 		setSize(region.getRegionWidth(), region.getRegionHeight());
@@ -128,18 +116,13 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	}
 
 	/**
-	 * Creates a sprite with width, height, and texture region equal to the
-	 * specified size, relative to specified sprite's texture region.
+	 * Creates a sprite with width, height, and texture region equal to the specified size, relative to specified sprite's texture
+	 * region.
 	 * 
-	 * @param srcWidth
-	 *            The width of the texture region. May be negative to flip the
-	 *            sprite when drawn.
-	 * @param srcHeight
-	 *            The height of the texture region. May be negative to flip the
-	 *            sprite when drawn.
+	 * @param srcWidth The width of the texture region. May be negative to flip the sprite when drawn.
+	 * @param srcHeight The height of the texture region. May be negative to flip the sprite when drawn.
 	 */
-	public eSprite(TextureRegion region, int srcX, int srcY, int srcWidth,
-			int srcHeight) {
+	public eSprite (TextureRegion region, int srcX, int srcY, int srcWidth, int srcHeight) {
 		setRegion(region, srcX, srcY, srcWidth, srcHeight);
 		setColor(1, 1, 1, 1);
 		setSize(Math.abs(srcWidth), Math.abs(srcHeight));
@@ -147,19 +130,15 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	}
 
 	/** Creates a sprite that is a copy in every way of the specified sprite. */
-	public eSprite(eSprite sprite) {
+	public eSprite (eSprite sprite) {
 		set(sprite);
 	}
 
-	public void set(eSprite sprite) {
-		if (sprite == null)
-			throw new IllegalArgumentException("sprite cannot be null.");
+	public void set (eSprite sprite) {
+		if (sprite == null) throw new IllegalArgumentException("sprite cannot be null.");
 		System.arraycopy(sprite.vertices, 0, vertices, 0, SPRITE_SIZE);
-		texture = sprite.texture;
-		u = sprite.u;
-		v = sprite.v;
-		u2 = sprite.u2;
-		v2 = sprite.v2;
+		setTexture(sprite.getTexture());
+		setRegion(sprite.getU(), sprite.getV(), sprite.getU2(), sprite.getV2());
 		x = sprite.x;
 		y = sprite.y;
 		width = sprite.width;
@@ -174,18 +153,16 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	}
 
 	/**
-	 * Sets the position and size of the sprite when drawn, before scaling and
-	 * rotation are applied. If origin, rotation, or scale are changed, it is
-	 * slightly more efficient to set the bounds after those operations.
+	 * Sets the position and size of the sprite when drawn, before scaling and rotation are applied. If origin, rotation, or scale
+	 * are changed, it is slightly more efficient to set the bounds after those operations.
 	 */
-	public void setBounds(float x, float y, float width, float height) {
+	public void setBounds (float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 
-		if (dirty)
-			return;
+		if (dirty) return;
 
 		float x2 = x + width;
 		float y2 = y + height;
@@ -202,23 +179,19 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		vertices[X4] = x2;
 		vertices[Y4] = y;
 
-		if (rotation != 0 || scaleX != 1 || scaleY != 1)
-			dirty = true;
+		if (rotation != 0 || scaleX != 1 || scaleY != 1) dirty = true;
 	}
 
 	/**
-	 * Sets the size of the sprite when drawn, before scaling and rotation are
-	 * applied. If origin, rotation, or scale are changed, it is slightly more
-	 * efficient to set the size after those operations. If both position and
-	 * size are to be changed, it is better to use
-	 * {@link #setBounds(float, float, float, float)}.
+	 * Sets the size of the sprite when drawn, before scaling and rotation are applied. If origin, rotation, or scale are changed,
+	 * it is slightly more efficient to set the size after those operations. If both position and size are to be changed, it is
+	 * better to use {@link #setBounds(float, float, float, float)}.
 	 */
-	public void setSize(float width, float height) {
+	public void setSize (float width, float height) {
 		this.width = width;
 		this.height = height;
 
-		if (dirty)
-			return;
+		if (dirty) return;
 
 		float x2 = x + width;
 		float y2 = y + height;
@@ -235,50 +208,44 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		vertices[X4] = x2;
 		vertices[Y4] = y;
 
-		if (rotation != 0 || scaleX != 1 || scaleY != 1)
-			dirty = true;
+		if (rotation != 0 || scaleX != 1 || scaleY != 1) dirty = true;
 	}
 
 	/**
-	 * Sets the position where the sprite will be drawn. If origin, rotation, or
-	 * scale are changed, it is slightly more efficient to set the position
-	 * after those operations. If both position and size are to be changed, it
-	 * is better to use {@link #setBounds(float, float, float, float)}.
+	 * Sets the position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
+	 * to set the position after those operations. If both position and size are to be changed, it is better to use
+	 * {@link #setBounds(float, float, float, float)}.
 	 */
-	public void setPosition(float x, float y) {
+	public void setPosition (float x, float y) {
 		translate(x - this.x, y - this.y);
 	}
 
 	/**
-	 * Sets the x position where the sprite will be drawn. If origin, rotation,
-	 * or scale are changed, it is slightly more efficient to set the position
-	 * after those operations. If both position and size are to be changed, it
-	 * is better to use {@link #setBounds(float, float, float, float)}.
+	 * Sets the x position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
+	 * to set the position after those operations. If both position and size are to be changed, it is better to use
+	 * {@link #setBounds(float, float, float, float)}.
 	 */
-	public void setX(float x) {
+	public void setX (float x) {
 		translateX(x - this.x);
 	}
 
 	/**
-	 * Sets the y position where the sprite will be drawn. If origin, rotation,
-	 * or scale are changed, it is slightly more efficient to set the position
-	 * after those operations. If both position and size are to be changed, it
-	 * is better to use {@link #setBounds(float, float, float, float)}.
+	 * Sets the y position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
+	 * to set the position after those operations. If both position and size are to be changed, it is better to use
+	 * {@link #setBounds(float, float, float, float)}.
 	 */
-	public void setY(float y) {
+	public void setY (float y) {
 		translateY(y - this.y);
 	}
 
 	/**
-	 * Sets the x position relative to the current position where the sprite
-	 * will be drawn. If origin, rotation, or scale are changed, it is slightly
-	 * more efficient to translate after those operations.
+	 * Sets the x position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
 	 */
-	public void translateX(float xAmount) {
+	public void translateX (float xAmount) {
 		this.x += xAmount;
 
-		if (dirty)
-			return;
+		if (dirty) return;
 
 		final float[] vertices = this.vertices;
 		vertices[X1] += xAmount;
@@ -288,15 +255,13 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	}
 
 	/**
-	 * Sets the y position relative to the current position where the sprite
-	 * will be drawn. If origin, rotation, or scale are changed, it is slightly
-	 * more efficient to translate after those operations.
+	 * Sets the y position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
 	 */
-	public void translateY(float yAmount) {
+	public void translateY (float yAmount) {
 		y += yAmount;
 
-		if (dirty)
-			return;
+		if (dirty) return;
 
 		final float[] vertices = this.vertices;
 		vertices[Y1] += yAmount;
@@ -306,16 +271,14 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	}
 
 	/**
-	 * Sets the position relative to the current position where the sprite will
-	 * be drawn. If origin, rotation, or scale are changed, it is slightly more
-	 * efficient to translate after those operations.
+	 * Sets the position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
 	 */
-	public void translate(float xAmount, float yAmount) {
+	public void translate (float xAmount, float yAmount) {
 		x += xAmount;
 		y += yAmount;
 
-		if (dirty)
-			return;
+		if (dirty) return;
 
 		final float[] vertices = this.vertices;
 		vertices[X1] += xAmount;
@@ -331,7 +294,7 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		vertices[Y4] += yAmount;
 	}
 
-	public void setColor(Color tint) {
+	public void setColor (Color tint) {
 		float color = tint.toFloatBits();
 		final float[] vertices = this.vertices;
 		vertices[C1] = color;
@@ -340,7 +303,7 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		vertices[C4] = color;
 	}
 
-	public void setColor(float color) {
+	public void setColor (float color) {
 		final float[] vertices = eSprite.this.vertices;
 		vertices[C1] = color;
 		vertices[C2] = color;
@@ -348,9 +311,8 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		vertices[C4] = color;
 	}
 
-	public void setColor(float r, float g, float b, float a) {
-		int intBits = ((int) (255 * a) << 24) | ((int) (255 * b) << 16)
-				| ((int) (255 * g) << 8) | ((int) (255 * r));
+	public void setColor (float r, float g, float b, float a) {
+		int intBits = ((int)(255 * a) << 24) | ((int)(255 * b) << 16) | ((int)(255 * g) << 8) | ((int)(255 * r));
 		float color = NumberUtils.intToFloatColor(intBits);
 		final float[] vertices = this.vertices;
 		vertices[C1] = color;
@@ -360,32 +322,30 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	}
 
 	/**
-	 * Sets the origin in relation to the sprite's position for scaling and
-	 * rotation.
+	 * Sets the origin in relation to the sprite's position for scaling and rotation.
 	 */
-	public void setOrigin(float originX, float originY) {
+	public void setOrigin (float originX, float originY) {
 		this.originX = originX;
 		this.originY = originY;
 		dirty = true;
 	}
 
-	public void setRotation(float degrees) {
+	public void setRotation (float degrees) {
 		this.rotation = degrees;
 		dirty = true;
 	}
 
 	/** Sets the sprite's rotation relative to the current rotation. */
-	public void rotate(float degrees) {
+	public void rotate (float degrees) {
 		rotation += degrees;
 		dirty = true;
 	}
 
 	/**
-	 * Rotates this sprite 90 degrees in-place by rotating the texture
-	 * coordinates. This rotation is unaffected by {@link #setRotation(float)}
-	 * and {@link #rotate(float)}.
+	 * Rotates this sprite 90 degrees in-place by rotating the texture coordinates. This rotation is unaffected by
+	 * {@link #setRotation(float)} and {@link #rotate(float)}.
 	 */
-	public void rotate90(boolean clockwise) {
+	public void rotate90 (boolean clockwise) {
 		float[] vertices = this.vertices;
 
 		if (clockwise) {
@@ -415,30 +375,29 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		}
 	}
 
-	public void setScale(float scaleXY) {
+	public void setScale (float scaleXY) {
 		this.scaleX = scaleXY;
 		this.scaleY = scaleXY;
 		dirty = true;
 	}
 
-	public void setScale(float scaleX, float scaleY) {
+	public void setScale (float scaleX, float scaleY) {
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
 		dirty = true;
 	}
 
 	/** Sets the sprite's scale relative to the current scale. */
-	public void scale(float amount) {
+	public void scale (float amount) {
 		this.scaleX += amount;
 		this.scaleY += amount;
 		dirty = true;
 	}
 
 	/**
-	 * Returns the packed vertices, colors, and texture coordinates for this
-	 * sprite.
+	 * Returns the packed vertices, colors, and texture coordinates for this sprite.
 	 */
-	public float[] getVertices() {
+	public float[] getVertices () {
 		if (dirty) {
 			dirty = false;
 
@@ -506,19 +465,18 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		return vertices;
 	}
 
-	public Circle getBoundingCircle() {
+	public Circle getBoundingCircle () {
 		return null;
 	}
 
 	/**
-	 * Returns the bounding axis aligned {@link Rectangle} that bounds this
-	 * sprite. The rectangles x and y coordinates describe its bottom left
-	 * corner. If you change the position or size of the sprite, you have to
-	 * fetch the triangle again for it to be recomputed.
+	 * Returns the bounding axis aligned {@link Rectangle} that bounds this sprite. The rectangles x and y coordinates describe its
+	 * bottom left corner. If you change the position or size of the sprite, you have to fetch the triangle again for it to be
+	 * recomputed.
 	 * 
 	 * @return the bounding Rectangle
 	 */
-	public Rectangle getBoundingRectangle() {
+	public Rectangle getBoundingRectangle () {
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -551,7 +509,7 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 	}
 
 	@Override
-	public float[] getBoundingFloatRect(float offset) {
+	public float[] getBoundingFloatRect (float offset) {
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -588,11 +546,11 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		return rect;
 	}
 
-	public void draw(Batch spriteBatch) {
-		spriteBatch.draw(texture, getVertices(), 0, SPRITE_SIZE);
+	public void draw (Batch spriteBatch) {
+		spriteBatch.draw(getTexture(), getVertices(), 0, SPRITE_SIZE);
 	}
 
-	public void draw(Batch spriteBatch, float alphaModulation) {
+	public void draw (Batch spriteBatch, float alphaModulation) {
 		Color color = getColor();
 		float oldAlpha = color.a;
 		color.a *= alphaModulation;
@@ -602,11 +560,10 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		setColor(color);
 	}
 
-	public void update(float delta) {
+	public void update (float delta) {
 
 		for (int i = 0, n = mUpdater.size; i < n; i++) {
-			if (mUpdater.size == 0)
-				continue;
+			if (mUpdater.size == 0) continue;
 
 			final Updater tmp = mUpdater.get(i);
 			if (!tmp.isStoped())
@@ -619,32 +576,31 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		}
 	}
 
-	public void postUpdater(Updater updater) {
-		if (mUpdater.contains(updater, true))
-			return;
+	public void postUpdater (Updater updater) {
+		if (mUpdater.contains(updater, true)) return;
 
 		updater.start();
 		this.mUpdater.add(updater);
 	}
 
 	@Override
-	public void removeUpdater(Updater updater) {
+	public void removeUpdater (Updater updater) {
 		mUpdater.removeValue(updater, true);
 	}
 
-	public void noUpdater() {
+	public void noUpdater () {
 		this.mUpdater.clear();
 	}
 
-	public int sizeUpdater() {
+	public int sizeUpdater () {
 		return mUpdater.size;
 	}
 
-	public float getX() {
+	public float getX () {
 		return x;
 	}
 
-	public float getCenterX() {
+	public float getCenterX () {
 		final float[] vertices = getVertices();
 
 		float minx = vertices[X1];
@@ -661,11 +617,11 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		return (minx + maxx) / 2;
 	}
 
-	public float getY() {
+	public float getY () {
 		return y;
 	}
 
-	public float getCenterY() {
+	public float getCenterY () {
 		final float[] vertices = getVertices();
 
 		float miny = vertices[Y1];
@@ -682,40 +638,39 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		return (miny + maxy) / 2;
 	}
 
-	public float getWidth() {
+	public float getWidth () {
 		return width;
 	}
 
-	public float getHeight() {
+	public float getHeight () {
 		return height;
 	}
 
-	public float getOriginX() {
+	public float getOriginX () {
 		return originX;
 	}
 
-	public float getOriginY() {
+	public float getOriginY () {
 		return originY;
 	}
 
-	public float getRotation() {
+	public float getRotation () {
 		return rotation;
 	}
 
-	public float getScaleX() {
+	public float getScaleX () {
 		return scaleX;
 	}
 
-	public float getScaleY() {
+	public float getScaleY () {
 		return scaleY;
 	}
 
 	/**
-	 * Returns the color of this sprite. Changing the returned color will have
-	 * no affect, {@link #setColor(Color)} or
+	 * Returns the color of this sprite. Changing the returned color will have no affect, {@link #setColor(Color)} or
 	 * {@link #setColor(float, float, float, float)} must be used.
 	 */
-	public Color getColor() {
+	public Color getColor () {
 		float floatBits = vertices[C1];
 		int intBits = NumberUtils.floatToIntColor(vertices[C1]);
 		Color color = this.color;
@@ -726,7 +681,7 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		return color;
 	}
 
-	public void setRegion(float u, float v, float u2, float v2) {
+	public void setRegion (float u, float v, float u2, float v2) {
 		super.setRegion(u, v, u2, v2);
 
 		float[] vertices = eSprite.this.vertices;
@@ -743,31 +698,31 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		vertices[V4] = v2;
 	}
 
-	public void setU(float u) {
+	public void setU (float u) {
 		super.setU(u);
 		vertices[U1] = u;
 		vertices[U2] = u;
 	}
 
-	public void setV(float v) {
+	public void setV (float v) {
 		super.setV(v);
 		vertices[V2] = v;
 		vertices[V3] = v;
 	}
 
-	public void setU2(float u2) {
+	public void setU2 (float u2) {
 		super.setU2(u2);
 		vertices[U3] = u2;
 		vertices[U4] = u2;
 	}
 
-	public void setV2(float v2) {
+	public void setV2 (float v2) {
 		super.setV2(v2);
 		vertices[V1] = v2;
 		vertices[V4] = v2;
 	}
 
-	public void flip(boolean x, boolean y) {
+	public void flip (boolean x, boolean y) {
 		super.flip(x, y);
 		float[] vertices = eSprite.this.vertices;
 		if (x) {
@@ -788,13 +743,13 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		}
 	}
 
-	public void scroll(float xAmount, float yAmount) {
+	public void scroll (float xAmount, float yAmount) {
 		final float[] vertices = eSprite.this.vertices;
 		if (xAmount != 0) {
 			float u = (vertices[U1] + xAmount) % 1;
-			float u2 = u + width / texture.getWidth();
-			this.u = u;
-			this.u2 = u2;
+			float u2 = u + width / getTexture().getWidth();
+			setU(u);
+			setU2(u2);
 			vertices[U1] = u;
 			vertices[U2] = u;
 			vertices[U3] = u2;
@@ -802,9 +757,9 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		}
 		if (yAmount != 0) {
 			float v = (vertices[V2] + yAmount) % 1;
-			float v2 = v + height / texture.getHeight();
-			this.v = v;
-			this.v2 = v2;
+			float v2 = v + height / getTexture().getHeight();
+			setV(v);
+			setV2(v2);
 			vertices[V1] = v2;
 			vertices[V2] = v;
 			vertices[V3] = v;
@@ -812,16 +767,15 @@ public class eSprite extends TextureRegion implements SpriteBackend {
 		}
 	}
 
-	public boolean hit(float x, float y) {
-		if (x >= this.x && x <= (this.x + width) && y >= this.y
-				&& y <= (this.y + height)) {
+	public boolean hit (float x, float y) {
+		if (x >= this.x && x <= (this.x + width) && y >= this.y && y <= (this.y + height)) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public void reset() {
+	public void reset () {
 		setSize(0, 0);
 		setPosition(0, 0);
 		setOrigin(0, 0);

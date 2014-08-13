@@ -1,3 +1,4 @@
+
 package stu.tnt.gdx.widget;
 
 import stu.tnt.gdx.core.eAdmin;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 /**
  * Layout is more flexible by using multi panel to present final UI
@@ -46,8 +49,10 @@ public class Layout extends Stage implements Pauseable {
 
 	final Image mBackground;
 
-	public Layout(boolean strecth) {
-		super(eAdmin.uiWidth(), eAdmin.uiHeight(), strecth);
+	public Layout (boolean strecth) {
+		super(strecth ? new StretchViewport(eAdmin.uiWidth(), eAdmin.uiHeight()) : new ScalingViewport(Scaling.none,
+			eAdmin.uiWidth(), eAdmin.uiHeight()));
+		
 		addPanelToRoot(mDefaultPanel);
 		mCurPanel = mDefaultPanel;
 		mDefaultPanel.setBounds(0, 0, eAdmin.uiWidth(), eAdmin.uiHeight());
@@ -67,19 +72,17 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 *******************************************************/
 
-	public void setBackground(Drawable drawable) {
-		if (mBackground.getParent() == null)
-			mDefaultPanel.addActorAt(0, mBackground);
+	public void setBackground (Drawable drawable) {
+		if (mBackground.getParent() == null) mDefaultPanel.addActorAt(0, mBackground);
 		mBackground.setDrawable(drawable);
 	}
 
-	public void setBackground(TextureRegion region) {
-		if (mBackground.getParent() == null)
-			mDefaultPanel.addActorAt(0, mBackground);
+	public void setBackground (TextureRegion region) {
+		if (mBackground.getParent() == null) mDefaultPanel.addActorAt(0, mBackground);
 		mBackground.setDrawable(new TextureRegionDrawable(region));
 	}
 
-	public Image getBackground() {
+	public Image getBackground () {
 		return mBackground;
 	}
 
@@ -87,12 +90,12 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 *******************************************************/
 
-	public void addAction(Action action) {
+	public void addAction (Action action) {
 		mBackground.addAction(action);
 		getRoot().addAction(action);
 	}
 
-	public Layout setEnable(boolean enable) {
+	public Layout setEnable (boolean enable) {
 		mBackground.setTouchable(Touchable.enabled);
 		return this;
 	}
@@ -106,7 +109,7 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 * @param panel
 	 */
-	public void addPanel(Panel panel) {
+	public void addPanel (Panel panel) {
 		addPanelToRoot(panel);
 	}
 
@@ -115,7 +118,7 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 * @return
 	 */
-	public Panel createPanel() {
+	public Panel createPanel () {
 		Panel panel = new Panel();
 		mCurPanel = panel;
 		addPanelToRoot(panel);
@@ -127,17 +130,15 @@ public class Layout extends Stage implements Pauseable {
 	 * 
 	 * @return
 	 */
-	public Panel createSafeModePanel() {
+	public Panel createSafeModePanel () {
 		// save visible list
 		mCurrentVisiblePanel.clear();
 		Array<Actor> list = getActors();
 		for (Actor a : list)
-			if (a.isVisible())
-				mCurrentVisiblePanel.add(a);
+			if (a.isVisible()) mCurrentVisiblePanel.add(a);
 
 		// create safe panel
-		if (mSafeModePanel == null)
-			mSafeModePanel = new Panel();
+		if (mSafeModePanel == null) mSafeModePanel = new Panel();
 
 		mSafeModePanel.setVisible(true);
 		mCurPanel = mSafeModePanel;
@@ -150,7 +151,7 @@ public class Layout extends Stage implements Pauseable {
 	/**
 	 * Restore the panel state to the before enable safe mode
 	 */
-	public void restore() {
+	public void restore () {
 		if (isSafeModeEnable) {
 			mSafeModePanel.clear();
 			getRoot().removeActor(mSafeModePanel);
@@ -161,11 +162,11 @@ public class Layout extends Stage implements Pauseable {
 		}
 	}
 
-	public void removePanel(Panel panel) {
+	public void removePanel (Panel panel) {
 		getRoot().removeActor(panel);
 	}
 
-	public void setVisiblePanel(Panel... list) {
+	public void setVisiblePanel (Panel... list) {
 		Array<Actor> root = getActors();
 		for (Actor a : root)
 			a.setVisible(false);
@@ -173,7 +174,7 @@ public class Layout extends Stage implements Pauseable {
 			panel.setVisible(true);
 	}
 
-	public void setToDefault() {
+	public void setToDefault () {
 		mCurPanel = mDefaultPanel;
 		Array<Actor> root = getActors();
 		for (Actor a : root)
@@ -181,25 +182,25 @@ public class Layout extends Stage implements Pauseable {
 		mDefaultPanel.setVisible(true);
 	}
 
-	public void setToCurrent() {
+	public void setToCurrent () {
 		Array<Actor> root = getActors();
 		for (Actor a : root)
 			a.setVisible(false);
 		mCurPanel.setVisible(true);
 	}
 
-	private void addPanelToRoot(Panel panel) {
+	private void addPanelToRoot (Panel panel) {
 		getRoot().addActor(panel);
 	}
 
 	// ==========================================
 	// getter method
 
-	public Panel getCurrentPanel() {
+	public Panel getCurrentPanel () {
 		return mCurPanel;
 	}
 
-	public Panel getDefaultPanel() {
+	public Panel getDefaultPanel () {
 		return mDefaultPanel;
 	}
 
@@ -209,25 +210,24 @@ public class Layout extends Stage implements Pauseable {
 	private Panel mCurPanel = mDefaultPanel;
 
 	@Override
-	public void addActor(Actor actor) {
+	public void addActor (Actor actor) {
 		mCurPanel.addActor(actor);
 	}
 
-	public void setCurrentPanel(Panel panel) {
-		if (getActors().contains(panel, true))
-			mCurPanel = panel;
+	public void setCurrentPanel (Panel panel) {
+		if (getActors().contains(panel, true)) mCurPanel = panel;
 	}
 
 	/*******************************************************
 	 * 
 	 *******************************************************/
 	@Override
-	public void Pause() {
+	public void Pause () {
 		eAdmin.einput.removeProcessor(ID);
 	}
 
 	@Override
-	public void Resume() {
+	public void Resume () {
 		eAdmin.einput.addProcessor(ID, this);
 	}
 
@@ -236,10 +236,9 @@ public class Layout extends Stage implements Pauseable {
 	 *******************************************************/
 
 	/**
-	 * This method will remove all panel (just keep default panel ) and then
-	 * reset the default panel
+	 * This method will remove all panel (just keep default panel ) and then reset the default panel
 	 */
-	public void clear() {
+	public void clear () {
 		super.clear();
 
 		mDefaultPanel.clear();
@@ -252,7 +251,7 @@ public class Layout extends Stage implements Pauseable {
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose () {
 		super.dispose();
 		clear();
 		eAdmin.einput.removeProcessor(ID);

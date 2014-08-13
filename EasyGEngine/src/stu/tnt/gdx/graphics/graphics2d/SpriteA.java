@@ -16,12 +16,6 @@
 
 package stu.tnt.gdx.graphics.graphics2d;
 
-import static com.badlogic.gdx.graphics.g2d.Animation.LOOP;
-import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_PINGPONG;
-import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_RANDOM;
-import static com.badlogic.gdx.graphics.g2d.Animation.LOOP_REVERSED;
-import static com.badlogic.gdx.graphics.g2d.Animation.NORMAL;
-import static com.badlogic.gdx.graphics.g2d.Animation.REVERSED;
 import static com.badlogic.gdx.graphics.g2d.Batch.C1;
 import static com.badlogic.gdx.graphics.g2d.Batch.C2;
 import static com.badlogic.gdx.graphics.g2d.Batch.C3;
@@ -47,6 +41,8 @@ import stu.tnt.gdx.utils.Updater;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -56,7 +52,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.NumberUtils;
 
-/** Holds the geometry, color, and texture information for drawing 2D sprites using {@link SpriteBatch}. A Sprite has a position
+/**
+ * Holds the geometry, color, and texture information for drawing 2D sprites using {@link SpriteBatch}. A Sprite has a position
  * and a size given as width and height. The position is relative to the origin of the coordinate system specified via
  * {@link SpriteBatch#begin()} and the respective matrices. A Sprite is always rectangular and its position (x, y) are located in
  * the bottom left corner of that rectangle. A Sprite also has an origin around which rotations and scaling are performed (that
@@ -65,7 +62,8 @@ import com.badlogic.gdx.utils.NumberUtils;
  * 
  * @author mzechner
  * @author Nathan Sweet
- * @author Ngo Trong Trung */
+ * @author Ngo Trong Trung
+ */
 public class SpriteA implements Animator, SpriteBackend {
 	TextureRegion[] keyFrames;
 
@@ -75,7 +73,7 @@ public class SpriteA implements Animator, SpriteBackend {
 
 	private int frameNumber;
 
-	private int mPlayMode = NORMAL;
+	private Animation.PlayMode mPlayMode = PlayMode.NORMAL;
 
 	private Texture mCurrentTexture;
 
@@ -103,8 +101,10 @@ public class SpriteA implements Animator, SpriteBackend {
 
 	private Array<Updater> mUpdater = new Array<Updater>(0);
 
-	/** Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and color set before it can be
-	 * drawn. */
+	/**
+	 * Creates an uninitialized sprite. The sprite will need a texture, texture region, bounds, and color set before it can be
+	 * drawn.
+	 */
 	public SpriteA () {
 		setColor(1, 1, 1, 1);
 		setSize(100, 100);
@@ -171,8 +171,10 @@ public class SpriteA implements Animator, SpriteBackend {
 		dirty = sprite.dirty;
 	}
 
-	/** Sets the position and size of the sprite when drawn, before scaling and rotation are applied. If origin, rotation, or scale
-	 * are changed, it is slightly more efficient to set the bounds after those operations. */
+	/**
+	 * Sets the position and size of the sprite when drawn, before scaling and rotation are applied. If origin, rotation, or scale
+	 * are changed, it is slightly more efficient to set the bounds after those operations.
+	 */
 	public void setBounds (float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
@@ -199,9 +201,11 @@ public class SpriteA implements Animator, SpriteBackend {
 		if (rotation != 0 || scaleX != 1 || scaleY != 1) dirty = true;
 	}
 
-	/** Sets the size of the sprite when drawn, before scaling and rotation are applied. If origin, rotation, or scale are changed,
+	/**
+	 * Sets the size of the sprite when drawn, before scaling and rotation are applied. If origin, rotation, or scale are changed,
 	 * it is slightly more efficient to set the size after those operations. If both position and size are to be changed, it is
-	 * better to use {@link #setBounds(float, float, float, float)}. */
+	 * better to use {@link #setBounds(float, float, float, float)}.
+	 */
 	public void setSize (float width, float height) {
 		this.width = width;
 		this.height = height;
@@ -226,29 +230,37 @@ public class SpriteA implements Animator, SpriteBackend {
 		if (rotation != 0 || scaleX != 1 || scaleY != 1) dirty = true;
 	}
 
-	/** Sets the position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
+	/**
+	 * Sets the position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
 	 * to set the position after those operations. If both position and size are to be changed, it is better to use
-	 * {@link #setBounds(float, float, float, float)}. */
+	 * {@link #setBounds(float, float, float, float)}.
+	 */
 	public void setPosition (float x, float y) {
 		translate(x - this.x, y - this.y);
 	}
 
-	/** Sets the x position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
+	/**
+	 * Sets the x position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
 	 * to set the position after those operations. If both position and size are to be changed, it is better to use
-	 * {@link #setBounds(float, float, float, float)}. */
+	 * {@link #setBounds(float, float, float, float)}.
+	 */
 	public void setX (float x) {
 		translateX(x - this.x);
 	}
 
-	/** Sets the y position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
+	/**
+	 * Sets the y position where the sprite will be drawn. If origin, rotation, or scale are changed, it is slightly more efficient
 	 * to set the position after those operations. If both position and size are to be changed, it is better to use
-	 * {@link #setBounds(float, float, float, float)}. */
+	 * {@link #setBounds(float, float, float, float)}.
+	 */
 	public void setY (float y) {
 		translateY(y - this.y);
 	}
 
-	/** Sets the x position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
-	 * changed, it is slightly more efficient to translate after those operations. */
+	/**
+	 * Sets the x position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
+	 */
 	public void translateX (float xAmount) {
 		this.x += xAmount;
 
@@ -261,8 +273,10 @@ public class SpriteA implements Animator, SpriteBackend {
 		vertices[X4] += xAmount;
 	}
 
-	/** Sets the y position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
-	 * changed, it is slightly more efficient to translate after those operations. */
+	/**
+	 * Sets the y position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
+	 */
 	public void translateY (float yAmount) {
 		y += yAmount;
 
@@ -275,8 +289,10 @@ public class SpriteA implements Animator, SpriteBackend {
 		vertices[Y4] += yAmount;
 	}
 
-	/** Sets the position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
-	 * changed, it is slightly more efficient to translate after those operations. */
+	/**
+	 * Sets the position relative to the current position where the sprite will be drawn. If origin, rotation, or scale are
+	 * changed, it is slightly more efficient to translate after those operations.
+	 */
 	public void translate (float xAmount, float yAmount) {
 		x += xAmount;
 		y += yAmount;
@@ -334,8 +350,10 @@ public class SpriteA implements Animator, SpriteBackend {
 		dirty = true;
 	}
 
-	/** Rotates this sprite 90 degrees in-place by rotating the texture coordinates. This rotation is unaffected by
-	 * {@link #setRotation(float)} and {@link #rotate(float)}. */
+	/**
+	 * Rotates this sprite 90 degrees in-place by rotating the texture coordinates. This rotation is unaffected by
+	 * {@link #setRotation(float)} and {@link #rotate(float)}.
+	 */
 	public void rotate90 (boolean clockwise) {
 		final float[] vertices = this.vertices;
 
@@ -391,21 +409,21 @@ public class SpriteA implements Animator, SpriteBackend {
 		this.mFrameDuration = frameDuration;
 	}
 
-	public void setPlayMode (int playMode) {
+	public void setPlayMode (Animation.PlayMode playMode) {
 		mPlayMode = playMode;
 	}
 
 	public void setLooping (boolean looping) {
-		if (looping && (mPlayMode == NORMAL || mPlayMode == REVERSED)) {
-			if (mPlayMode == NORMAL)
-				mPlayMode = LOOP;
+		if (looping && (mPlayMode == Animation.PlayMode.NORMAL || mPlayMode == Animation.PlayMode.REVERSED)) {
+			if (mPlayMode == Animation.PlayMode.NORMAL)
+				mPlayMode = Animation.PlayMode.LOOP;
 			else
-				mPlayMode = LOOP_REVERSED;
-		} else if (!looping && !(mPlayMode == NORMAL || mPlayMode == REVERSED)) {
-			if (mPlayMode == LOOP_REVERSED)
-				mPlayMode = REVERSED;
+				mPlayMode = Animation.PlayMode.LOOP_REVERSED;
+		} else if (!looping && !(mPlayMode == Animation.PlayMode.NORMAL || mPlayMode == Animation.PlayMode.REVERSED)) {
+			if (mPlayMode == Animation.PlayMode.LOOP_REVERSED)
+				mPlayMode = Animation.PlayMode.REVERSED;
 			else
-				mPlayMode = LOOP;
+				mPlayMode = Animation.PlayMode.LOOP;
 		}
 	}
 
@@ -436,7 +454,7 @@ public class SpriteA implements Animator, SpriteBackend {
 		mFrameDuration = frameDuration;
 	}
 
-	public void start (float frameDuration, int playMode) {
+	public void start (float frameDuration, Animation.PlayMode playMode) {
 		RUN = true;
 		mFrameDuration = frameDuration;
 		mPlayMode = playMode;
@@ -525,9 +543,11 @@ public class SpriteA implements Animator, SpriteBackend {
 		}
 	}
 
-	/** Get current frame number ( unsafe method)
+	/**
+	 * Get current frame number ( unsafe method)
 	 * 
-	 * @return */
+	 * @return
+	 */
 	public int getFrameNumber () {
 		return frameNumber;
 	}
@@ -639,11 +659,13 @@ public class SpriteA implements Animator, SpriteBackend {
 		return vertices;
 	}
 
-	/** Returns the bounding axis aligned {@link Rectangle} that bounds this sprite. The rectangles x and y coordinates describe its
+	/**
+	 * Returns the bounding axis aligned {@link Rectangle} that bounds this sprite. The rectangles x and y coordinates describe its
 	 * bottom left corner. If you change the position or size of the sprite, you have to fetch the triangle again for it to be
 	 * recomputed.
 	 * 
-	 * @return the bounding Rectangle */
+	 * @return the bounding Rectangle
+	 */
 	public Rectangle getBoundingRectangle () {
 		final float[] vertices = getVertices();
 
@@ -801,8 +823,10 @@ public class SpriteA implements Animator, SpriteBackend {
 		return scaleY;
 	}
 
-	/** Returns the color of this sprite. Changing the returned color will have no affect, {@link #setColor(Color)} or
-	 * {@link #setColor(float, float, float, float)} must be used. */
+	/**
+	 * Returns the color of this sprite. Changing the returned color will have no affect, {@link #setColor(Color)} or
+	 * {@link #setColor(float, float, float, float)} must be used.
+	 */
 	public Color getColor () {
 		final int intBits = NumberUtils.floatToIntColor(vertices[C1]);
 		final Color color = this.color;

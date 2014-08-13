@@ -1,7 +1,6 @@
-package stu.tnt.gdx.core;
+package stu.tnt.platform;
 
 import stu.tnt.gdx.utils.D;
-import vn.sunnet.gdx.backends.IActivityHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;

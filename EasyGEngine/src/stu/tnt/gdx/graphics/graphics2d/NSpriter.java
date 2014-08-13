@@ -5,6 +5,7 @@ import stu.tnt.gdx.utils.Updater;
 import stu.tnt.gdx.utils.exception.EasyGEngineRuntimeException;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
@@ -652,7 +653,7 @@ public class NSpriter extends NManager implements Animator, SpriteBackend,
 	}
 
 	@Override
-	public void start(float frameDuration, int playMode) {
+	public void start(float frameDuration, Animation.PlayMode playMode) {
 		RUN = true;
 		for (NativeSpriteBackend s : mRunnable)
 			((Animator) s).start(frameDuration, playMode);
